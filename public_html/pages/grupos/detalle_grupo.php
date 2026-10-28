@@ -1,22 +1,23 @@
+<?php require_once __DIR__ . '/../../config.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle del Grupo - Área Morelos</title>
-    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="<?= url('styles/styles.css') ?>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>window.BASE_URL = <?= json_encode(BASE_URL) ?>;</script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<body>
-    <?php include 'header.php'; ?>
-    <div class="wrapper">
-        <?php include 'nav.php'; ?>
-        <div class="breadcrumb">
-            Está aquí: <a href="index.php">Inicio</a> / <a href="grupos.php">Grupos</a> / Detalle del Grupo
-        </div>
+<body class="bg-gray-100">
+    <?php require ROOT_PATH . '/header.php'; ?>
+    <?php require ROOT_PATH . '/nav.php'; ?>
+    <div class="container mx-auto px-4 py-8">
+        <?php require ROOT_PATH . '/breadcrumb.php'; ?>
         
-        <div class="content-section" id="group-detail">
-            <h1>Detalle del Grupo</h1>
+        <div class="content-section bg-white p-6 rounded shadow" id="group-detail">
+            <h1 class="text-2xl font-bold text-blue-700 mb-4 border-b border-gray-200 pb-2">Detalle del Grupo</h1>
             <div id="detail-content">Cargando información...</div>
         </div>
     </div>
@@ -27,7 +28,7 @@
             const groupId = urlParams.get('id');
 
             if (groupId) {
-                $.getJSON('js/groups.json', function(data) {
+                $.getJSON((window.BASE_URL || '') + 'js/groups.json', function(data) {
                     const group = data.find(g => g.id == groupId);
                     if (group) {
                         // Preparar días de sesión

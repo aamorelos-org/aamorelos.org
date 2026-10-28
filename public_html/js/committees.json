@@ -1,0 +1,114 @@
+[
+    {
+        "id": 1,
+        "nombre": "Comités de Accesibilidades",
+        "descripcion": "Los comités de accesibilidades prestan servicio para ayudar a las personas que tienen que superar barreras importantes para asegurar su participación plena en A.A.",
+        "detalle": "Los comités de Accesibilidad exploran, desarrollan y ofrecen recursos a los alcohólicos que enfrentan barreras significativas para recibir el mensaje de Alcohólicos Anónimos y participar en el programa de recuperación. Su objetivo es que A.A. esté disponible para todos los alcohólicos que pidan ayuda.",
+        "actividades": [
+            "Coordinar talleres de accesibilidad en grupos, distritos o áreas.",
+            "Realizar encuestas de reuniones accesibles para sillas de ruedas y con interpretación en lenguaje de señas (ASL).",
+            "Ayudar a contratar intérpretes de ASL y apoyar a los miembros con discapacidad.",
+            "Llevar reuniones a personas que no pueden salir de casa, hospitales y centros de rehabilitación."
+        ],
+        "url": "pages/comites/detalle_comite.php?id=1",
+        "fuente": "https://www.aa.org/es/accessibilities-committees"
+    },
+    {
+        "id": 2,
+        "nombre": "Comités de Archivos Históricos",
+        "descripcion": "Los comités de archivos históricos trabajan para coleccionar, preservar y compartir la historia de A.A.",
+        "detalle": "Los comités de archivos históricos coleccionan, preservan y comparten la historia de A.A., ayudando a mantener viva la memoria de la Comunidad y su experiencia de servicio.",
+        "actividades": [
+            "Llevar a cabo talleres de archivos históricos de A.A.",
+            "Crear exposiciones portátiles para eventos locales de A.A.",
+            "Solicitar a los grupos los formularios de historia del grupo.",
+            "Digitalizar, inventariar y preservar los materiales históricos."
+        ],
+        "url": "pages/comites/detalle_comite.php?id=2",
+        "fuente": "https://www.aa.org/es/archives-committees"
+    },
+    {
+        "id": 3,
+        "nombre": "Comités de Cooperación con la Comunidad Profesional (CCP)",
+        "descripcion": "Los comités de CCP trabajan para informar acerca de A.A. a los profesionales que puedan tener contacto con personas que tienen un problema con la bebida.",
+        "detalle": "Los comités de Cooperación con la Comunidad Profesional informan acerca de A.A. a profesionales que pueden tener contacto con personas con problemas con la bebida, para que A.A. sea un recurso disponible.",
+        "actividades": [
+            "Dar presentaciones sobre A.A. a escuelas y organizaciones.",
+            "Brindar información de A.A. mediante materiales impresos y digitales.",
+            "Contactar médicos, hospitales, juzgados y centros laborales.",
+            "Invitar a profesionales a reuniones abiertas y ofrecer literatura."
+        ],
+        "url": "pages/comites/detalle_comite.php?id=3",
+        "fuente": "https://www.aa.org/es/Cooperation-with-the-Professional-Community"
+    },
+    {
+        "id": 4,
+        "nombre": "Comités de Correccionales",
+        "descripcion": "Los comités de correccionales trabajan para llevar el mensaje de la recuperación a los alcohólicos bajo custodia.",
+        "detalle": "Los comités de correccionales coordinan la labor de miembros y grupos de A.A. para llevar el mensaje de recuperación a los alcohólicos bajo custodia, dentro y fuera de las instituciones.",
+        "actividades": [
+            "Llevar reuniones y literatura a las instituciones correccionales.",
+            "Promover el Servicio de Correspondencia de Correccionales (SCC).",
+            "Apoyar la transición de las personas bajo custodia a la comunidad de A.A.",
+            "Facilitar los contactos previos a la salida en libertad."
+        ],
+        "url": "pages/comites/detalle_comite.php?id=4",
+        "fuente": "https://www.aa.org/es/corrections-committees"
+    },
+    {
+        "id": 5,
+        "nombre": "Comités de Literatura",
+        "descripcion": "Los comités de literatura trabajan para comunicar la importancia de la literatura de A.A. para la recuperación. Se aseguran de que la literatura de A.A. esté disponible para los grupos de A.A., reuniones de servicio, eventos de A.A. y el público en general.",
+        "detalle": "Los comités de literatura se aseguran de que la literatura de A.A. esté disponible para grupos, reuniones de servicio y eventos, y ayudan a difundir el valor de la literatura aprobada por la Conferencia.",
+        "actividades": [
+            "Llevar a cabo talleres de literatura de A.A.",
+            "Conseguir muestrarios, catálogos y formularios de pedido.",
+            "Organizar exposiciones de literatura en eventos de A.A.",
+            "Considerar las propuestas de cambios a la literatura aprobada."
+        ],
+        "url": "pages/comites/detalle_comite.php?id=5",
+        "fuente": "https://www.aa.org/es/literature-committees"
+    },
+    {
+        "id": 6,
+        "nombre": "Comités de Información Pública (IP)",
+        "descripcion": "Los comités de información pública comunican información de A.A. al público en general.",
+        "detalle": "Los comités de Información Pública comunican información de A.A. al público en general y aseguran que los medios locales cuenten con información exacta, respetando el anonimato.",
+        "actividades": [
+            "Colocar anuncios de servicio público (ASP) en radio, televisión y canales digitales.",
+            "Dar presentaciones sobre A.A. a escuelas y organizaciones.",
+            "Ofrecer a los medios entrevistas con protección del anonimato.",
+            "Difundir información de reuniones abiertas y materiales de A.A."
+        ],
+        "url": "pages/comites/detalle_comite.php?id=6",
+        "fuente": "https://www.aa.org/es/public-information-committees"
+    },
+    {
+        "id": 7,
+        "nombre": "Comités de Tratamiento",
+        "descripcion": "Los comités de tratamiento trabajan para llevar el mensaje de A.A. a entornos de tratamiento donde puede haber alcohólicos que sufren.",
+        "detalle": "Los comités de Tratamiento transmiten el mensaje de A.A. a los alcohólicos que sufren y a los profesionales que los atienden en entornos de tratamiento, y apoyan la transición a A.A. en la comunidad.",
+        "actividades": [
+            "Llevar reuniones y literatura a instituciones y entornos de tratamiento.",
+            "Presentar a administradores y personal cómo funciona A.A.",
+            "Apoyar el Programa Puente hacia A.A. para quienes salen de tratamiento.",
+            "Contactar hospitales, refugios y centros de rehabilitación."
+        ],
+        "url": "pages/comites/detalle_comite.php?id=7",
+        "fuente": "https://www.aa.org/es/treatment-committees"
+    },
+    {
+        "id": 8,
+        "nombre": "Comités de Comunidades Remotas",
+        "descripcion": "Los comités de comunidades remotas trabajan para llevar A.A. a comunidades que son difíciles de alcanzar por causa de la geografía, el idioma o la cultura.",
+        "detalle": "Los comités de Comunidades Remotas procuran que haya acceso a A.A. en comunidades desatendidas o remotas, superando barreras de geografía, idioma o cultura.",
+        "actividades": [
+            "Organizar reuniones por teléfono, tele y videoconferencia.",
+            "Identificar líderes y recursos en comunidades étnicas y culturales.",
+            "Iniciar reuniones en zonas que carecen de ellas.",
+            "Compartir información de servicio en formatos accesibles."
+        ],
+        "url": "pages/comites/detalle_comite.php?id=8",
+        "fuente": "https://www.aa.org/es/remote-communities-committees"
+    }
+]

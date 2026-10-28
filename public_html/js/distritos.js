@@ -3,7 +3,7 @@ let currentPage = 1;
 const rowsPerPage = 50;
 
 $(document).ready(function() {
-    $.getJSON('js/districts.json', function(data) {
+    $.getJSON((window.BASE_URL || '') + 'js/districts.json', function(data) {
         districtsData = data;
         renderTable(data);
     });
@@ -22,7 +22,7 @@ function renderTable(data, page = 1) {
         const row = `<tr>
             <td style="padding: 10px; border: 1px solid #dcdcdc;">
                 <div class="tooltip-wrapper">
-                    <a href="detalle_distrito.php?id=${district.id}" style="color: #0077b6; text-decoration: none;">${district.name}</a>
+                    <a href="${window.BASE_URL || ''}pages/distritos/detalle_distrito.php?id=${district.id}" style="color: #0077b6; text-decoration: none;">${district.name}</a>
                     <div class="tooltip-text">
                         <strong>Distrito:</strong> ${district.name}<br>
                         <strong>Municipio:</strong> ${district.municipality}<br>

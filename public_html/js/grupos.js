@@ -3,7 +3,7 @@ let currentPage = 1;
 const rowsPerPage = 50;
 
 $(document).ready(function() {
-    $.getJSON('js/groups.json', function(data) {
+    $.getJSON((window.BASE_URL || '') + 'js/groups.json', function(data) {
         groupsData = data;
         renderTable(data);
     });
@@ -20,7 +20,7 @@ function renderTable(data, page = 1) {
 
     $.each(paginatedData, function(index, group) {
         const row = `<tr>
-            <td style="padding: 10px; border: 1px solid #dcdcdc;"><a href="detalle_grupo.php?id=${group.id}" style="color: #0077b6; text-decoration: none;">${group.name}</a></td>
+            <td style="padding: 10px; border: 1px solid #dcdcdc;"><a href="${window.BASE_URL || ''}pages/grupos/detalle_grupo.php?id=${group.id}" style="color: #0077b6; text-decoration: none;">${group.name}</a></td>
             <td style="padding: 10px; border: 1px solid #dcdcdc;">${group.municipality}</td>
             <td style="padding: 10px; border: 1px solid #dcdcdc;">${group.neighborhood}</td>
             <td style="padding: 10px; border: 1px solid #dcdcdc;">${group.type}</td>

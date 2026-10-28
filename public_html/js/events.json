@@ -1,0 +1,25 @@
+[
+	{
+		"id" : "10001",
+		"image" : "images/events/central.png",
+		"alt": "Centrail Mexicana",
+		"url" : "https://www.aamexico.org.mx/",
+		"title": "Servicios Generales",
+		"detail": "Conoce más sobre nuestra comunidad a nivel nacional."
+	},
+	{
+		"id" : "10002",
+		"image" : "images/events/luz_esperanza_2027.png",
+		"alt": "Luz y Esperanza 2027",
+		"url" : "https://convencion.aamexico.mx/",
+		"title": "14.a Convención Nacional",
+		"detail": "Del 11 al 13 de junio del 2027"
+	},
+	{
+		"id" : "10003",
+		"image" : "images/events/luz_esperanza_2027.png",
+		"url" : "pages/info/werever.php",
+		"title": "13º Aniversario - Grupo Hoy volvemos a empezar",
+		"detail": "Del 9 al 14 de noviembre de 2026"
+	}
+]

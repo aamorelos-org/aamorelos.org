@@ -4,20 +4,25 @@ $page_titles = [
     'index.php' => 'Inicio',
     'grupos.php' => 'Grupos',
     'info.php' => '¿Qué es AA?',
-    's.php' => 'Eventos y Noticias',
-    'agendas.php' => 'Agendas de Trabajo',
-    'mapa.php' => 'Mapa de Distritos',
+    'eventos.php' => 'Eventos y Noticias',
     'autodiagnosticos.php' => 'Auto Diagnósticos',
     'comites.php' => 'Comités',
     'ubicacion.php' => 'Ubicación',
-    'distritos.php' => 'Distritos'
+    'distritos.php' => 'Distritos',
+    'detalle_grupo.php' => 'Detalle del Grupo',
+    'detalle_distrito.php' => 'Detalle del Distrito',
+    'detalle_comite.php' => 'Detalle del Comité'
 ];
 
 $title = isset($page_titles[$current_page]) ? $page_titles[$current_page] : 'Página';
 
+if (!empty($breadcrumb_title)) {
+    $title = $breadcrumb_title;
+}
+
 if ($current_page !== 'index.php') {
     echo '<div class="breadcrumb">';
-    echo 'Está aquí: <a href="index.php">Inicio</a> / ' . $title;
+    echo 'Está aquí: <a href="' . url('index.php') . '">Inicio</a> / ' . $title;
     echo '</div>';
 }
 ?>

@@ -1,17 +1,20 @@
+<?php require_once __DIR__ . '/../../config.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle del Distrito - Área Morelos</title>
-    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="<?= url('styles/styles.css') ?>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>window.BASE_URL = <?= json_encode(BASE_URL) ?>;</script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<body>
-    <?php include 'header.php'; ?>
+<body class="bg-gray-100">
+    <?php require ROOT_PATH . '/header.php'; ?>
+    <?php require ROOT_PATH . '/nav.php'; ?>
     <div class="wrapper">
-        <?php include 'nav.php'; ?>
-        <?php include 'breadcrumb.php'; ?>
+        <?php require ROOT_PATH . '/breadcrumb.php'; ?>
         
         <div class="content-section" id="district-detail">
             <h1 style="color: var(--color-primary);"><i class="fas fa-map-marked-alt"></i> Detalle del Distrito</h1>
@@ -25,7 +28,7 @@
             const districtId = urlParams.get('id');
 
             if (districtId) {
-                $.getJSON('js/districts.json', function(data) {
+                $.getJSON((window.BASE_URL || '') + 'js/districts.json', function(data) {
                     const district = data.find(d => d.id == districtId);
                     if (district) {
                         // Construir búsqueda en Google Maps con dirección y municipio

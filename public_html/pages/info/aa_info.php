@@ -13,6 +13,12 @@
                 </ul>
             </div>
 
+            <h2>Historia AA</h2>
+            <p>Alcohólicos Anónimos nace un 10 de junio de 1935 en la ciudad de Akron, Ohio en los Estados Unidos de América, cuando dos alcohólicos crónicos: el Dr. Robert H. Smith (Bob S.) y William Griffith Wilson (Bill W.) – cofundadores –, se encuentran y a través del compartimiento de sus experiencias como bebedores problema alcanzan el estado de sobriedad permanente. El éxito de este resultado es basado en la idea de que un alcohólico puede ayudar a otro alcohólico a través de un “puente de comprensión”.</p>
+            
+            <p>Ésta es la fecha en que oficialmente se funda Alcohólicos Anónimos y a partir de la cual comienza a desarrollarse el revolucionario y exitoso programa de los “Doce Pasos de A.A.” que ayuda a los alcohólicos a mantenerse en sobriedad. El nombre de A.A. es tomado de la primera publicación del libro “Alcohólicos Anónimos” en el año de 1939 escrito por Bill W.</p>
+
+
             <p>Nuestro objetivo primordial es mantenernos sobrios y ayudar a otros alcohólicos a alcanzar el estado de sobriedad.</p>
 
             <h2>¿Qué es el Alcoholismo?</h2>
@@ -64,11 +70,7 @@
                 </ul>
             </div>
 
-            <h2>Historia AA</h2>
-            <p>Alcohólicos Anónimos nace un 10 de junio de 1935 en la ciudad de Akron, Ohio en los Estados Unidos de América, cuando dos alcohólicos crónicos: el Dr. Robert H. Smith (Bob S.) y William Griffith Wilson (Bill W.) – cofundadores –, se encuentran y a través del compartimiento de sus experiencias como bebedores problema alcanzan el estado de sobriedad permanente. El éxito de este resultado es basado en la idea de que un alcohólico puede ayudar a otro alcohólico a través de un “puente de comprensión”.</p>
-            
-            <p>Ésta es la fecha en que oficialmente se funda Alcohólicos Anónimos y a partir de la cual comienza a desarrollarse el revolucionario y exitoso programa de los “Doce Pasos de A.A.” que ayuda a los alcohólicos a mantenerse en sobriedad. El nombre de A.A. es tomado de la primera publicación del libro “Alcohólicos Anónimos” en el año de 1939 escrito por Bill W.</p>
-
+        
             <h2>¿Qué es la Central Mexicana de Servicios Generales de AA?</h2>
             <p>La Central Mexicana de Servicios Generales de Alcohólicos Anónimos de acuerdo a su acta constitutiva es una Asociación Civil no lucrativa integrada actualmente por la Oficina de Servicios Generales y la Oficina Plenitud AA. Tiene como objetivo prestar servicios y llevar a cabo actividades para ayudar a la recuperación de las personas que padecen la enfermedad del alcoholismo a través del programa de Alcohólicos Anónimos®, así como imprimir y distribuir la literatura de AA y es la única poseedora de los derechos de autor en nuestro país.</p>
             
