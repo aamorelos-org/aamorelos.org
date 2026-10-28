@@ -17,9 +17,9 @@
 	},
 	{
 		"id" : "10003",
-		"image" : "images/events/luz_esperanza_2027.png",
-		"url" : "pages/info/werever.php",
-		"title": "13º Aniversario - Grupo Hoy volvemos a empezar",
-		"detail": "Del 9 al 14 de noviembre de 2026"
+		"image" : "images/aniversarios/grupo_37178/invitacion.jpg",
+		"url" : "pages/eventos/invitacion_37178.php",
+		"title": "16° Aniversario - Hoy volvemos a empezar",
+		"detail": "Días de Unidad del 8 al 19 de diciembre · Junta Pública el 20 de diciembre de 2026"
 	}
 ]

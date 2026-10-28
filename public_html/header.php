@@ -20,7 +20,7 @@
                 </a>
                 <a href="tel:+527773090872">
                     <span aria-hidden="true">📞</span>
-                    <span>777 309-08-72</span>
+                    <span>777 992-40-62</span>
                 </a>
             </div>
         </div>

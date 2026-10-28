@@ -49,13 +49,13 @@
                 <span class="nav-text">GRUPOS</span>
             </a>
 
-            <a href="<?= url('index.php') ?>#comites" class="nav-item <?php echo in_array($current_page, ['comites.php', 'detalle_comite.php']) ? 'active' : ''; ?>">
+            <a href="<?= url('pages/directorio/directorio.php') ?>" class="nav-item <?php echo in_array($current_page, ['directorio.php', 'detalle_comite.php']) ? 'active' : ''; ?>">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                     <path d="M9 18h6"/>
                     <path d="M10 21h4"/>
                     <path d="M12 3a6 6 0 0 0-3.5 10.9c.4.3.5.7.5 1.1v1h6v-1c0-.4.1-.8.5-1.1A6 6 0 0 0 12 3Z"/>
                 </svg>
-                <span class="nav-text">COMITÉS</span>
+                <span class="nav-text">Directorio</span>
             </a>
 
             <a href="<?= url('pages/ubicacion/ubicacion.php') ?>" class="nav-item <?php echo $current_page == 'ubicacion.php' ? 'active' : ''; ?>">

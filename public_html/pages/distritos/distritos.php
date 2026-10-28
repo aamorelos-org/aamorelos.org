@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Área Morelos - Distritos - AA</title>
+    <link rel="icon" type="image/x-icon" href="<?= url('favicon.ico') ?>">
     <link rel="stylesheet" href="<?= url('styles/styles.css') ?>">
     <link rel="stylesheet" href="<?= url('styles/distritos.css') ?>">
     <script src="https://cdn.tailwindcss.com"></script>
