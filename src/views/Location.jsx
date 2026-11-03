@@ -1,19 +1,25 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Breadcrumb from '../components/layout/Breadcrumb'
 import MapEmbed from '../components/ui/MapEmbed'
+import Pagination from '../components/ui/Pagination'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { site } from '../data/site'
 import { districtRoute } from '../utils/links'
+import { matchesRecord } from '../utils/text'
 import pageStyles from './Page.module.css'
 import styles from './Listing.module.css'
+
+const PAGE_SIZE = 20
 
 export default function Location() {
   useDocumentTitle('Ubicación y mapa de distritos')
 
   const [districts, setDistricts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [query, setQuery] = useState('')
+  const [page, setPage] = useState(1)
 
   useEffect(() => {
     let active = true
@@ -37,6 +43,22 @@ export default function Location() {
       active = false
     }
   }, [])
+
+  useEffect(() => {
+    setPage(1)
+  }, [query])
+
+  const filtered = useMemo(
+    () => districts.filter((district) => matchesRecord(district, query)),
+    [districts, query],
+  )
+
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const currentPage = Math.min(page, pageCount)
+  const start = (currentPage - 1) * PAGE_SIZE
+  const visible = filtered.slice(start, start + PAGE_SIZE)
+  const from = filtered.length === 0 ? 0 : start + 1
+  const to = Math.min(start + PAGE_SIZE, filtered.length)
 
   return (
     <div className={pageStyles.page}>
@@ -62,6 +84,25 @@ export default function Location() {
       <div className={pageStyles.grid2} style={{ marginTop: 28 }}>
         <section className={pageStyles.panel}>
           <h2 className={pageStyles.sectionBlock} style={{ marginTop: 0 }}>Listado de distritos</h2>
+          <div className={styles.filters} style={{ marginBottom: 12 }}>
+            <div className={styles.field}>
+              <label htmlFor="district-query">Buscar</label>
+              <input
+                id="district-query"
+                className={styles.input}
+                type="search"
+                placeholder="Nombre, municipio o zona"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+              />
+            </div>
+          </div>
+          <div className={styles.metaRow} style={{ marginBottom: 8 }}>
+            <span>
+              Mostrando <span className={styles.metaStrong}>{from}–{to}</span> de{' '}
+              <span className={styles.metaStrong}>{filtered.length}</span> distritos
+            </span>
+          </div>
           <div className={styles.tableWrap} style={{ boxShadow: 'none' }}>
             <table className={styles.table} style={{ minWidth: 0 }}>
               <thead>
@@ -77,17 +118,26 @@ export default function Location() {
                       Cargando distritos desde el API...
                     </td>
                   </tr>
-                ) : districts.map((district) => (
-                  <tr key={district.id}>
-                    <td>
-                      <Link to={districtRoute(district.id)}>{district.name}</Link>
+                ) : visible.length ? (
+                  visible.map((district) => (
+                    <tr key={district.id}>
+                      <td>
+                        <Link to={districtRoute(district.id)}>{district.name}</Link>
+                      </td>
+                      <td>{district.municipality || '—'}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={2} className={styles.emptyCell}>
+                      {query ? `Sin resultados para “${query}”.` : 'No se encontraron distritos.'}
                     </td>
-                    <td>{district.municipality || '—'}</td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
+          <Pagination page={currentPage} pageCount={pageCount} onChange={setPage} />
         </section>
 
         <aside className={pageStyles.asideCard}>

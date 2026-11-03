@@ -196,6 +196,10 @@
   line-height: 1.82;
 }
 
+.articleBody p {
+  white-space: pre-line;
+}
+
 .articleBody strong {
   color: var(--reflection-ink);
 }

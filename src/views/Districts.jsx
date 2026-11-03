@@ -5,11 +5,11 @@ import Pagination from '../components/ui/Pagination'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { districtRoute } from '../utils/links'
-import { matchesQuery } from '../utils/text'
+import { matchesRecord } from '../utils/text'
 import pageStyles from './Page.module.css'
 import styles from './Listing.module.css'
 
-const PAGE_SIZE = 15
+const PAGE_SIZE = 20
 
 export default function Districts() {
   useDocumentTitle('Directorio de distritos')
@@ -74,7 +74,6 @@ export default function Districts() {
     return districts.filter((district) => {
       const muni = district.municipality || district.municipio || ''
       const ar = district.area || district.area_id || ''
-      const name = district.name || district.distrito || ''
 
       if (municipality && muni !== municipality) {
         return false
@@ -82,11 +81,8 @@ export default function Districts() {
       if (area && String(ar) !== String(area)) {
         return false
       }
-      if (query) {
-        const haystack = [name, muni, district.neighborhood || district.colonia, district.address || district.domicilio].join(' ')
-        if (!matchesQuery(haystack, query)) {
-          return false
-        }
+      if (query && !matchesRecord(district, query)) {
+        return false
       }
       return true
     })

@@ -5,11 +5,11 @@ import Pagination from '../components/ui/Pagination'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { groupRoute, districtRoute } from '../utils/links'
-import { matchesQuery } from '../utils/text'
+import { matchesRecord } from '../utils/text'
 import pageStyles from './Page.module.css'
 import styles from './Listing.module.css'
 
-const PAGE_SIZE = 25
+const PAGE_SIZE = 20
 
 export default function Groups() {
   useDocumentTitle('Directorio de grupos')
@@ -82,19 +82,8 @@ export default function Groups() {
       if (type && typ !== type) {
         return false
       }
-      if (query) {
-        const haystack = [
-          group.name || group.grupo,
-          muni,
-          group.neighborhood || group.colonia,
-          group.address || group.domicilio,
-          group.reference || group.referencia,
-          typ,
-          districtNames.get(dist),
-        ].join(' ')
-        if (!matchesQuery(haystack, query)) {
-          return false
-        }
+      if (query && !matchesRecord({ ...group, district: districtNames.get(dist) }, query)) {
+        return false
       }
       return true
     })

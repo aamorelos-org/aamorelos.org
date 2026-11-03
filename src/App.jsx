@@ -2,6 +2,9 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import ScrollToTop from './components/layout/ScrollToTop'
 import Home from './views/Home'
+import Login from './views/Login'
+import Admin from './views/Admin'
+import ProtectedRoute from './components/ProtectedRoute'
 import Info from './views/Info'
 import Events from './views/Events'
 import EventDetail from './views/EventDetail'
@@ -42,7 +45,7 @@ function App() {
           <Route path="pages/directorio/directorio.php" element={<Directory />} />
           <Route path="pages/ubicacion/ubicacion.php" element={<Location />} />
 
-          <Route path="pages/reflections/reflexiones.php" element={<Reflections />} />
+          <Route path="pages/reflections/reflexiones.php" element={<Navigate to="/reflexiones" replace />} />
           <Route path="pages/reflections/detalle_reflexion.php" element={<ReflectionDetail />} />
           <Route path="pages/reflections/:slug" element={<ReflectionDetail />} />
 
@@ -55,6 +58,8 @@ function App() {
           <Route path="directorio" element={<Navigate to="/pages/directorio/directorio.php" replace />} />
           <Route path="ubicacion" element={<Navigate to="/pages/ubicacion/ubicacion.php" replace />} />
           <Route path="reflexiones" element={<Reflections />} />
+          <Route path="login" element={<Login />} />
+          <Route path="admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
 
           <Route path="*" element={<NotFound />} />
         </Route>

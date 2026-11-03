@@ -15,7 +15,16 @@ async function request(path, options = {}) {
   })
 
   if (!response.ok) {
-    throw new Error(`Error ${response.status} al consultar la API`)
+    let message = `Error ${response.status} al consultar la API`
+
+    try {
+      const errorData = await response.json()
+      message = errorData?.message || errorData?.error || message
+    } catch {
+      // Si la API no envía JSON, se conserva el mensaje por estado HTTP.
+    }
+
+    throw new Error(message)
   }
 
   return response.json()
@@ -70,6 +79,23 @@ export const api = {
         return String(reflection.id) === value
       }) || null
     )
+  },
+
+  async createReflection(payload) {
+    const token = sessionStorage.getItem('access_token')
+
+    if (!token) {
+      throw new Error('Sesión no válida. Inicia sesión nuevamente.')
+    }
+
+    return request('/aa/api/v1/reflections/', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
   },
 
   async getEvents() {

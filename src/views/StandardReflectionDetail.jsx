@@ -7,6 +7,28 @@ import { api } from '../services/api'
 import { reflectionRoute } from '../utils/links'
 import styles from './Reflections.module.css'
 
+// Divide el contenido en bloques separados por líneas vacías. Si la primera
+// línea repite exactamente el título, se omite para no duplicarlo.
+function splitDescription(text, title) {
+  const normalized = String(text || '')
+    .replace(/\r\n/g, '\n')
+    .trim()
+
+  if (!normalized) return []
+
+  const lines = normalized.split('\n')
+
+  if (title && lines[0].trim() === String(title).trim()) {
+    lines.shift()
+  }
+
+  return lines
+    .join('\n')
+    .split(/\n\s*\n/)
+    .map((block) => block.trim())
+    .filter(Boolean)
+}
+
 export default function StandardReflectionDetail() {
   const { slug = '' } = useParams()
   const [searchParams] = useSearchParams()
@@ -72,6 +94,8 @@ export default function StandardReflectionDetail() {
   const previous = index > 0 ? reflectionItems[index - 1] : null
   const next = index >= 0 && index < reflectionItems.length - 1 ? reflectionItems[index + 1] : null
   const prompt = reflectionPrompts[reflection.slug]
+  const blocks = splitDescription(reflection.description, reflection.title)
+  const hasArticle = blocks.length > 0 || Boolean(prompt)
 
   const imgPath = reflection.image || ''
   const imgSrc = imgPath.startsWith('http') ? imgPath : `/${imgPath.replace(/^\/+/, '')}`
@@ -103,24 +127,27 @@ export default function StandardReflectionDetail() {
               {`Pausa y Bienestar${reflection.subtitle ? ` · ${reflection.subtitle}` : ''}`}
             </span>
             <h1 className={styles.detailTitle}>{reflection.title}</h1>
-            <p className={styles.description}>{reflection.description}</p>
             <Link className={styles.backLink} to="/reflexiones">
               ← Volver a reflexiones
             </Link>
           </div>
         </section>
 
-        <article className={styles.article}>
-          <div className={styles.articleBody}>
-            <p>{reflection.description}</p>
-            {prompt ? (
-              <div className={styles.promptBox}>
-                <span>Para reflexionar</span>
-                <p>{prompt}</p>
-              </div>
-            ) : null}
-          </div>
-        </article>
+        {hasArticle ? (
+          <article className={styles.article}>
+            <div className={styles.articleBody}>
+              {blocks.map((block, index) => (
+                <p key={index}>{block}</p>
+              ))}
+              {prompt ? (
+                <div className={styles.promptBox}>
+                  <span>Para reflexionar</span>
+                  <p>{prompt}</p>
+                </div>
+              ) : null}
+            </div>
+          </article>
+        ) : null}
 
         <nav className={styles.prevNext} aria-label="Navegación entre reflexiones">
           {previous ? (
