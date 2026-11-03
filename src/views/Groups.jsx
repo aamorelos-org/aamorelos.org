@@ -6,18 +6,16 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { groupRoute, districtRoute } from '../utils/links'
 import { matchesQuery } from '../utils/text'
-import districts from '../data/districts.json'
 import pageStyles from './Page.module.css'
 import styles from './Listing.module.css'
 
 const PAGE_SIZE = 25
 
-const districtNames = new Map(districts.map((district) => [String(district.id), district.name]))
-
 export default function Groups() {
   useDocumentTitle('Directorio de grupos')
 
   const [rawGroups, setRawGroups] = useState([])
+  const [districts, setDistricts] = useState([])
   const [loading, setLoading] = useState(true)
 
   const [query, setQuery] = useState('')
@@ -28,11 +26,17 @@ export default function Groups() {
 
   useEffect(() => {
     let active = true
-    api.getStateGroups('17')
-      .then((res) => {
+
+    Promise.all([
+      api.getStateGroups('17'),
+      api.getStateDistricts('17'),
+    ])
+      .then(([groupsRes, districtsRes]) => {
         if (active) {
-          const list = Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : [])
-          setRawGroups(list)
+          const groupList = Array.isArray(groupsRes?.data) ? groupsRes.data : (Array.isArray(groupsRes) ? groupsRes : [])
+          const districtList = Array.isArray(districtsRes?.data) ? districtsRes.data : (Array.isArray(districtsRes) ? districtsRes : [])
+          setRawGroups(groupList)
+          setDistricts(districtList)
           setLoading(false)
         }
       })
@@ -46,6 +50,10 @@ export default function Groups() {
       active = false
     }
   }, [])
+
+  const districtNames = useMemo(() => {
+    return new Map(districts.map((district) => [String(district.id), district.name]))
+  }, [districts])
 
   const municipalities = useMemo(() => {
     return [...new Set(rawGroups.map((g) => g.municipality || g.municipio).filter(Boolean))].sort((a, b) =>
@@ -90,7 +98,7 @@ export default function Groups() {
       }
       return true
     })
-  }, [districtId, municipality, query, rawGroups, type])
+  }, [districtId, districtNames, municipality, query, rawGroups, type])
 
   useEffect(() => {
     setPage(1)

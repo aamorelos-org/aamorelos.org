@@ -1,14 +1,41 @@
+import { useEffect, useState } from 'react'
 import Breadcrumb from '../components/layout/Breadcrumb'
 import EventCard from '../components/ui/EventCard'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
-import events from '../data/events.json'
+import { api } from '../services/api'
 import pageStyles from './Page.module.css'
 import styles from './Listing.module.css'
 
 export default function Events() {
   useDocumentTitle('Eventos y noticias')
 
-  const internal = events.filter((event) => /\.php(\?.*)?$/i.test(event.url || '')).length
+  const [events, setEvents] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let active = true
+
+    api
+      .getEvents()
+      .then((response) => {
+        if (active) {
+          const list = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : [])
+          setEvents(list)
+          setLoading(false)
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const internal = events.filter((event) => Boolean(event.slug)).length
   const external = events.length - internal
 
   return (
@@ -39,11 +66,15 @@ export default function Events() {
         </div>
       </div>
 
-      <div className={pageStyles.grid3}>
-        {events.map((event) => (
-          <EventCard key={event.id} event={event} />
-        ))}
-      </div>
+      {loading ? (
+        <p className={pageStyles.lead}>Cargando eventos desde el API...</p>
+      ) : (
+        <div className={pageStyles.grid3}>
+          {events.map((event) => (
+            <EventCard key={event.id} event={event} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

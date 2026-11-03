@@ -1,15 +1,42 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Breadcrumb from '../components/layout/Breadcrumb'
 import MapEmbed from '../components/ui/MapEmbed'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { api } from '../services/api'
 import { site } from '../data/site'
 import { districtRoute } from '../utils/links'
-import districts from '../data/districts.json'
 import pageStyles from './Page.module.css'
 import styles from './Listing.module.css'
 
 export default function Location() {
   useDocumentTitle('Ubicación y mapa de distritos')
+
+  const [districts, setDistricts] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let active = true
+
+    api
+      .getStateDistricts('17')
+      .then((response) => {
+        if (active) {
+          const list = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : [])
+          setDistricts(list)
+          setLoading(false)
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
 
   return (
     <div className={pageStyles.page}>
@@ -44,7 +71,13 @@ export default function Location() {
                 </tr>
               </thead>
               <tbody>
-                {districts.map((district) => (
+                {loading ? (
+                  <tr>
+                    <td colSpan={2} className={styles.emptyCell}>
+                      Cargando distritos desde el API...
+                    </td>
+                  </tr>
+                ) : districts.map((district) => (
                   <tr key={district.id}>
                     <td>
                       <Link to={districtRoute(district.id)}>{district.name}</Link>

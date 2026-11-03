@@ -6,22 +6,16 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { districtRoute } from '../utils/links'
 import { matchesQuery } from '../utils/text'
-import allGroups from '../data/groups.json'
 import pageStyles from './Page.module.css'
 import styles from './Listing.module.css'
 
 const PAGE_SIZE = 15
 
-const groupCounts = allGroups.reduce((counts, group) => {
-  const key = String(group.district_id)
-  counts.set(key, (counts.get(key) || 0) + 1)
-  return counts
-}, new Map())
-
 export default function Districts() {
   useDocumentTitle('Directorio de distritos')
 
   const [districts, setDistricts] = useState([])
+  const [groups, setGroups] = useState([])
   const [loading, setLoading] = useState(true)
 
   const [query, setQuery] = useState('')
@@ -31,11 +25,17 @@ export default function Districts() {
 
   useEffect(() => {
     let active = true
-    api.getStateDistricts('17')
-      .then((res) => {
+
+    Promise.all([
+      api.getStateDistricts('17'),
+      api.getStateGroups('17'),
+    ])
+      .then(([districtsRes, groupsRes]) => {
         if (active) {
-          const list = Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : [])
-          setDistricts(list.length ? list : [])
+          const districtList = Array.isArray(districtsRes?.data) ? districtsRes.data : (Array.isArray(districtsRes) ? districtsRes : [])
+          const groupList = Array.isArray(groupsRes?.data) ? groupsRes.data : (Array.isArray(groupsRes) ? groupsRes : [])
+          setDistricts(districtList)
+          setGroups(groupList)
           setLoading(false)
         }
       })
@@ -49,6 +49,14 @@ export default function Districts() {
       active = false
     }
   }, [])
+
+  const groupCounts = useMemo(() => {
+    return groups.reduce((counts, group) => {
+      const key = String(group.district_id)
+      counts.set(key, (counts.get(key) || 0) + 1)
+      return counts
+    }, new Map())
+  }, [groups])
 
   const municipalities = useMemo(() => {
     return [...new Set(districts.map((d) => d.municipality || d.municipio).filter(Boolean))].sort((a, b) =>
@@ -121,7 +129,7 @@ export default function Districts() {
           <span className={styles.statLabel}>Municipios</span>
         </div>
         <div className={styles.stat}>
-          <span className={styles.statValue}>{allGroups.length}</span>
+          <span className={styles.statValue}>{groups.length}</span>
           <span className={styles.statLabel}>Grupos registrados</span>
         </div>
       </div>

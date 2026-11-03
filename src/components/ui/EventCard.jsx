@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { assetUrl, legacyToRoute } from '../../utils/links'
+import { eventLink, mediaUrl } from '../../utils/links'
 import styles from './EventCard.module.css'
 
 function Arrow() {
@@ -17,14 +17,14 @@ export default function EventCard({ event }) {
   }
 
   const title = event.title || event.titulo || ''
-  const detail = event.detail || event.detalle || ''
-  const image = event.image || event.imagen || ''
-  const link = legacyToRoute(event.url)
+  const detail = event.detail || event.detalle || event.subtitle || ''
+  const image = mediaUrl(event)
+  const link = eventLink(event)
   const content = (
     <>
       <div className={styles.media}>
         <img
-          src={assetUrl(image)}
+          src={image}
           alt={event.alt || title}
           loading="lazy"
           onError={(imageEvent) => {

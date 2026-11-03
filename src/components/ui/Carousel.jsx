@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { assetUrl, legacyToRoute } from '../../utils/links'
+import { eventLink, mediaUrl } from '../../utils/links'
 import styles from './Carousel.module.css'
 
 function Arrow({ direction = 'right' }) {
@@ -16,7 +16,7 @@ function SlideContent({ item }) {
     <>
       <div className={styles.media}>
         <img
-          src={assetUrl(item.image)}
+          src={mediaUrl(item)}
           alt={item.alt || item.title || 'Evento'}
           loading="lazy"
           onError={(event) => {
@@ -108,7 +108,7 @@ export default function Carousel({ items = [], interval = 6000 }) {
       <div className={styles.viewport}>
         <div className={styles.track} style={{ transform: `translateX(-${index * 100}%)` }}>
           {items.map((item, itemIndex) => {
-            const link = legacyToRoute(item.url)
+            const link = eventLink(item)
             const slideClass = `${styles.slide} ${itemIndex === index ? styles.slideActive : ''}`
 
             if (link.to === '#') {

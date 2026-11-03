@@ -1,10 +1,10 @@
+import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import Breadcrumb from '../components/layout/Breadcrumb'
 import MapEmbed from '../components/ui/MapEmbed'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { api } from '../services/api'
 import { districtRoute, groupRoute } from '../utils/links'
-import groups from '../data/groups.json'
-import districts from '../data/districts.json'
 import pageStyles from './Page.module.css'
 import styles from './Detail.module.css'
 
@@ -21,10 +21,60 @@ const days = [
 export default function GroupDetail() {
   const [searchParams] = useSearchParams()
   const id = searchParams.get('id') || ''
-  const group = groups.find((item) => String(item.id) === id)
-  const district = group ? districts.find((item) => String(item.id) === String(group.district_id)) : null
 
-  useDocumentTitle(group?.name || 'Grupo no encontrado')
+  const [group, setGroup] = useState(null)
+  const [districts, setDistricts] = useState([])
+  const [allGroups, setAllGroups] = useState([])
+  const [loading, setLoading] = useState(Boolean(id))
+
+  useEffect(() => {
+    if (!id) {
+      return undefined
+    }
+
+    let active = true
+
+    Promise.all([
+      api.getStateGroups('17'),
+      api.getStateDistricts('17'),
+    ])
+      .then(([groupsRes, districtsRes]) => {
+        if (!active) {
+          return
+        }
+
+        const groups = Array.isArray(groupsRes?.data) ? groupsRes.data : (Array.isArray(groupsRes) ? groupsRes : [])
+        const districtList = Array.isArray(districtsRes?.data) ? districtsRes.data : (Array.isArray(districtsRes) ? districtsRes : [])
+
+        setAllGroups(groups)
+        setDistricts(districtList)
+        setGroup(groups.find((item) => String(item.id) === id) || null)
+        setLoading(false)
+      })
+      .catch(() => {
+        if (active) {
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [id])
+
+  const district = group
+    ? districts.find((item) => String(item.id) === String(group.district_id))
+    : null
+
+  useDocumentTitle(group?.name || (loading ? 'Cargando grupo...' : 'Grupo no encontrado'))
+
+  if (loading) {
+    return (
+      <div className={pageStyles.page}>
+        <p>Cargando grupo desde el API...</p>
+      </div>
+    )
+  }
 
   if (!group) {
     return (
@@ -51,7 +101,7 @@ export default function GroupDetail() {
     ? `${group.latitude},${group.longitude}`
     : [group.address, group.neighborhood, group.municipality, 'Morelos'].filter(Boolean).join(', ')
 
-  const related = groups
+  const related = allGroups
     .filter((item) => String(item.district_id) === String(group.district_id) && String(item.id) !== String(group.id))
     .slice(0, 6)
 

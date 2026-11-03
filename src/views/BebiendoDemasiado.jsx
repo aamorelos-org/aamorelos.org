@@ -1,8 +1,10 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Breadcrumb from '../components/layout/Breadcrumb'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { bebiendo } from '../data/reflectionsContent'
-import { assetUrl } from '../utils/links'
+import { api } from '../services/api'
+import { mediaUrl } from '../utils/links'
 import { formatPhoneHref } from '../utils/text'
 import styles from './Reflections.module.css'
 
@@ -28,6 +30,27 @@ function PhoneIcon() {
 export default function BebiendoDemasiado() {
   useDocumentTitle(bebiendo.title)
 
+  const [reflection, setReflection] = useState(null)
+
+  useEffect(() => {
+    let active = true
+
+    api
+      .getReflectionDetail('bebiendo_demasiado')
+      .then((detail) => {
+        if (active) {
+          setReflection(detail)
+        }
+      })
+      .catch(() => {})
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const image = mediaUrl(reflection)
+
   return (
     <div>
       <Breadcrumb
@@ -40,15 +63,20 @@ export default function BebiendoDemasiado() {
 
       <div className={styles.detailPage}>
         <section className={styles.detailHero}>
-          <figure className={styles.detailMedia}>
-            <img
-              src={assetUrl(bebiendo.image)}
-              alt={bebiendo.title}
-              onError={(event) => {
-                event.currentTarget.style.visibility = 'hidden'
-              }}
-            />
-          </figure>
+          {image ? (
+            <figure className={styles.detailMedia}>
+              <img
+                src={image}
+                alt={bebiendo.title}
+                onLoad={(event) => {
+                  event.currentTarget.style.visibility = 'visible'
+                }}
+                onError={(event) => {
+                  event.currentTarget.style.visibility = 'hidden'
+                }}
+              />
+            </figure>
+          ) : null}
 
           <div className={styles.detailBody}>
             <span className={styles.kicker}>{bebiendo.kicker}</span>

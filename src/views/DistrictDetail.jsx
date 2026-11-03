@@ -1,53 +1,64 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import Breadcrumb from '../components/layout/Breadcrumb'
 import MapEmbed from '../components/ui/MapEmbed'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
-import { api, isApiConfigured } from '../services/api'
+import { api } from '../services/api'
 import { groupRoute } from '../utils/links'
-import districts from '../data/districts.json'
-import allGroups from '../data/groups.json'
 import pageStyles from './Page.module.css'
 import styles from './Detail.module.css'
 
 export default function DistrictDetail() {
   const [searchParams] = useSearchParams()
   const id = searchParams.get('id') || ''
-  const district = districts.find((item) => String(item.id) === id)
 
-  const localGroups = useMemo(
-    () => allGroups.filter((group) => String(group.district_id) === id),
-    [id],
-  )
-
-  const [districtGroups, setDistrictGroups] = useState(localGroups)
+  const [district, setDistrict] = useState(null)
+  const [districtGroups, setDistrictGroups] = useState([])
+  const [loading, setLoading] = useState(Boolean(id))
 
   useEffect(() => {
-    setDistrictGroups(localGroups)
-
-    if (!district || !isApiConfigured) {
+    if (!id) {
       return undefined
     }
 
     let active = true
 
-    api
-      .getDistrictGroups(district.id)
-      .then((response) => {
-        if (active && Array.isArray(response?.data) && response.data.length) {
-          setDistrictGroups(response.data)
+    Promise.all([
+      api.getStateDistricts('17'),
+      api.getDistrictGroups(id),
+    ])
+      .then(([districtsRes, groupsRes]) => {
+        if (!active) {
+          return
         }
+
+        const districts = Array.isArray(districtsRes?.data) ? districtsRes.data : (Array.isArray(districtsRes) ? districtsRes : [])
+        const groups = Array.isArray(groupsRes?.data) ? groupsRes.data : (Array.isArray(groupsRes) ? groupsRes : [])
+
+        setDistrict(districts.find((item) => String(item.id) === id) || null)
+        setDistrictGroups(groups)
+        setLoading(false)
       })
       .catch(() => {
-        // El directorio local sigue disponible si la API no responde.
+        if (active) {
+          setLoading(false)
+        }
       })
 
     return () => {
       active = false
     }
-  }, [district, localGroups])
+  }, [id])
 
-  useDocumentTitle(district?.name || 'Distrito no encontrado')
+  useDocumentTitle(district?.name || (loading ? 'Cargando distrito...' : 'Distrito no encontrado'))
+
+  if (loading) {
+    return (
+      <div className={pageStyles.page}>
+        <p>Cargando distrito desde el API...</p>
+      </div>
+    )
+  }
 
   if (!district) {
     return (

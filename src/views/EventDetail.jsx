@@ -1,19 +1,56 @@
+import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import Breadcrumb from '../components/layout/Breadcrumb'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
-import { getEventDetail } from '../data/eventDetails'
-import { assetUrl } from '../utils/links'
+import { api } from '../services/api'
+import { mediaUrl } from '../utils/links'
 import styles from './Page.module.css'
 
 export default function EventDetail() {
   const { slug = '' } = useParams()
   const cleanSlug = slug.replace(/\.php$/i, '')
-  const event = getEventDetail(cleanSlug)
 
-  useDocumentTitle(event?.title || 'Evento')
+  const [event, setEvent] = useState(null)
+  const [loading, setLoading] = useState(Boolean(cleanSlug) && cleanSlug !== 'invitacion_37178')
+
+  useEffect(() => {
+    if (!cleanSlug || cleanSlug === 'invitacion_37178') {
+      return undefined
+    }
+
+    let active = true
+
+    api
+      .getEventDetail(cleanSlug)
+      .then((detail) => {
+        if (active) {
+          setEvent(detail)
+          setLoading(false)
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [cleanSlug])
+
+  useDocumentTitle(event?.title || (loading ? 'Cargando evento...' : 'Evento'))
 
   if (cleanSlug === 'invitacion_37178') {
     return <Navigate to="/pages/eventos/invitacion_37178.php" replace />
+  }
+
+  if (loading) {
+    return (
+      <div className={styles.page}>
+        <p>Cargando evento desde el API...</p>
+      </div>
+    )
   }
 
   if (!event) {
@@ -58,7 +95,7 @@ export default function EventDetail() {
 
         <div className={styles.imageFrame}>
           <img
-            src={assetUrl(event.image)}
+            src={mediaUrl(event)}
             alt={event.alt || event.title}
             onError={(imageEvent) => {
               imageEvent.currentTarget.style.visibility = 'hidden'
@@ -67,7 +104,7 @@ export default function EventDetail() {
         </div>
 
         <div className={styles.prose}>
-          {event.paragraphs.map((paragraph) => (
+          {(event.paragraphs || []).map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
         </div>

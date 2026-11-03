@@ -34,7 +34,7 @@ export default function Header() {
       <div className={`container ${styles.inner}`}>
         <Link className={styles.logo} to="/" aria-label="Ir al inicio">
           <img
-            src="/images/logo-header.png"
+            src="https://images.aamorelos.org/logo-header.webp"
             alt="Central Mexicana de Servicios Generales de Alcohólicos Anónimos, A.C."
           />
         </Link>

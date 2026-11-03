@@ -80,9 +80,9 @@ export default function Home() {
     let active = true
 
     Promise.all([
-      api.getEvents(),
-      api.getReflections(),
-      api.getCommittees(),
+      api.getEvents().catch(() => null),
+      api.getReflections().catch(() => null),
+      api.getCommittees().catch(() => []),
     ]).then(([eventsRes, reflectionsRes, committeesRes]) => {
       if (active) {
         const evList = Array.isArray(eventsRes?.data) ? eventsRes.data : (Array.isArray(eventsRes) ? eventsRes : [])

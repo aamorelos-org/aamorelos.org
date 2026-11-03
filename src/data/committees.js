@@ -1,4 +1,4 @@
-[
+export const committees = [
     {
         "id": 1,
         "nombre": "Comités de Accesibilidades",
@@ -112,3 +112,4 @@
         "fuente": "https://www.aa.org/es/remote-communities-committees"
     }
 ]
+export default committees

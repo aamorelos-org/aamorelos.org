@@ -1,4 +1,5 @@
 const EXTERNAL_URL = /^https?:\/\//i
+const IMAGE_URL = /^https?:\/\/.+\.(?:png|jpe?g|gif|webp|avif|svg)(?:\?.*)?$/i
 
 export function isExternal(url = '') {
   return EXTERNAL_URL.test(url.trim())
@@ -16,6 +17,42 @@ export function assetUrl(path = '') {
   }
 
   return `/${value.replace(/^\/+/, '')}`
+}
+
+export function mediaUrl(item) {
+  if (!item) {
+    return ''
+  }
+
+  if (typeof item === 'string') {
+    return assetUrl(item)
+  }
+
+  const image = String(item.image || item.imagen || '').trim()
+  const remote = String(item.url || '').trim()
+
+  if (image && isExternal(image)) {
+    return image
+  }
+
+  if (remote && IMAGE_URL.test(remote)) {
+    return remote
+  }
+
+  return assetUrl(image)
+}
+
+export function eventLink(event) {
+  if (event?.slug) {
+    return {
+      to: event.tipo === 'invitacion'
+        ? `/pages/eventos/${event.slug}.php`
+        : `/pages/eventos/${event.slug}`,
+      external: false,
+    }
+  }
+
+  return legacyToRoute(event?.url)
 }
 
 export function reflectionRoute(reflection) {

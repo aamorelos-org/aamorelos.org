@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import Breadcrumb from '../components/layout/Breadcrumb'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
-import committees from '../data/committees.json'
+import { api } from '../services/api'
 import styles from './Page.module.css'
 
 export default function CommitteeDetail() {
@@ -9,10 +10,44 @@ export default function CommitteeDetail() {
   const rawId = searchParams.get('id') || ''
   const numericId = Number(rawId)
 
-  const committee = committees.find((item) => Number(item.id) === numericId) ||
+  const [committees, setCommittees] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let active = true
+
+    api
+      .getCommittees()
+      .then((list) => {
+        if (active) {
+          setCommittees(Array.isArray(list) ? list : [])
+          setLoading(false)
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const committee =
+    committees.find((item) => Number(item.id) === numericId) ||
     (numericId > 0 ? committees[numericId - 1] : null)
 
-  useDocumentTitle(committee?.nombre || 'Comité no encontrado')
+  useDocumentTitle(committee?.nombre || (loading ? 'Cargando comité...' : 'Comité no encontrado'))
+
+  if (loading) {
+    return (
+      <div className={styles.page}>
+        <p>Cargando comité...</p>
+      </div>
+    )
+  }
 
   if (!committee) {
     return (
