@@ -1,0 +1,145 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.75fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.aside {
+  position: sticky;
+  top: 92px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.card {
+  padding: 22px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-xs);
+}
+
+.card h2 {
+  margin-bottom: 14px;
+  color: var(--color-primary-dark);
+  font-size: 1.08rem;
+}
+
+.infoList {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eef2f7;
+  font-size: 0.9rem;
+}
+
+.infoRow:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.infoLabel {
+  flex: 0 0 auto;
+  color: var(--color-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.infoValue {
+  color: var(--color-ink);
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.scheduleList {
+  display: grid;
+  gap: 2px;
+  list-style: none;
+}
+
+.scheduleItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid #eef2f7;
+  font-size: 0.9rem;
+}
+
+.scheduleItem:last-child {
+  border-bottom: 0;
+}
+
+.scheduleDay {
+  color: var(--color-muted);
+  font-weight: 700;
+}
+
+.scheduleTime {
+  color: var(--color-ink);
+  font-weight: 700;
+  text-align: right;
+}
+
+.groupList {
+  display: grid;
+  gap: 2px;
+  list-style: none;
+}
+
+.groupList a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eef2f7;
+  color: var(--color-primary);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.groupList a:hover {
+  text-decoration: underline;
+}
+
+.groupMeta {
+  color: var(--color-muted);
+  font-size: 0.74rem;
+  font-weight: 400;
+  text-align: right;
+}
+
+.note {
+  color: var(--color-muted);
+  font-size: 0.84rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .aside {
+    position: static;
+  }
+}

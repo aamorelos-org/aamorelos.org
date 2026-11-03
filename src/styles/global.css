@@ -1,0 +1,233 @@
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Lora', Georgia, 'Times New Roman', serif;
+
+  --color-ink: #14213d;
+  --color-text: #3f4a5a;
+  --color-muted: #6b7280;
+  --color-primary: #1d4e89;
+  --color-primary-dark: #12365f;
+  --color-primary-soft: #eaf1fb;
+  --color-secondary: #0f766e;
+  --color-secondary-soft: #e6f4f1;
+  --color-accent: #c2410c;
+  --color-bg: #f4f6f9;
+  --color-surface: #ffffff;
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+
+  --reflection-bg: #fbf8f3;
+  --reflection-surface: #fffdf9;
+  --reflection-surface-alt: #f4eee5;
+  --reflection-ink: #2f3a36;
+  --reflection-text: #55635c;
+  --reflection-muted: #7a857f;
+  --reflection-sage: #7c9a86;
+  --reflection-sage-dark: #4f6f5b;
+  --reflection-sage-soft: #e8efe9;
+  --reflection-sand: #efe7da;
+  --reflection-sand-soft: #f6f1e9;
+  --reflection-terracotta: #bd7b5e;
+  --reflection-clay: #a9674c;
+  --reflection-border: #e6ded0;
+
+  --shadow-xs: 0 1px 2px rgba(20, 33, 61, 0.05);
+  --shadow-sm: 0 4px 14px rgba(20, 33, 61, 0.06);
+  --shadow-md: 0 12px 32px rgba(20, 33, 61, 0.09);
+  --shadow-lg: 0 24px 60px rgba(20, 33, 61, 0.12);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --container: 1120px;
+  --header-height: 76px;
+
+  color-scheme: light;
+  font-family: var(--font-sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  color: var(--color-ink);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+p {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+img,
+svg,
+iframe {
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(29, 78, 137, 0.45);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: rgba(124, 154, 134, 0.28);
+  color: var(--color-ink);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+.section {
+  padding-block: 56px;
+}
+
+.section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.section-heading h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.section-heading p {
+  margin-top: 6px;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 2000;
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-inline: 16px;
+  }
+
+  .section {
+    padding-block: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+}

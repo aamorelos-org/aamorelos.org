@@ -1,0 +1,20 @@
+.wrapper {
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: #e8eef5;
+  box-shadow: var(--shadow-xs);
+}
+
+.wrapper iframe {
+  display: block;
+  width: 100%;
+  height: var(--map-height, 320px);
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .wrapper iframe {
+    height: 260px;
+  }
+}
