@@ -103,7 +103,7 @@ function isInformationRoute(pathname) {
 }
 
 function isReflectionRoute(pathname) {
-  return pathname.startsWith('/pages/reflections') || pathname === '/reflexiones'
+  return pathname.startsWith('/pages/reflexiones') || pathname === '/reflexiones'
 }
 
 export default function Navbar() {

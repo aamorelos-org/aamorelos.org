@@ -17,7 +17,7 @@ function SlideContent({ item }) {
       <div className={styles.media}>
         <img
           src={mediaUrl(item)}
-          alt={item.alt || item.title || 'Evento'}
+          alt={item.alt || item.titulo || 'Evento'}
           loading="lazy"
           onError={(event) => {
             event.currentTarget.style.visibility = 'hidden'
@@ -26,8 +26,8 @@ function SlideContent({ item }) {
       </div>
       <div className={styles.caption}>
         <span className={styles.kicker}>Evento y noticia</span>
-        <h3>{item.title}</h3>
-        {item.detail ? <p>{item.detail}</p> : null}
+        <h3>{item.titulo}</h3>
+        {item.subtitulo ? <p>{item.subtitulo}</p> : null}
         <span className={styles.more}>
           Ver más
           <Arrow />
@@ -113,7 +113,7 @@ export default function Carousel({ items = [], interval = 6000 }) {
 
             if (link.to === '#') {
               return (
-                <div key={item.id || item.title} className={slideClass} aria-hidden={itemIndex !== index}>
+                <div key={item.id || item.titulo} className={slideClass} aria-hidden={itemIndex !== index}>
                   <SlideContent item={item} />
                 </div>
               )
@@ -122,7 +122,7 @@ export default function Carousel({ items = [], interval = 6000 }) {
             if (link.external) {
               return (
                 <a
-                  key={item.id || item.title}
+                  key={item.id || item.titulo}
                   className={slideClass}
                   href={link.to}
                   target="_blank"
@@ -137,7 +137,7 @@ export default function Carousel({ items = [], interval = 6000 }) {
 
             return (
               <Link
-                key={item.id || item.title}
+                key={item.id || item.titulo}
                 className={slideClass}
                 to={link.to}
                 aria-hidden={itemIndex !== index}
@@ -171,11 +171,11 @@ export default function Carousel({ items = [], interval = 6000 }) {
           <div className={styles.dots} role="tablist" aria-label="Seleccionar evento">
             {items.map((item, dotIndex) => (
               <button
-                key={item.id || item.title}
+                key={item.id || item.titulo}
                 type="button"
                 role="tab"
                 aria-selected={dotIndex === index}
-                aria-label={`Ir al evento ${dotIndex + 1}: ${item.title}`}
+                aria-label={`Ir al evento ${dotIndex + 1}: ${item.titulo}`}
                 className={`${styles.dot} ${dotIndex === index ? styles.dotActive : ''}`}
                 onClick={() => goTo(dotIndex)}
               />

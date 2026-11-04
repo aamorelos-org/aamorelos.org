@@ -1,9 +1,49 @@
 import { committees } from '../data/committees'
+import { slugFromUrl } from '../utils/links'
 
 const rawBaseUrl = import.meta.env?.VITE_API_URL || 'https://aamorelos.onrender.com'
 const API_URL = rawBaseUrl.replace(/\/+$/, '')
 
 export const isApiConfigured = Boolean(API_URL)
+
+function messageFromErrorData(errorData, status) {
+  if (typeof errorData?.message === 'string' && errorData.message.trim()) {
+    return errorData.message
+  }
+
+  if (typeof errorData?.error === 'string' && errorData.error.trim()) {
+    return errorData.error
+  }
+
+  // FastAPI/Pydantic: {detail: "..."} o {detail: [{loc, msg, type}, ...]}
+  const detail = errorData?.detail
+
+  if (typeof detail === 'string' && detail.trim()) {
+    return detail
+  }
+
+  if (Array.isArray(detail)) {
+    const messages = detail
+      .map((item) => {
+        if (typeof item === 'string') return item
+
+        const field = Array.isArray(item?.loc)
+          ? item.loc.filter((part) => part !== 'body').join('.')
+          : ''
+        const raw = String(item?.msg || '').replace(/^Value error,\s*/i, '')
+
+        if (!raw) return ''
+        return field ? `${field}: ${raw}` : raw
+      })
+      .filter(Boolean)
+
+    if (messages.length) {
+      return messages.join(' · ')
+    }
+  }
+
+  return `Error ${status} al consultar la API`
+}
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, {
@@ -15,16 +55,15 @@ async function request(path, options = {}) {
   })
 
   if (!response.ok) {
-    let message = `Error ${response.status} al consultar la API`
+    let errorData = null
 
     try {
-      const errorData = await response.json()
-      message = errorData?.message || errorData?.error || message
+      errorData = await response.json()
     } catch {
       // Si la API no envía JSON, se conserva el mensaje por estado HTTP.
     }
 
-    throw new Error(message)
+    throw new Error(messageFromErrorData(errorData, response.status))
   }
 
   return response.json()
@@ -39,19 +78,19 @@ function listFrom(response) {
 
 export const api = {
   async getStateDistricts(stateId = '17') {
-    return request(`/aa/api/v1/states/${encodeURIComponent(stateId)}/districts`)
+    return request(`/aa/api/v1/estados/${encodeURIComponent(stateId)}/distritos`)
   },
 
   async getAreaDistricts(areaId) {
-    return request(`/aa/api/v1/areas/${encodeURIComponent(areaId)}/districts`)
+    return request(`/aa/api/v1/areas/${encodeURIComponent(areaId)}/distritos`)
   },
 
   async getDistrictGroups(districtId) {
-    return request(`/aa/api/v1/districts/${encodeURIComponent(districtId)}/groups`)
+    return request(`/aa/api/v1/distritos/${encodeURIComponent(districtId)}/grupos`)
   },
 
   async getStateGroups(stateId = '17') {
-    return request(`/aa/api/v1/states/${encodeURIComponent(stateId)}/groups`)
+    return request(`/aa/api/v1/estados/${encodeURIComponent(stateId)}/grupos`)
   },
 
   async getDistrictDetail(districtId, stateId = '17') {
@@ -65,20 +104,18 @@ export const api = {
   },
 
   async getReflections() {
-    return request('/aa/api/v1/reflections/')
+    return request('/aa/api/v1/reflexiones/')
   },
 
   async getReflectionDetail(slugOrId) {
-    const response = await this.getReflections()
-    const value = String(slugOrId || '').replace(/\.php$/i, '')
-    return (
-      listFrom(response).find((reflection) => {
-        if (reflection.slug === value) {
-          return true
-        }
-        return String(reflection.id) === value
-      }) || null
-    )
+    const value = slugFromUrl(slugOrId)
+
+    if (!value) {
+      return null
+    }
+
+    const response = await request(`/aa/api/v1/reflexiones/${encodeURIComponent(value)}`)
+    return response?.data || null
   },
 
   async createReflection(payload) {
@@ -88,7 +125,7 @@ export const api = {
       throw new Error('Sesión no válida. Inicia sesión nuevamente.')
     }
 
-    return request('/aa/api/v1/reflections/', {
+    return request('/aa/api/v1/reflexiones/', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -99,26 +136,53 @@ export const api = {
   },
 
   async getEvents() {
-    return request('/aa/api/v1/events/')
+    return request('/aa/api/v1/eventos/')
+  },
+
+  async getGroups() {
+    return request(`/aa/api/v1/estados/17/grupos`)
   },
 
   async getEventDetail(slugOrId) {
-    const value = String(slugOrId || '').replace(/\.php$/i, '')
+    const value = slugFromUrl(slugOrId)
+
+    if (!value) {
+      return null
+    }
 
     if (/^\d+$/.test(value)) {
-      const response = await request(`/aa/api/v1/events/${encodeURIComponent(value)}`)
+      const response = await request(`/aa/api/v1/eventos/${encodeURIComponent(value)}`)
       return response?.data || null
     }
 
     const response = await this.getEvents()
-    const event = listFrom(response).find((item) => item.slug === value)
+    const event = listFrom(response).find(
+      (item) => slugFromUrl(item.url) === value || item.slogan === value,
+    )
 
     if (!event) {
       return null
     }
 
-    const detail = await request(`/aa/api/v1/events/${encodeURIComponent(event.id)}`)
+    const detail = await request(`/aa/api/v1/eventos/${encodeURIComponent(event.id)}`)
     return detail?.data || null
+  },
+
+  async createEvent(payload) {
+    const token = sessionStorage.getItem('access_token')
+
+    if (!token) {
+      throw new Error('Sesión no válida. Inicia sesión nuevamente.')
+    }
+
+    return request('/aa/api/v1/eventos/', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
   },
 
   async getCommittees() {

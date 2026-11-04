@@ -122,9 +122,9 @@ export default function Location() {
                   visible.map((district) => (
                     <tr key={district.id}>
                       <td>
-                        <Link to={districtRoute(district.id)}>{district.name}</Link>
+                        <Link to={districtRoute(district.id)}>{district.nombre}</Link>
                       </td>
-                      <td>{district.municipality || '—'}</td>
+                      <td>{district.municipio || '—'}</td>
                     </tr>
                   ))
                 ) : (

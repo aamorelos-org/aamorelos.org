@@ -3,7 +3,9 @@ import Layout from './components/layout/Layout'
 import ScrollToTop from './components/layout/ScrollToTop'
 import Home from './views/Home'
 import Login from './views/Login'
-import Admin from './views/Admin'
+import AdminLayout from './views/AdminLayout'
+import AdminEvents from './views/AdminEvents'
+import AdminReflections from './views/AdminReflections'
 import ProtectedRoute from './components/ProtectedRoute'
 import Info from './views/Info'
 import Events from './views/Events'
@@ -45,9 +47,9 @@ function App() {
           <Route path="pages/directorio/directorio.php" element={<Directory />} />
           <Route path="pages/ubicacion/ubicacion.php" element={<Location />} />
 
-          <Route path="pages/reflections/reflexiones.php" element={<Navigate to="/reflexiones" replace />} />
-          <Route path="pages/reflections/detalle_reflexion.php" element={<ReflectionDetail />} />
-          <Route path="pages/reflections/:slug" element={<ReflectionDetail />} />
+          <Route path="pages/reflexiones/reflexiones.php" element={<Navigate to="/reflexiones" replace />} />
+          <Route path="pages/reflexiones/detalle_reflexion.php" element={<ReflectionDetail />} />
+          <Route path="pages/reflexiones/:slug" element={<ReflectionDetail />} />
 
           <Route path="pages/comites/detalle_comite.php" element={<CommitteeDetail />} />
 
@@ -59,7 +61,11 @@ function App() {
           <Route path="ubicacion" element={<Navigate to="/pages/ubicacion/ubicacion.php" replace />} />
           <Route path="reflexiones" element={<Reflections />} />
           <Route path="login" element={<Login />} />
-          <Route path="admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+          <Route path="admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+            <Route index element={<Navigate to="eventos" replace />} />
+            <Route path="eventos" element={<AdminEvents />} />
+            <Route path="reflexiones" element={<AdminReflections />} />
+          </Route>
 
           <Route path="*" element={<NotFound />} />
         </Route>

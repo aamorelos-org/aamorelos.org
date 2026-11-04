@@ -1,46 +1,38 @@
 import { useMemo, useState } from 'react'
 import { api } from '../../services/api'
+import { fileToWebpBase64, MAX_IMAGE_BYTES } from '../../utils/image'
+import { toSlug } from '../../utils/text'
 
 const emptyForm = {
-  slug: '',
-  title: '',
-  subtitle: '',
-  image: '',
-  description: '',
-}
-
-function toSlug(value) {
-  return String(value || '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9_-]+/g, '_')
-    .replace(/^_+|_+$/g, '')
-    .replace(/_{2,}/g, '_')
+  slogan: '',
+  titulo: '',
+  subtitulo: '',
+  imagen: '',
+  descripcion: '',
 }
 
 export default function ReflectionForm({ onClose, onCreated }) {
   const [form, setForm] = useState(emptyForm)
   const [imageName, setImageName] = useState('')
   const [imageError, setImageError] = useState('')
+  const [converting, setConverting] = useState(false)
   const [saving, setSaving] = useState(false)
   const [formError, setFormError] = useState('')
   const token = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('access_token') : ''
 
   const previewSrc = useMemo(() => {
-    const value = form.image.trim()
+    const value = form.imagen.trim()
     if (!value) return ''
     if (value.startsWith('data:image/')) return value
-    return `data:image/jpeg;base64,${value.replace(/\s/g, '')}`
-  }, [form.image])
+    return `data:image/webp;base64,${value.replace(/\s/g, '')}`
+  }, [form.imagen])
 
   const updateField = (field, value) => {
     setForm((current) => ({ ...current, [field]: value }))
     setFormError('')
   }
 
-  const handleImageFile = (event) => {
+  const handleImageFile = async (event) => {
     const file = event.target.files?.[0]
     setImageError('')
     if (!file) return
@@ -50,19 +42,28 @@ export default function ReflectionForm({ onClose, onCreated }) {
       return
     }
 
-    if (file.size > 5 * 1024 * 1024) {
+    if (file.size > MAX_IMAGE_BYTES) {
       setImageError('La imagen supera 5 MB. Selecciona una imagen más ligera.')
       return
     }
 
-    const reader = new FileReader()
-    reader.onload = () => {
-      const dataUrl = String(reader.result || '')
-      setForm((current) => ({ ...current, image: dataUrl.split(',')[1] || '' }))
+    setConverting(true)
+    try {
+      const base64 = await fileToWebpBase64(file)
+      if (!base64) {
+        throw new Error('No se pudo convertir la imagen a WebP.')
+      }
+      setForm((current) => ({ ...current, imagen: base64 }))
       setImageName(file.name)
+    } catch (err) {
+      setForm((current) => ({ ...current, imagen: '' }))
+      setImageName('')
+      setImageError(err.message || 'No se pudo convertir la imagen a WebP.')
+    } finally {
+      setConverting(false)
+      // Permite volver a seleccionar el mismo archivo tras un error.
+      event.target.value = ''
     }
-    reader.onerror = () => setImageError('No se pudo leer la imagen seleccionada.')
-    reader.readAsDataURL(file)
   }
 
   const handleSubmit = async (event) => {
@@ -95,7 +96,7 @@ export default function ReflectionForm({ onClose, onCreated }) {
   }
 
   const clearImage = () => {
-    updateField('image', '')
+    updateField('imagen', '')
     setImageName('')
   }
 
@@ -104,8 +105,8 @@ export default function ReflectionForm({ onClose, onCreated }) {
       <div className="flex justify-end">
         <button
           type="button"
-          onClick={() => updateField('slug', toSlug(form.title))}
-          disabled={!form.title.trim()}
+          onClick={() => updateField('slogan', toSlug(form.titulo))}
+          disabled={!form.titulo.trim()}
           className="rounded-md px-3 py-2 text-xs font-semibold text-purple-700 transition hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-40 dark:text-purple-300 dark:hover:bg-purple-950/40"
         >
           Sugerir slug desde el título
@@ -115,54 +116,56 @@ export default function ReflectionForm({ onClose, onCreated }) {
       <div className="mt-2 grid gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <label htmlFor="reflection-title" className="text-sm font-medium text-slate-700 dark:text-slate-200">Título *</label>
-          <input id="reflection-title" type="text" required value={form.title} onChange={(event) => updateField('title', event.target.value)} className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white" placeholder="Más Allá de la Fiesta: El Verdadero Rostro del Alcoholismo" />
+          <input id="reflection-title" type="text" required value={form.titulo} onChange={(event) => updateField('titulo', event.target.value)} className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white" placeholder="Más Allá de la Fiesta: El Verdadero Rostro del Alcoholismo" />
         </div>
 
         <div>
           <label htmlFor="reflection-slug" className="text-sm font-medium text-slate-700 dark:text-slate-200">Slug *</label>
-          <input id="reflection-slug" type="text" required value={form.slug} onChange={(event) => updateField('slug', event.target.value)} className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 font-mono text-sm text-slate-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white" placeholder="mas_alla_fiesta" />
+          <input id="reflection-slug" type="text" required value={form.slogan} onChange={(event) => updateField('slogan', event.target.value)} className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 font-mono text-sm text-slate-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white" placeholder="mas_alla_fiesta" />
         </div>
 
         <div>
           <label htmlFor="reflection-subtitle" className="text-sm font-medium text-slate-700 dark:text-slate-200">Subtítulo *</label>
-          <input id="reflection-subtitle" type="text" required value={form.subtitle} onChange={(event) => updateField('subtitle', event.target.value)} className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white" placeholder="No estás liberando estrés" />
+          <input id="reflection-subtitle" type="text" required value={form.subtitulo} onChange={(event) => updateField('subtitulo', event.target.value)} className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white" placeholder="No estás liberando estrés" />
         </div>
 
         <div className="sm:col-span-2">
           <label htmlFor="reflection-image-file" className="text-sm font-medium text-slate-700 dark:text-slate-200">Imagen *</label>
-          <input id="reflection-image-file" type="file" accept="image/*" onChange={handleImageFile} className="mt-1 block w-full text-sm text-slate-600 file:mr-4 file:rounded-md file:border-0 file:bg-purple-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-purple-700 dark:text-slate-300 dark:file:bg-purple-500 dark:hover:file:bg-purple-400" />
-          {imageName ? <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Archivo seleccionado: {imageName} · {form.image.length.toLocaleString()} caracteres</p> : null}
+          <input id="reflection-image-file" type="file" accept="image/*" onChange={handleImageFile} disabled={converting} className="mt-1 block w-full text-sm text-slate-600 file:mr-4 file:rounded-md file:border-0 file:bg-purple-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-60 dark:text-slate-300 dark:file:bg-purple-500 dark:hover:file:bg-purple-400" />
+          {converting ? <p role="status" className="mt-1 text-xs text-slate-600 dark:text-slate-300">Convirtiendo a WebP…</p> : null}
+          {imageName && !converting ? <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Archivo seleccionado: {imageName} · {form.imagen.length.toLocaleString()} caracteres</p> : null}
           {imageError ? <p role="alert" className="mt-1 text-xs text-red-600 dark:text-red-400">{imageError}</p> : null}
-          {previewSrc ? (
+          {previewSrc && !converting ? (
             <div className="mt-2 flex items-center gap-3 rounded-lg border border-slate-200 p-2 dark:border-slate-800">
               <img src={previewSrc} alt="Vista previa de la reflexión" onError={(eventImage) => { eventImage.currentTarget.style.display = 'none' }} className="h-16 w-24 rounded-md object-cover" />
-              <button type="button" onClick={clearImage} className="text-xs font-semibold text-red-600 hover:underline dark:text-red-400">Quitar imagen</button>
+              <span className="text-xs text-slate-500 dark:text-slate-400">WebP listo para guardar</span>
+              <button type="button" onClick={clearImage} className="ml-auto text-xs font-semibold text-red-600 hover:underline dark:text-red-400">Quitar imagen</button>
             </div>
           ) : null}
         </div>
 
         <div className="sm:col-span-2">
           <label htmlFor="reflection-description" className="text-sm font-medium text-slate-700 dark:text-slate-200">Descripción *</label>
-          <textarea id="reflection-description" required value={form.description} onChange={(event) => updateField('description', event.target.value)} className="mt-1 block min-h-28 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white" placeholder="Para los que pertenecemos a Alcohólicos Anónimos..." />
+          <textarea id="reflection-description" required value={form.descripcion} onChange={(event) => updateField('descripcion', event.target.value)} className="mt-1 block min-h-28 w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white" placeholder="Para los que pertenecemos a Alcohólicos Anónimos..." />
         </div>
       </div>
 
       {formError ? <div role="alert" className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">{formError}</div> : null}
 
-      <div className="mt-5 flex flex-wrap items-center justify-end gap-3">
+      <div className="mt-5 flex flex-col-reverse items-stretch justify-end gap-3 sm:flex-row sm:flex-wrap sm:items-center">
         <button
           type="button"
           onClick={onClose}
-          className="rounded-md border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+          className="w-full rounded-md border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 sm:w-auto"
         >
           Cancelar
         </button>
         <button
           type="submit"
-          disabled={saving || !token}
-          className="rounded-md bg-purple-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-purple-500 dark:hover:bg-purple-400"
+          disabled={saving || converting || !token}
+          className="w-full rounded-md bg-purple-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-purple-500 dark:hover:bg-purple-400 sm:w-auto"
         >
-          {saving ? 'Registrando…' : 'Registrar reflexión'}
+          {saving ? 'Registrando…' : converting ? 'Convirtiendo…' : 'Registrar reflexión'}
         </button>
       </div>
     </form>

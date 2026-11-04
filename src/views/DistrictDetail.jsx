@@ -50,7 +50,7 @@ export default function DistrictDetail() {
     }
   }, [id])
 
-  useDocumentTitle(district?.name || (loading ? 'Cargando distrito...' : 'Distrito no encontrado'))
+  useDocumentTitle(district?.nombre || (loading ? 'Cargando distrito...' : 'Distrito no encontrado'))
 
   if (loading) {
     return (
@@ -77,7 +77,7 @@ export default function DistrictDetail() {
     )
   }
 
-  const mapQuery = [district.address, district.neighborhood, district.municipality, 'Morelos']
+  const mapQuery = [district.direccion, district.vecinos, district.municipio, 'Morelos']
     .filter(Boolean)
     .join(', ')
 
@@ -87,7 +87,7 @@ export default function DistrictDetail() {
         items={[
           { label: 'Inicio', to: '/' },
           { label: 'Distritos', to: '/pages/distritos/distritos.php' },
-          { label: district.name },
+          { label: district.nombre },
         ]}
       />
 
@@ -99,10 +99,10 @@ export default function DistrictDetail() {
         <div className={styles.main}>
           <header className={pageStyles.detailHeader}>
             <span className={pageStyles.eyebrow}>Distrito · Área {district.area || 'Morelos'}</span>
-            <h1 className={pageStyles.detailTitle}>{district.name}</h1>
+            <h1 className={pageStyles.detailTitle}>{district.nombre}</h1>
             <div className={pageStyles.pillRow}>
               <span className={pageStyles.pill}>{districtGroups.length} grupos</span>
-              {district.municipality ? <span className={pageStyles.pillNeutral + ' ' + pageStyles.pill}>{district.municipality}</span> : null}
+              {district.municipio ? <span className={pageStyles.pillNeutral + ' ' + pageStyles.pill}>{district.municipio}</span> : null}
             </div>
           </header>
 
@@ -115,27 +115,27 @@ export default function DistrictDetail() {
               </li>
               <li className={styles.infoRow}>
                 <span className={styles.infoLabel}>Municipio</span>
-                <span className={styles.infoValue}>{district.municipality || 'No disponible'}</span>
+                <span className={styles.infoValue}>{district.municipio || 'No disponible'}</span>
               </li>
               <li className={styles.infoRow}>
                 <span className={styles.infoLabel}>Colonia</span>
-                <span className={styles.infoValue}>{district.neighborhood || 'No disponible'}</span>
+                <span className={styles.infoValue}>{district.vecinos || 'No disponible'}</span>
               </li>
               <li className={styles.infoRow}>
                 <span className={styles.infoLabel}>Dirección</span>
-                <span className={styles.infoValue}>{district.address || 'No disponible'}</span>
+                <span className={styles.infoValue}>{district.direccion || 'No disponible'}</span>
               </li>
-              {district.reference ? (
+              {district.referencia ? (
                 <li className={styles.infoRow}>
                   <span className={styles.infoLabel}>Referencias</span>
-                  <span className={styles.infoValue}>{district.reference}</span>
+                  <span className={styles.infoValue}>{district.referencia}</span>
                 </li>
               ) : null}
-              {district.phone ? (
+              {district.telefono ? (
                 <li className={styles.infoRow}>
                   <span className={styles.infoLabel}>Teléfono</span>
                   <span className={styles.infoValue}>
-                    <a href={`tel:${String(district.phone).replace(/\D/g, '')}`}>{district.phone}</a>
+                    <a href={`tel:${String(district.telefono).replace(/\D/g, '')}`}>{district.telefono}</a>
                   </span>
                 </li>
               ) : null}
@@ -144,7 +144,7 @@ export default function DistrictDetail() {
 
           <section className={pageStyles.panel}>
             <h2 className={pageStyles.sectionBlock} style={{ marginTop: 0 }}>Ubicación aproximada</h2>
-            <MapEmbed query={mapQuery} title={`Mapa de ${district.name}`} height={340} />
+            <MapEmbed query={mapQuery} title={`Mapa de ${district.nombre}`} height={340} />
           </section>
         </div>
 
@@ -156,8 +156,8 @@ export default function DistrictDetail() {
                 {districtGroups.map((group) => (
                   <li key={group.id || group.id_grupo}>
                     <Link to={groupRoute(group.id || group.id_grupo)}>
-                      <span>{group.name || group.grupo}</span>
-                      <span className={styles.groupMeta}>{group.municipality || group.municipio || ''}</span>
+                      <span>{group.nombre || group.grupo}</span>
+                      <span className={styles.groupMeta}>{group.municipio || ''}</span>
                     </Link>
                   </li>
                 ))}

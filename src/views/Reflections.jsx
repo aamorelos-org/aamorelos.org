@@ -58,7 +58,7 @@ export default function Reflections() {
               Si algo de lo que sientes te resulta familiar, pedir ayuda también es un acto de
               cuidado. Podemos escucharte sin juzgar.
             </p>
-            <Link to="/pages/reflections/bebiendo_demasiado">
+            <Link to="/pages/reflexiones/bebiendo_demasiado">
               Leer esta reflexión →
             </Link>
           </aside>

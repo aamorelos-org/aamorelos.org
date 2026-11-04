@@ -35,7 +35,7 @@ export default function Events() {
     }
   }, [])
 
-  const internal = events.filter((event) => Boolean(event.slug)).length
+  const internal = events.filter((event) => Boolean(event.slogan)).length
   const external = events.length - internal
 
   return (

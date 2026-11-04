@@ -16,8 +16,8 @@ export default function EventCard({ event }) {
     return null
   }
 
-  const title = event.title || event.titulo || ''
-  const detail = event.detail || event.detalle || event.subtitle || ''
+  const title = event.titulo || ''
+  const detail = event.subtitulo || ''
   const image = mediaUrl(event)
   const link = eventLink(event)
   const content = (

@@ -34,40 +34,51 @@ export default function StandardReflectionDetail() {
   const [searchParams] = useSearchParams()
   const id = searchParams.get('id') || ''
   const cleanSlug = slug.replace(/\.php$/i, '')
+  const identifier = cleanSlug || id
 
+  const [reflection, setReflection] = useState(null)
   const [reflections, setReflections] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let active = true
-    api.getReflections()
-      .then((res) => {
+
+    // El detalle se pide directamente a la API: el listado ya no incluye
+    // la descripción para no inflar el payload.
+    api
+      .getReflectionDetail(identifier)
+      .then((detail) => {
         if (active) {
-          const list = Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : [])
-          setReflections(list)
+          setReflection(detail)
           setLoading(false)
         }
       })
       .catch(() => {
         if (active) {
+          setReflection(null)
           setLoading(false)
         }
       })
 
+    // El listado se usa solo para la navegación "Anterior / Siguiente".
+    api
+      .getReflections()
+      .then((res) => {
+        if (active) {
+          const list = Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : [])
+          setReflections(list)
+        }
+      })
+      .catch(() => {})
+
     return () => {
       active = false
     }
-  }, [])
+  }, [identifier])
 
   const reflectionItems = Array.isArray(reflections) ? reflections : []
-  const reflection = reflectionItems.find((item) => {
-    if (cleanSlug && item.slug === cleanSlug) {
-      return true
-    }
-    return id && String(item.id) === id
-  })
 
-  useDocumentTitle(reflection?.title || (loading ? 'Cargando...' : 'Reflexión no encontrada'))
+  useDocumentTitle(reflection?.titulo || (loading ? 'Cargando...' : 'Reflexión no encontrada'))
 
   if (loading) {
     return (
@@ -93,11 +104,11 @@ export default function StandardReflectionDetail() {
   const index = reflectionItems.findIndex((item) => String(item.id) === String(reflection.id))
   const previous = index > 0 ? reflectionItems[index - 1] : null
   const next = index >= 0 && index < reflectionItems.length - 1 ? reflectionItems[index + 1] : null
-  const prompt = reflectionPrompts[reflection.slug]
-  const blocks = splitDescription(reflection.description, reflection.title)
+  const prompt = reflectionPrompts[reflection.slogan]
+  const blocks = splitDescription(reflection.descripcion, reflection.titulo)
   const hasArticle = blocks.length > 0 || Boolean(prompt)
 
-  const imgPath = reflection.image || ''
+  const imgPath = reflection.imagen || ''
   const imgSrc = imgPath.startsWith('http') ? imgPath : `/${imgPath.replace(/^\/+/, '')}`
 
   return (
@@ -106,7 +117,7 @@ export default function StandardReflectionDetail() {
         items={[
           { label: 'Inicio', to: '/' },
           { label: 'Reflexiones', to: '/reflexiones' },
-          { label: reflection.title },
+          { label: reflection.titulo },
         ]}
       />
 
@@ -115,7 +126,7 @@ export default function StandardReflectionDetail() {
           <figure className={styles.detailMedia}>
             <img
               src={imgSrc}
-              alt={reflection.alt || reflection.title}
+              alt={reflection.alt || reflection.titulo}
               onError={(event) => {
                 event.currentTarget.style.visibility = 'hidden'
               }}
@@ -124,9 +135,9 @@ export default function StandardReflectionDetail() {
 
           <div className={styles.detailBody}>
             <span className={styles.kicker}>
-              {`Pausa y Bienestar${reflection.subtitle ? ` · ${reflection.subtitle}` : ''}`}
+              {`Pausa y Bienestar${reflection.subtitulo ? ` · ${reflection.subtitulo}` : ''}`}
             </span>
-            <h1 className={styles.detailTitle}>{reflection.title}</h1>
+            <h1 className={styles.detailTitle}>{reflection.titulo}</h1>
             <Link className={styles.backLink} to="/reflexiones">
               ← Volver a reflexiones
             </Link>
@@ -153,7 +164,7 @@ export default function StandardReflectionDetail() {
           {previous ? (
             <Link to={reflectionRoute(previous)}>
               <span>Anterior</span>
-              ← {previous.title}
+              ← {previous.titulo}
             </Link>
           ) : (
             <span />
@@ -161,7 +172,7 @@ export default function StandardReflectionDetail() {
           {next ? (
             <Link className={styles.next} to={reflectionRoute(next)}>
               <span>Siguiente</span>
-              {next.title} →
+              {next.titulo} →
             </Link>
           ) : null}
         </nav>

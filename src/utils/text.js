@@ -32,6 +32,17 @@ export function matchesRecord(record, query) {
   return matchesQuery(haystack, query)
 }
 
+export function toSlug(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9_-]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .replace(/_{2,}/g, '_')
+}
+
 export function formatPhoneHref(value = '') {
   const digits = String(value).replace(/\D/g, '')
 

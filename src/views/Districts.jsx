@@ -52,14 +52,14 @@ export default function Districts() {
 
   const groupCounts = useMemo(() => {
     return groups.reduce((counts, group) => {
-      const key = String(group.district_id)
+      const key = String(group.distrito_id)
       counts.set(key, (counts.get(key) || 0) + 1)
       return counts
     }, new Map())
   }, [groups])
 
   const municipalities = useMemo(() => {
-    return [...new Set(districts.map((d) => d.municipality || d.municipio).filter(Boolean))].sort((a, b) =>
+    return [...new Set(districts.map((d) => d.municipio).filter(Boolean))].sort((a, b) =>
       a.localeCompare(b, 'es'),
     )
   }, [districts])
@@ -72,7 +72,7 @@ export default function Districts() {
 
   const filtered = useMemo(() => {
     return districts.filter((district) => {
-      const muni = district.municipality || district.municipio || ''
+      const muni = district.municipio || ''
       const ar = district.area || district.area_id || ''
 
       if (municipality && muni !== municipality) {
@@ -209,9 +209,9 @@ export default function Districts() {
             ) : visible.length ? (
               visible.map((district) => {
                 const dId = district.id || district.distrito_id
-                const dName = district.name || district.distrito
-                const dMuni = district.municipality || district.municipio
-                const dNeigh = district.neighborhood || district.colonia
+                const dName = district.nombre || district.distrito
+                const dMuni = district.municipio
+                const dNeigh = district.vecinos || district.colonia
                 const dArea = district.area || district.area_id
 
                 return (

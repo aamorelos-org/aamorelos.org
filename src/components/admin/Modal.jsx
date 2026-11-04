@@ -35,7 +35,7 @@ export default function Modal({ title, onClose, children }) {
         className="flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4 dark:border-slate-800">
+        <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-800 sm:gap-4 sm:px-5 sm:py-4">
           <h3 id={titleId} className="text-base font-bold text-slate-900 dark:text-white">
             {title}
           </h3>
@@ -53,7 +53,7 @@ export default function Modal({ title, onClose, children }) {
           </button>
         </div>
 
-        <div className="overflow-y-auto px-5 py-4">
+        <div className="overflow-y-auto px-4 py-4 sm:px-5">
           {children}
         </div>
       </div>

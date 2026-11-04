@@ -9,13 +9,13 @@ import pageStyles from './Page.module.css'
 import styles from './Detail.module.css'
 
 const days = [
-  ['Lunes', 'schedule_monday'],
-  ['Martes', 'schedule_tuesday'],
-  ['Miércoles', 'schedule_wednesday'],
-  ['Jueves', 'schedule_thursday'],
-  ['Viernes', 'schedule_friday'],
-  ['Sábado', 'schedule_saturday'],
-  ['Domingo', 'schedule_sunday'],
+  ['Lunes', 'horario_lunes'],
+  ['Martes', 'horario_martes'],
+  ['Miércoles', 'horario_miercoles'],
+  ['Jueves', 'horario_jueves'],
+  ['Viernes', 'horario_viernes'],
+  ['Sábado', 'horario_sabado'],
+  ['Domingo', 'horario_domingo'],
 ]
 
 export default function GroupDetail() {
@@ -63,10 +63,10 @@ export default function GroupDetail() {
   }, [id])
 
   const district = group
-    ? districts.find((item) => String(item.id) === String(group.district_id))
+    ? districts.find((item) => String(item.id) === String(group.distrito_id))
     : null
 
-  useDocumentTitle(group?.name || (loading ? 'Cargando grupo...' : 'Grupo no encontrado'))
+  useDocumentTitle(group?.nombre || (loading ? 'Cargando grupo...' : 'Grupo no encontrado'))
 
   if (loading) {
     return (
@@ -97,12 +97,12 @@ export default function GroupDetail() {
     .map(([label, key]) => ({ label, value: group[key] }))
     .filter((day) => String(day.value || '').trim() !== '')
 
-  const mapQuery = group.latitude && group.longitude
-    ? `${group.latitude},${group.longitude}`
-    : [group.address, group.neighborhood, group.municipality, 'Morelos'].filter(Boolean).join(', ')
+  const mapQuery = group.latitud && group.longitud
+    ? `${group.latitud},${group.longitud}`
+    : [group.direccion, group.vecinos, group.municipio, 'Morelos'].filter(Boolean).join(', ')
 
   const related = allGroups
-    .filter((item) => String(item.district_id) === String(group.district_id) && String(item.id) !== String(group.id))
+    .filter((item) => String(item.distrito_id) === String(group.distrito_id) && String(item.id) !== String(group.id))
     .slice(0, 6)
 
   return (
@@ -111,7 +111,7 @@ export default function GroupDetail() {
         items={[
           { label: 'Inicio', to: '/' },
           { label: 'Grupos', to: '/pages/grupos/grupos.php' },
-          { label: group.name },
+          { label: group.nombre },
         ]}
       />
 
@@ -123,13 +123,13 @@ export default function GroupDetail() {
         <div className={styles.main}>
           <header className={pageStyles.detailHeader}>
             <span className={pageStyles.eyebrow}>Grupo de Alcohólicos Anónimos</span>
-            <h1 className={pageStyles.detailTitle}>{group.name}</h1>
+            <h1 className={pageStyles.detailTitle}>{group.nombre}</h1>
             <div className={pageStyles.pillRow}>
-              {group.type ? <span className={pageStyles.pill}>{group.type}</span> : null}
-              {group.gender ? <span className={pageStyles.pillNeutral + ' ' + pageStyles.pill}>{group.gender}</span> : null}
-              {group.language ? <span className={pageStyles.pillNeutral + ' ' + pageStyles.pill}>{group.language}</span> : null}
+              {group.tipo ? <span className={pageStyles.pill}>{group.tipo}</span> : null}
+              {group.genero ? <span className={pageStyles.pillNeutral + ' ' + pageStyles.pill}>{group.genero}</span> : null}
+              {group.lengua ? <span className={pageStyles.pillNeutral + ' ' + pageStyles.pill}>{group.lengua}</span> : null}
               <span className={pageStyles.pillNeutral + ' ' + pageStyles.pill}>
-                {group.is_active ? 'Activo' : 'Inactivo'}
+                {group.es_activo ? 'Activo' : 'Inactivo'}
               </span>
             </div>
           </header>
@@ -140,36 +140,36 @@ export default function GroupDetail() {
               <ul className={styles.infoList}>
                 <li className={styles.infoRow}>
                   <span className={styles.infoLabel}>Municipio</span>
-                  <span className={styles.infoValue}>{group.municipality || 'No disponible'}</span>
+                  <span className={styles.infoValue}>{group.municipio || 'No disponible'}</span>
                 </li>
                 <li className={styles.infoRow}>
                   <span className={styles.infoLabel}>Colonia</span>
-                  <span className={styles.infoValue}>{group.neighborhood || 'No disponible'}</span>
+                  <span className={styles.infoValue}>{group.vecinos || 'No disponible'}</span>
                 </li>
                 <li className={styles.infoRow}>
                   <span className={styles.infoLabel}>Dirección</span>
-                  <span className={styles.infoValue}>{group.address || 'No disponible'}</span>
+                  <span className={styles.infoValue}>{group.direccion || 'No disponible'}</span>
                 </li>
-                {group.reference ? (
+                {group.referencias ? (
                   <li className={styles.infoRow}>
                     <span className={styles.infoLabel}>Referencias</span>
-                    <span className={styles.infoValue}>{group.reference}</span>
+                    <span className={styles.infoValue}>{group.referencias}</span>
                   </li>
                 ) : null}
                 <li className={styles.infoRow}>
                   <span className={styles.infoLabel}>Distrito</span>
                   <span className={styles.infoValue}>
                     {district ? (
-                      <Link to={districtRoute(district.id)}>{district.name}</Link>
+                      <Link to={districtRoute(district.id)}>{district.nombre}</Link>
                     ) : (
                       'No disponible'
                     )}
                   </span>
                 </li>
-                {group.smoking_text ? (
+                {group.fumar_texto ? (
                   <li className={styles.infoRow}>
                     <span className={styles.infoLabel}>Se fuma</span>
-                    <span className={styles.infoValue}>{group.smoking_text}</span>
+                    <span className={styles.infoValue}>{group.fumar_texto}</span>
                   </li>
                 ) : null}
               </ul>
@@ -190,16 +190,16 @@ export default function GroupDetail() {
             ) : (
               <p className={styles.note}>Sin horarios registrados. Te recomendamos comunicarte con el Área Morelos.</p>
             )}
-            {group.schedule_observation ? (
+            {group.horario_observacion ? (
               <p className={styles.note} style={{ marginTop: 14 }}>
-                <strong>Observaciones:</strong> {group.schedule_observation}
+                <strong>Observaciones:</strong> {group.horario_observacion}
               </p>
             ) : null}
           </section>
 
           <section className={pageStyles.panel}>
             <h2 className={pageStyles.sectionBlock} style={{ marginTop: 0 }}>Ubicación</h2>
-            <MapEmbed query={mapQuery} title={`Mapa de ${group.name}`} height={340} />
+            <MapEmbed query={mapQuery} title={`Mapa de ${group.nombre}`} height={340} />
           </section>
         </div>
 
@@ -227,8 +227,8 @@ export default function GroupDetail() {
                 {related.map((item) => (
                   <li key={item.id}>
                     <Link to={groupRoute(item.id)}>
-                      <span>{item.name}</span>
-                      <span className={styles.groupMeta}>{item.municipality}</span>
+                      <span>{item.nombre}</span>
+                      <span className={styles.groupMeta}>{item.municipio}</span>
                     </Link>
                   </li>
                 ))}

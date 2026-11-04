@@ -52,26 +52,26 @@ export default function Groups() {
   }, [])
 
   const districtNames = useMemo(() => {
-    return new Map(districts.map((district) => [String(district.id), district.name]))
+    return new Map(districts.map((district) => [String(district.id), district.nombre]))
   }, [districts])
 
   const municipalities = useMemo(() => {
-    return [...new Set(rawGroups.map((g) => g.municipality || g.municipio).filter(Boolean))].sort((a, b) =>
+    return [...new Set(rawGroups.map((g) => g.municipio).filter(Boolean))].sort((a, b) =>
       a.localeCompare(b, 'es'),
     )
   }, [rawGroups])
 
   const types = useMemo(() => {
-    return [...new Set(rawGroups.map((g) => g.type || g.tipo).filter(Boolean))].sort((a, b) =>
+    return [...new Set(rawGroups.map((g) => g.tipo).filter(Boolean))].sort((a, b) =>
       a.localeCompare(b, 'es'),
     )
   }, [rawGroups])
 
   const filtered = useMemo(() => {
     return rawGroups.filter((group) => {
-      const muni = group.municipality || group.municipio || ''
-      const typ = group.type || group.tipo || ''
-      const dist = String(group.district_id || group.distrito || '')
+      const muni = group.municipio || ''
+      const typ = group.tipo || ''
+      const dist = String(group.distrito_id || '')
 
       if (municipality && muni !== municipality) {
         return false
@@ -170,7 +170,7 @@ export default function Groups() {
           >
             <option value="">Todos</option>
             {districts.map((district) => (
-              <option key={district.id} value={String(district.id)}>{district.name}</option>
+              <option key={district.id} value={String(district.id)}>{district.nombre}</option>
             ))}
           </select>
         </div>
@@ -228,13 +228,13 @@ export default function Groups() {
             ) : visible.length ? (
               visible.map((group) => {
                 const gId = group.id || group.id_grupo
-                const gName = group.name || group.grupo
-                const gDistId = group.district_id || group.distrito
-                const gMuni = group.municipality || group.municipio
-                const gNeigh = group.neighborhood || group.colonia
-                const gType = group.type || group.tipo
-                const gGender = group.gender || group.genero
-                const gLang = group.language || group.idioma
+                const gName = group.nombre || group.grupo
+                const gDistId = group.distrito_id || group.distrito
+                const gMuni = group.municipio
+                const gNeigh = group.vecinos || group.colonia
+                const gType = group.tipo
+                const gGender = group.genero
+                const gLang = group.lengua
 
                 return (
                   <tr key={gId}>

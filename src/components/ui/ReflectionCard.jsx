@@ -16,9 +16,9 @@ export default function ReflectionCard({ reflection }) {
     return null
   }
 
-  const title = reflection.title || reflection.titulo || ''
-  const subtitle = reflection.subtitle || reflection.subtitulo || ''
-  const image = reflection.image || reflection.imagen || ''
+  const title = reflection.titulo || ''
+  const subtitle = reflection.subtitulo || ''
+  const image = reflection.imagen || ''
   const alt = reflection.alt || title
 
   return (

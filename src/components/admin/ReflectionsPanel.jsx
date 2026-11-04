@@ -48,7 +48,7 @@ export default function ReflectionsPanel() {
   }, [successMessage])
 
   return (
-    <section className="flex flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900" aria-labelledby="admin-reflections-title">
+    <section className="flex min-w-0 flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5" aria-labelledby="admin-reflections-title">
       <PanelHeader
         title="Reflexiones"
         headingId="admin-reflections-title"
@@ -98,7 +98,7 @@ export default function ReflectionsPanel() {
           type="button"
           onClick={() => setIsFormOpen(true)}
           disabled={!token}
-          className="rounded-md bg-purple-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-purple-500 dark:hover:bg-purple-400"
+          className="w-full rounded-md bg-purple-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-purple-500 dark:hover:bg-purple-400 sm:w-auto"
         >
           Registrar nueva reflexión
         </button>

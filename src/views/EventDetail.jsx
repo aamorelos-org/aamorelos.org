@@ -39,7 +39,7 @@ export default function EventDetail() {
     }
   }, [cleanSlug])
 
-  useDocumentTitle(event?.title || (loading ? 'Cargando evento...' : 'Evento'))
+  useDocumentTitle(event?.titulo || (loading ? 'Cargando evento...' : 'Evento'))
 
   if (cleanSlug === 'invitacion_37178') {
     return <Navigate to="/pages/eventos/invitacion_37178.php" replace />
@@ -78,7 +78,7 @@ export default function EventDetail() {
         items={[
           { label: 'Inicio', to: '/' },
           { label: 'Eventos', to: '/pages/info/eventos.php' },
-          { label: event.title },
+          { label: event.titulo },
         ]}
       />
 
@@ -89,14 +89,14 @@ export default function EventDetail() {
       <article className={styles.article}>
         <header className={styles.detailHeader}>
           <span className={styles.eyebrow}>Evento</span>
-          <h1 className={styles.articleTitle}>{event.title}</h1>
-          {event.subtitle ? <p className={styles.articleSubtitle}>{event.subtitle}</p> : null}
+          <h1 className={styles.articleTitle}>{event.titulo}</h1>
+          {event.subtitulo ? <p className={styles.articleSubtitle}>{event.subtitulo}</p> : null}
         </header>
 
         <div className={styles.imageFrame}>
           <img
             src={mediaUrl(event)}
-            alt={event.alt || event.title}
+            alt={event.alt || event.titulo}
             onError={(imageEvent) => {
               imageEvent.currentTarget.style.visibility = 'hidden'
             }}
@@ -104,13 +104,13 @@ export default function EventDetail() {
         </div>
 
         <div className={styles.prose}>
-          {(event.paragraphs || []).map((paragraph) => (
+          {(event.frases || []).map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
         </div>
 
         <div className={styles.footerNote}>
-          <span>{event.footer}</span>
+          <span>{event.pie}</span>
           <Link className={styles.secondaryButton} to="/pages/info/eventos.php">
             Ver más eventos
           </Link>

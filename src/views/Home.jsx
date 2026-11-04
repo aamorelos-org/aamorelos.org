@@ -134,7 +134,7 @@ export default function Home() {
           <a className={styles.helpPrimary} href={`tel:${site.phoneHref}`}>
             Llamar {site.phone}
           </a>
-          <Link className={styles.helpSecondary} to="/pages/reflections/bebiendo_demasiado">
+          <Link className={styles.helpSecondary} to="/pages/reflexiones/bebiendo_demasiado">
             Leer más
           </Link>
         </div>
