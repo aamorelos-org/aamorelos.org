@@ -88,8 +88,6 @@ const ANIVERSARIO_REQUIRED = [
 const DIA_LABELS = { dia: 'Día', tema: 'Tema', fecha: 'Fecha', grupos: 'Grupos', numero: 'Número' }
 const DIA_LIMITS = { dia: 100, tema: 100, fecha: 100, grupos: 255, numero: 2 }
 
-const DIAS_SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
-
 function validate(form, dias) {
   const required =
     form.tipo === 'aniversario' ? [...COMMON_REQUIRED, ...ANIVERSARIO_REQUIRED] : COMMON_REQUIRED
@@ -140,7 +138,7 @@ function validate(form, dias) {
   return ''
 }
 
-function buildPayload(form, dias) {
+function buildPayload(form, dias, groups) {
   const clean = (field) => String(form[field] || '').trim()
 
   const payload = {
@@ -163,14 +161,21 @@ function buildPayload(form, dias) {
     payload[field] = clean(field)
   }
 
-  payload.dias = dias.map((dia) => ({
-    dia: dia.dia.trim(),
-    tema: dia.tema.trim(),
-    fecha: dia.fecha.trim(),
-    grupos: (Array.isArray(dia.grupos) ? dia.grupos.join(', ') : '').trim(),
-    numero: dia.numero.trim(),
-    es_junta_publica: Boolean(dia.es_junta_publica),
-  }))
+  payload.dias = dias.map((dia) => {
+    const nombresGrupos = Array.isArray(dia.grupos)
+      ? dia.grupos
+          .map((id) => groups.find((g) => String(g.id) === String(id))?.nombre)
+          .filter(Boolean)
+      : []
+    return {
+      dia: dia.dia.trim(),
+      tema: dia.tema.trim(),
+      fecha: dia.fecha.trim(),
+      grupos: nombresGrupos.join(', ').trim(),
+      numero: dia.numero.trim(),
+      es_junta_publica: Boolean(dia.es_junta_publica),
+    }
+  })
 
   return payload
 }
@@ -178,6 +183,9 @@ function buildPayload(form, dias) {
 export default function EventForm({ onClose, onCreated }) {
   const [form, setForm] = useState(emptyForm)
   const [dias, setDias] = useState([])
+  const [fechaInicial, setFechaInicial] = useState('')
+  const [numDias, setNumDias] = useState('')
+  const [abiertos, setAbiertos] = useState(new Set())
   const [groups, setGroups] = useState([])
   const [groupsLoading, setGroupsLoading] = useState(true)
   const [imageName, setImageName] = useState('')
@@ -189,6 +197,14 @@ export default function EventForm({ onClose, onCreated }) {
 
   const esAniversario = form.tipo === 'aniversario'
 
+  const previewSrc = useMemo(() => {
+    const value = form.imagen.trim()
+    if (!value) return ''
+    if (value.startsWith('data:image/')) return value
+    return `data:image/webp;base64,${value.replace(/\s/g, '')}`
+  }, [form.imagen])
+
+  // Carga los grupos del Área Morelos para el select múltiple de cada día.
   useEffect(() => {
     let active = true
 
@@ -197,6 +213,9 @@ export default function EventForm({ onClose, onCreated }) {
       .then((res) => {
         if (active) {
           const list = Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : [])
+          // Ordena alfabéticamente por nombre para facilitar la búsqueda.
+          list.sort((a, b) => String(a.nombre || '').localeCompare(String(b.nombre || '')))
+          // Usamos una referencia estable para evitar re-renders del GroupMultiSelect.
           setGroups(list)
           setGroupsLoading(false)
         }
@@ -210,13 +229,6 @@ export default function EventForm({ onClose, onCreated }) {
     }
   }, [])
 
-  const previewSrc = useMemo(() => {
-    const value = form.imagen.trim()
-    if (!value) return ''
-    if (value.startsWith('data:image/')) return value
-    return `data:image/webp;base64,${value.replace(/\s/g, '')}`
-  }, [form.imagen])
-
   const updateField = (field, value) => {
     setForm((current) => ({ ...current, [field]: value }))
     setFormError('')
@@ -227,6 +239,57 @@ export default function EventForm({ onClose, onCreated }) {
     setFormError('')
   }
 
+  const toggleAcordion = (index) => {
+    setAbiertos((prev) => {
+      const next = new Set(prev)
+      if (next.has(index)) next.delete(index)
+      else next.add(index)
+      return next
+    })
+  }
+
+  const generarAgenda = () => {
+    setFormError('')
+
+    if (!fechaInicial) {
+      setFormError('La fecha inicial es obligatoria.')
+      return
+    }
+
+    const n = parseInt(numDias, 10)
+    if (isNaN(n) || n < 1 || n > 365) {
+      setFormError('El número de días debe ser un entero entre 1 y 365.')
+      return
+    }
+
+    const [anio, mes, diaMes] = fechaInicial.split('-').map(Number)
+    const inicio = Date.UTC(anio, mes - 1, diaMes) // opera en UTC, sin desfase de zona horaria
+
+    const DIAS_SEMANA_ES = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+
+    const nuevos = []
+
+    for (let i = 0; i < n; i += 1) {
+      const fecha = new Date(inicio + i * 24 * 60 * 60 * 1000)
+
+      const dia = DIAS_SEMANA_ES[fecha.getUTCDay()] // nombre del día en UTC
+      const fechaStr = fecha.toISOString().split('T')[0] // YYYY-MM-DD en UTC
+      const numero = fechaStr.slice(-2) // día del mes con cero a la izquierda
+
+      nuevos.push({
+        dia,
+        tema: '',
+        fecha: fechaStr,
+        grupos: [],
+        numero,
+        es_junta_publica: false,
+      })
+    }
+
+    setDias(nuevos)
+    setAbiertos(new Set())
+  }
+
   const addDia = () => {
     setDias((current) => [...current, { ...emptyDia }])
     setFormError('')
@@ -234,6 +297,11 @@ export default function EventForm({ onClose, onCreated }) {
 
   const removeDia = (index) => {
     setDias((current) => current.filter((_, i) => i !== index))
+    setAbiertos((prev) => {
+      const next = new Set(prev)
+      next.delete(index)
+      return next
+    })
     setFormError('')
   }
 
@@ -266,7 +334,6 @@ export default function EventForm({ onClose, onCreated }) {
       setImageError(err.message || 'No se pudo convertir la imagen a WebP.')
     } finally {
       setConverting(false)
-      // Permite volver a seleccionar el mismo archivo tras un error.
       event.target.value = ''
     }
   }
@@ -289,13 +356,16 @@ export default function EventForm({ onClose, onCreated }) {
     }
 
     try {
-      const response = await api.createEvent(buildPayload(form, dias))
+      const response = await api.createEvent(buildPayload(form, dias, groups))
       if (response?.ok === false) {
         throw new Error(response.mensaje || response.message || response.error || 'La API rechazó el registro.')
       }
 
       setForm(emptyForm)
       setDias([])
+      setFechaInicial('')
+      setNumDias('')
+      setAbiertos(new Set())
       setImageName('')
       await onCreated?.()
     } catch (err) {
@@ -307,6 +377,9 @@ export default function EventForm({ onClose, onCreated }) {
 
   const inputClass =
     'mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white'
+
+  const readonlyClass =
+    'mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-500 bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400'
 
   const labelClass = 'text-sm font-medium text-slate-700 dark:text-slate-200'
 
@@ -426,7 +499,6 @@ export default function EventForm({ onClose, onCreated }) {
             id="event-imagen-file"
             type="file"
             accept="image/*"
-            required
             onChange={handleImageFile}
             disabled={converting}
             className="mt-1 block w-full text-sm text-slate-600 file:mr-4 file:rounded-md file:border-0 file:bg-purple-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-60 dark:text-slate-300 dark:file:bg-purple-500 dark:hover:file:bg-purple-400"
@@ -585,76 +657,123 @@ export default function EventForm({ onClose, onCreated }) {
             </div>
           </div>
 
+          {/* Generador automático de agenda */}
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            <div>
+              <label htmlFor="event-fecha-inicial" className={labelClass}>Fecha inicial *</label>
+              <input
+                id="event-fecha-inicial"
+                type="date"
+                required
+                value={fechaInicial}
+                onChange={(e) => setFechaInicial(e.target.value)}
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="event-num-dias" className={labelClass}>Número de días *</label>
+              <input
+                id="event-num-dias"
+                type="number"
+                required
+                min="1"
+                max="365"
+                value={numDias}
+                onChange={(e) => setNumDias(e.target.value)}
+                className={inputClass}
+                placeholder="7"
+              />
+            </div>
+
+            <div className="flex items-end">
+              <button
+                type="button"
+                onClick={generarAgenda}
+                disabled={groupsLoading}
+                className="w-full rounded-md bg-purple-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 dark:bg-purple-500 dark:hover:bg-purple-400"
+              >
+                {groupsLoading ? 'Cargando grupos…' : 'Generar agenda'}
+              </button>
+            </div>
+          </div>
+
+          {groupsLoading && dias.length === 0 ? (
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Cargando grupos…</p>
+          ) : null}
+
           <div className="mt-5 rounded-xl border border-slate-200 p-3 dark:border-slate-800">
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center justify-between gap-3 mb-3">
               <h5 className="text-sm font-semibold text-slate-700 dark:text-slate-200">
                 Agenda de días {dias.length ? `(${dias.length})` : ''}
               </h5>
-              <button
-                type="button"
-                onClick={addDia}
-                className="rounded-md border border-purple-300 px-3 py-1.5 text-xs font-semibold text-purple-700 transition hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-950/40"
-              >
-                + Agregar día
-              </button>
+              {dias.length === 0 && (
+                <button
+                  type="button"
+                  onClick={addDia}
+                  disabled={!fechaInicial || !numDias}
+                  className="rounded-md border border-purple-300 px-3 py-1.5 text-xs font-semibold text-purple-700 transition hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-950/40 disabled:opacity-50"
+                >
+                  + Agregar día
+                </button>
+              )}
             </div>
 
             {dias.length === 0 ? (
               <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-                Sin días programados. Puedes dejarla vacía o agregar la agenda.
+                Define la fecha inicial y el número de días, luego presiona “Generar agenda”.
               </p>
             ) : (
-              <ul className="mt-3 space-y-3">
+              <ul className="mt-3 space-y-2">
                 {dias.map((dia, index) => (
-                  <li key={index} className="rounded-lg border border-slate-200 p-3 dark:border-slate-700">
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                        Día {index + 1}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => removeDia(index)}
-                        className="text-xs font-semibold text-red-600 hover:underline dark:text-red-400"
-                      >
-                        Quitar
-                      </button>
-                    </div>
+                  <li key={index} className="rounded-lg border border-slate-200 dark:border-slate-800 overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => toggleAcordion(index)}
+                      className="flex w-full items-center justify-between gap-3 bg-white p-3 dark:bg-slate-900"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                          Día {index + 1}
+                        </span>
+                        <span className="text-sm font-medium text-slate-900 dark:text-slate-100">{dia.dia}</span>
+                        <span className="text-xs text-slate-500 dark:text-slate-400">{dia.fecha}</span>
+                        <span className="text-xs text-slate-500 dark:text-slate-400">· #{dia.numero}</span>
+                      </div>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={`h-4 w-4 text-slate-500 transition-transform ${abiertos.has(index) ? 'rotate-180' : ''}`}>
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </button>
 
-                    <div className="mt-2 grid gap-3 sm:grid-cols-2">
-                      {['dia', 'tema', 'fecha', 'numero', 'grupos'].map((field) => (
-                        <div key={field}>
-                          <label htmlFor={`dia-${index}-${field}`} className="text-xs font-medium text-slate-600 dark:text-slate-300">
-                            {DIA_LABELS[field]} *
-                          </label>
-                          {field === 'dia' ? (
-                            <select
+                    {abiertos.has(index) && (
+                      <div className="bg-slate-50/50 dark:bg-slate-950/50 p-4">
+                        <div className="grid gap-3 sm:grid-cols-3">
+                          <div>
+                            <label className="text-xs font-medium text-slate-600 dark:text-slate-300">Día *</label>
+                            <input
                               id={`dia-${index}-dia`}
+                              type="text"
                               required
                               value={dia.dia}
-                              onChange={(e) => updateDia(index, 'dia', e.target.value)}
-                              className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                            >
-                              <option value="">Seleccionar día</option>
-                              {DIAS_SEMANA.map((d) => (
-                                <option key={d} value={d}>{d}</option>
-                              ))}
-                            </select>
-                          ) : field === 'fecha' ? (
+                              readOnly
+                              className={readonlyClass}
+                            />
+                          </div>
+
+                          <div>
+                            <label className="text-xs font-medium text-slate-600 dark:text-slate-300">Fecha *</label>
                             <input
                               id={`dia-${index}-fecha`}
                               type="date"
                               required
-                              maxLength={DIA_LIMITS.fecha}
                               value={dia.fecha}
-                              onChange={(e) => {
-                                const v = e.target.value
-                                updateDia(index, 'fecha', v)
-                                // Numero = día del mes (ej. 2026-12-08 → "08")
-                                updateDia(index, 'numero', v ? String(v).slice(-2) : '')
-                              }}
-                              className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                              readOnly
+                              className={readonlyClass}
                             />
-                          ) : field === 'numero' ? (
+                          </div>
+
+                          <div>
+                            <label className="text-xs font-medium text-slate-600 dark:text-slate-300">Número *</label>
                             <input
                               id={`dia-${index}-numero`}
                               type="text"
@@ -662,9 +781,25 @@ export default function EventForm({ onClose, onCreated }) {
                               maxLength={DIA_LIMITS.numero}
                               value={dia.numero}
                               readOnly
+                              className={readonlyClass}
+                            />
+                          </div>
+
+                          <div className="sm:col-span-3">
+                            <label className="text-xs font-medium text-slate-600 dark:text-slate-300">Tema *</label>
+                            <input
+                              id={`dia-${index}-tema`}
+                              type="text"
+                              required
+                              maxLength={DIA_LIMITS.tema}
+                              value={dia.tema}
+                              onChange={(e) => updateDia(index, 'tema', e.target.value)}
                               className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                             />
-                          ) : field === 'grupos' ? (
+                          </div>
+
+                          <div className="sm:col-span-3">
+                            <label className="text-xs font-medium text-slate-600 dark:text-slate-300">Grupos *</label>
                             <GroupMultiSelect
                               id={`dia-${index}-grupos`}
                               value={Array.isArray(dia.grupos) ? dia.grupos : []}
@@ -672,30 +807,22 @@ export default function EventForm({ onClose, onCreated }) {
                               groups={groups}
                               disabled={saving || groupsLoading}
                             />
-                          ) : (
-                            <input
-                              id={`dia-${index}-${field}`}
-                              type="text"
-                              required
-                              maxLength={DIA_LIMITS[field]}
-                              value={dia[field]}
-                              onChange={(e) => updateDia(index, field, e.target.value)}
-                              className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                            />
-                          )}
-                        </div>
-                      ))}
+                          </div>
 
-                      <label className="flex items-center gap-2 self-end pb-2 text-sm text-slate-700 dark:text-slate-200">
-                        <input
-                          type="checkbox"
-                          checked={dia.es_junta_publica}
-                          onChange={(e) => updateDia(index, 'es_junta_publica', e.target.checked)}
-                          className="h-4 w-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
-                        />
-                        ¿Es junta pública?
-                      </label>
-                    </div>
+                          <div className="sm:col-span-3">
+                            <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-slate-700 dark:text-slate-200">
+                              <input
+                                type="checkbox"
+                                checked={dia.es_junta_publica}
+                                onChange={(e) => updateDia(index, 'es_junta_publica', e.target.checked)}
+                                className="h-4 w-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500 dark:border-slate-600 dark:text-purple-500"
+                              />
+                              ¿Es junta pública?
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>

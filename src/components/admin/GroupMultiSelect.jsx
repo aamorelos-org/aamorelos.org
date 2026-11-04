@@ -3,7 +3,9 @@ import { useMemo, useState } from 'react'
 export default function GroupMultiSelect({ value = [], onChange, groups = [], disabled, placeholder = 'Buscar grupo…' }) {
   const [search, setSearch] = useState('')
   const [isOpen, setIsOpen] = useState(false)
-  const selected = new Set(value)
+  // value es un array de IDs (strings). Usamos id como llave única porque
+  // hay grupos con el mismo nombre en municipios diferentes.
+  const selected = new Set(value.map(String))
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
@@ -17,16 +19,17 @@ export default function GroupMultiSelect({ value = [], onChange, groups = [], di
 
   const toggle = (group) => {
     if (disabled) return
+    const id = String(group.id)
     const next = new Set(selected)
-    if (next.has(group.nombre)) next.delete(group.nombre)
-    else next.add(group.nombre)
+    if (next.has(id)) next.delete(id)
+    else next.add(id)
     onChange([...next])
   }
 
-  const remove = (groupName) => {
+  const remove = (groupId) => {
     if (disabled) return
     const next = new Set(selected)
-    next.delete(groupName)
+    next.delete(String(groupId))
     onChange([...next])
   }
 
@@ -40,7 +43,7 @@ export default function GroupMultiSelect({ value = [], onChange, groups = [], di
     setIsOpen((prev) => !prev)
   }
 
-  const selectedGroups = groups.filter((g) => selected.has(g.nombre))
+  const selectedGroups = groups.filter((g) => selected.has(String(g.id)))
 
   return (
     <div className="w-full" role="combobox" aria-expanded={isOpen} aria-haspopup="listbox">
@@ -50,7 +53,7 @@ export default function GroupMultiSelect({ value = [], onChange, groups = [], di
           <button
             key={g.id}
             type="button"
-            onClick={() => remove(g.nombre)}
+            onClick={() => remove(g.id)}
             disabled={disabled}
             className="inline-flex items-center gap-1.5 rounded-md border border-purple-200 bg-purple-50 px-2.5 py-1 text-xs font-medium text-purple-800 transition hover:bg-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed dark:border-purple-900 dark:bg-purple-950/40 dark:text-purple-300 dark:hover:bg-purple-900"
           >
@@ -103,14 +106,14 @@ export default function GroupMultiSelect({ value = [], onChange, groups = [], di
                     key={g.id}
                     type="button"
                     role="option"
-                    aria-selected={selected.has(g.nombre)}
+                    aria-selected={selected.has(String(g.id))}
                     onClick={() => toggle(g)}
                     className="flex items-center justify-between w-full px-3 py-2.5 text-sm transition hover:bg-slate-50 dark:hover:bg-slate-800/60"
                   >
                     <div className="flex items-center gap-2">
                       <input
                         type="checkbox"
-                        checked={selected.has(g.nombre)}
+                        checked={selected.has(String(g.id))}
                         readOnly
                         className="h-4 w-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500 dark:border-slate-600 dark:text-purple-500"
                       />
@@ -119,7 +122,7 @@ export default function GroupMultiSelect({ value = [], onChange, groups = [], di
                         <div className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wide">{g.municipio || '—'}</div>
                       </div>
                     </div>
-                    {selected.has(g.nombre) ? (
+                    {selected.has(String(g.id)) ? (
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-4 w-4 text-purple-600 dark:text-purple-400">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
