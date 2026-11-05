@@ -35,20 +35,22 @@ export default function GroupDetail() {
     let active = true
 
     Promise.all([
-      api.getStateGroups('17'),
+      api.getGroupDetail(id, '17'),
       api.getStateDistricts('17'),
+      api.getStateGroups('17'),
     ])
-      .then(([groupsRes, districtsRes]) => {
+      .then(([groupRes, districtsRes, groupsRes]) => {
         if (!active) {
           return
         }
 
-        const groups = Array.isArray(groupsRes?.data) ? groupsRes.data : (Array.isArray(groupsRes) ? groupsRes : [])
+        const group = groupRes?.data || groupRes || null
         const districtList = Array.isArray(districtsRes?.data) ? districtsRes.data : (Array.isArray(districtsRes) ? districtsRes : [])
+        const groups = Array.isArray(groupsRes?.data) ? groupsRes.data : (Array.isArray(groupsRes) ? groupsRes : [])
 
         setAllGroups(groups)
         setDistricts(districtList)
-        setGroup(groups.find((item) => String(item.id) === id) || null)
+        setGroup(group)
         setLoading(false)
       })
       .catch(() => {

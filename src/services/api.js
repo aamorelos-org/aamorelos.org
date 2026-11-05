@@ -94,13 +94,11 @@ export const api = {
   },
 
   async getDistrictDetail(districtId, stateId = '17') {
-    const response = await this.getStateDistricts(stateId)
-    return listFrom(response).find((district) => String(district.id) === String(districtId)) || null
+    return request(`/aa/api/v1/distritos/${encodeURIComponent(districtId)}`)
   },
 
   async getGroupDetail(groupId, stateId = '17') {
-    const response = await this.getStateGroups(stateId)
-    return listFrom(response).find((group) => String(group.id) === String(groupId)) || null
+    return request(`/aa/api/v1/estados/${encodeURIComponent(stateId)}/grupos/${encodeURIComponent(groupId)}`)
   },
 
   async getReflections() {

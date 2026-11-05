@@ -24,18 +24,18 @@ export default function DistrictDetail() {
     let active = true
 
     Promise.all([
-      api.getStateDistricts('17'),
+      api.getDistrictDetail(id),
       api.getDistrictGroups(id),
     ])
-      .then(([districtsRes, groupsRes]) => {
+      .then(([districtRes, groupsRes]) => {
         if (!active) {
           return
         }
 
-        const districts = Array.isArray(districtsRes?.data) ? districtsRes.data : (Array.isArray(districtsRes) ? districtsRes : [])
+        const district = districtRes?.data || districtRes || null
         const groups = Array.isArray(groupsRes?.data) ? groupsRes.data : (Array.isArray(groupsRes) ? groupsRes : [])
 
-        setDistrict(districts.find((item) => String(item.id) === id) || null)
+        setDistrict(district)
         setDistrictGroups(groups)
         setLoading(false)
       })
