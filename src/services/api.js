@@ -117,30 +117,9 @@ export const api = {
     return response?.data || null
   },
 
-  async createReflection(payload) {
-    const token = sessionStorage.getItem('access_token')
-
-    if (!token) {
-      throw new Error('Sesión no válida. Inicia sesión nuevamente.')
-    }
-
-    return request('/aa/api/v1/reflexiones/', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-  },
-
   async getEvents({ skip = 0, limit = 100 } = {}) {
     const params = new URLSearchParams({ skip, limit })
     return request(`/aa/api/v1/eventos/?${params.toString()}`)
-  },
-
-  async getGroups() {
-    return request(`/aa/api/v1/estados/17/grupos`)
   },
 
   async getDirectorio() {
@@ -175,23 +154,6 @@ export const api = {
 
     const detail = await request(`/aa/api/v1/eventos/${encodeURIComponent(event.id)}`)
     return detail?.data || null
-  },
-
-  async createEvent(payload) {
-    const token = sessionStorage.getItem('access_token')
-
-    if (!token) {
-      throw new Error('Sesión no válida. Inicia sesión nuevamente.')
-    }
-
-    return request('/aa/api/v1/eventos/', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
   },
 
   async getCommittees() {

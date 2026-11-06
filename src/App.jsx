@@ -2,11 +2,6 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import ScrollToTop from './components/layout/ScrollToTop'
 import Home from './views/Home'
-import Login from './views/Login'
-import AdminLayout from './views/AdminLayout'
-import AdminEvents from './views/AdminEvents'
-import AdminReflections from './views/AdminReflections'
-import ProtectedRoute from './components/ProtectedRoute'
 import Info from './views/Info'
 import Events from './views/Events'
 import EventDetail from './views/EventDetail'
@@ -59,12 +54,6 @@ function App() {
           <Route path="directorio" element={<Navigate to="/pages/directorio/directorio.php" replace />} />
           <Route path="reflexiones" element={<Reflections />} />
           <Route path="reflexiones-diarias" element={<DailyReflection />} />
-          <Route path="login" element={<Login />} />
-          <Route path="admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-            <Route index element={<Navigate to="eventos" replace />} />
-            <Route path="eventos" element={<AdminEvents />} />
-            <Route path="reflexiones" element={<AdminReflections />} />
-          </Route>
 
           <Route path="*" element={<NotFound />} />
         </Route>
