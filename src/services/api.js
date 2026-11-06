@@ -143,6 +143,10 @@ export const api = {
     return request(`/aa/api/v1/estados/17/grupos`)
   },
 
+  async getDirectorio() {
+    return request('/aa/api/v1/directorio/')
+  },
+
   async getEventDetail(slugOrId) {
     const value = slugFromUrl(slugOrId)
 

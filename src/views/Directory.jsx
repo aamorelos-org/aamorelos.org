@@ -1,19 +1,54 @@
 import { useCallback, useEffect, useState } from 'react'
 import Breadcrumb from '../components/layout/Breadcrumb'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { api } from '../services/api'
 import { assetUrl } from '../utils/links'
 import pageStyles from './Page.module.css'
 import styles from './Directory.module.css'
 
-const images = Array.from({ length: 10 }, (_, index) => {
-  const number = String(index + 1).padStart(4, '0')
-  return `images/directorio/DIRECTORIO 2026 SEPTIEMBRE_${number}.jpg`
-})
+function pageLabel(item, index) {
+  return item?.pagina != null ? `Página ${item.pagina}` : `Página ${index + 1}`
+}
+
+function periodLabel(item) {
+  const parts = [item?.anio, item?.mes].filter(Boolean)
+  return parts.length ? `Directorio ${parts.join(' · ')}` : 'Directorio'
+}
 
 export default function Directory() {
   useDocumentTitle('Directorio institucional')
 
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
   const [selected, setSelected] = useState(null)
+
+  useEffect(() => {
+    let active = true
+    setLoading(true)
+
+    api
+      .getDirectorio()
+      .then((response) => {
+        if (active) {
+          const list = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : [])
+          setItems(list)
+          setLoadError('')
+          setLoading(false)
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setItems([])
+          setLoadError('No se pudo cargar el directorio. Intenta recargar la página.')
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
 
   const close = useCallback(() => setSelected(null), [])
 
@@ -22,9 +57,9 @@ export default function Directory() {
       if (current === null) {
         return current
       }
-      return (current + direction + images.length) % images.length
+      return (current + direction + items.length) % items.length
     })
-  }, [])
+  }, [items.length])
 
   useEffect(() => {
     if (selected === null) {
@@ -65,31 +100,39 @@ export default function Directory() {
         </p>
       </header>
 
-      <div className={styles.grid}>
-        {images.map((image, index) => (
-          <button
-            type="button"
-            className={styles.card}
-            key={image}
-            onClick={() => setSelected(index)}
-            aria-label={`Ver página ${index + 1} del directorio`}
-          >
-            <div className={styles.media}>
-              <img
-                src={assetUrl(image)}
-                alt={`Página ${index + 1} del directorio institucional de Alcohólicos Anónimos Área Morelos`}
-                loading="lazy"
-              />
-            </div>
-            <div className={styles.body}>
-              <h2>Página {index + 1}</h2>
-              <p>Directorio 2026 · Septiembre</p>
-            </div>
-          </button>
-        ))}
-      </div>
+      {loading ? (
+        <p className={styles.empty}>Cargando directorio...</p>
+      ) : loadError ? (
+        <p className={styles.empty}>{loadError}</p>
+      ) : items.length === 0 ? (
+        <p className={styles.empty}>No hay páginas de directorio registradas.</p>
+      ) : (
+        <div className={styles.grid}>
+          {items.map((item, index) => (
+            <button
+              type="button"
+              className={styles.card}
+              key={item.id ?? item.imagen ?? index}
+              onClick={() => setSelected(index)}
+              aria-label={`Ver ${pageLabel(item, index).toLowerCase()} del directorio`}
+            >
+              <div className={styles.media}>
+                <img
+                  src={assetUrl(item.imagen)}
+                  alt={`${pageLabel(item, index)} del directorio institucional de Alcohólicos Anónimos Área Morelos`}
+                  loading="lazy"
+                />
+              </div>
+              <div className={styles.body}>
+                <h2>{pageLabel(item, index)}</h2>
+                <p>{periodLabel(item)}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
 
-      {selected !== null ? (
+      {selected !== null && items[selected] ? (
         <div
           className={styles.overlay}
           role="dialog"
@@ -104,14 +147,14 @@ export default function Directory() {
           <div className={styles.modal} onClick={(event) => event.stopPropagation()}>
             <img
               className={styles.modalImage}
-              src={assetUrl(images[selected])}
-              alt={`Página ${selected + 1} del directorio institucional ampliada`}
+              src={assetUrl(items[selected].imagen)}
+              alt={`${pageLabel(items[selected], selected)} del directorio institucional ampliada`}
             />
             <div className={styles.modalNav}>
               <button type="button" className={styles.modalButton} onClick={() => go(-1)}>
                 ← Anterior
               </button>
-              <span>{selected + 1} / {images.length}</span>
+              <span>{pageLabel(items[selected], selected)} · {selected + 1} / {items.length}</span>
               <button type="button" className={styles.modalButton} onClick={() => go(1)}>
                 Siguiente →
               </button>
