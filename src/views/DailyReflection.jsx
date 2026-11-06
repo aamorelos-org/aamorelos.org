@@ -42,7 +42,9 @@ function formatFechaHumana(mmdd) {
   }
   const month = Number(match[1])
   const day = Number(match[2])
-  if (month < 1 || month > 12 || day < 1) {
+  const year = new Date().getFullYear()
+  const daysInMonth = new Date(year, month, 0).getDate()
+  if (month < 1 || month > 12 || day < 1 || day > daysInMonth) {
     return mmdd
   }
   return `${day} de ${MONTHS[month - 1]}`
@@ -64,6 +66,7 @@ export default function DailyReflection() {
   const [reflexion, setReflexion] = useState(null)
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
+  const [retryTick, setRetryTick] = useState(0)
 
   const viewYear = viewDate.getFullYear()
   const viewMonth = viewDate.getMonth()
@@ -104,7 +107,7 @@ export default function DailyReflection() {
     return () => {
       active = false
     }
-  }, [fecha])
+  }, [fecha, retryTick])
 
   const handlePickDay = (day) => {
     setFecha(formatMMDD(viewYear, viewMonth, day))
@@ -112,6 +115,24 @@ export default function DailyReflection() {
 
   const moveMonth = (direction) => {
     setViewDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + direction, 1))
+  }
+
+  const goToday = () => {
+    const now = new Date()
+    setViewDate(new Date(now.getFullYear(), now.getMonth(), 1))
+    setFecha(`${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`)
+  }
+
+  const changeDay = (offset) => {
+    const next = new Date(viewDate.getFullYear(), viewDate.getMonth(), 1)
+    const [month, day] = fecha.split('-').map(Number)
+    next.setMonth(month - 1, day + offset)
+    setViewDate(new Date(next.getFullYear(), next.getMonth(), 1))
+    setFecha(formatMMDD(next.getFullYear(), next.getMonth(), next.getDate()))
+  }
+
+  const retryLoad = () => {
+    setRetryTick((tick) => tick + 1)
   }
 
   const textoBlocks = splitIntoBlocks(reflexion?.texto)
@@ -123,14 +144,21 @@ export default function DailyReflection() {
 
       <div className={styles.warmPage}>
         <div className={dailyStyles.dailyModule}>
-          <div className={styles.detailBody}>
+          <div className={styles.detailBody} aria-live="polite">
             {loading ? (
               <p className={dailyStyles.empty}>Cargando reflexión del día...</p>
             ) : loadError ? (
-              <p className={dailyStyles.empty}>{loadError}</p>
+              <div className={dailyStyles.empty}>
+                <p>{loadError}</p>
+                <p>
+                  <button type="button" className={dailyStyles.actionBtn} onClick={retryLoad}>
+                    Reintentar
+                  </button>
+                </p>
+              </div>
             ) : !reflexion ? (
               <div className={dailyStyles.empty}>
-                <p>No hay reflexión diaria para el {fecha}.</p>
+                <p>No hay reflexión diaria para el {formatFechaHumana(fecha)}.</p>
                 <p>
                   <Link to="/reflexiones">Ver todas las reflexiones</Link>
                 </p>
@@ -138,7 +166,18 @@ export default function DailyReflection() {
             ) : (
               <>
                 <h2 className={styles.detailTitle}>{reflexion.titulo}</h2>
-                <span className={styles.kicker}>Reflexión diaria · {formatFechaHumana(reflexion.fecha)}</span>
+                <span className={styles.kicker}>Reflexión diaria · {formatFechaHumana(reflexion.fecha || fecha)}</span>
+                <div className={dailyStyles.dayNav}>
+                  <button type="button" className={dailyStyles.dayBtn} onClick={() => changeDay(-1)} aria-label="Día anterior">
+                    ← Anterior
+                  </button>
+                  <button type="button" className={dailyStyles.dayBtn} onClick={goToday} aria-label="Ir a hoy">
+                    Hoy
+                  </button>
+                  <button type="button" className={dailyStyles.dayBtn} onClick={() => changeDay(1)} aria-label="Día siguiente">
+                    Siguiente →
+                  </button>
+                </div>
                 {textoBlocks.length > 0 ? (
                   <div className={styles.articleBody}>
                     {textoBlocks.map((block, index) => (
@@ -146,15 +185,15 @@ export default function DailyReflection() {
                     ))}
                   </div>
                 ) : null}
+                {reflexion.cita ? (
+                  <blockquote className={styles.quoteBox}>«{reflexion.cita}»</blockquote>
+                ) : null}
                 {contenidoBlocks.length > 0 ? (
                   <div className={styles.articleBody}>
                     {contenidoBlocks.map((block, index) => (
                       <p key={index}>{block}</p>
                     ))}
                   </div>
-                ) : null}
-                {reflexion.cita ? (
-                  <blockquote className={styles.quoteBox}>«{reflexion.cita}»</blockquote>
                 ) : null}
               </>
             )}
@@ -169,6 +208,11 @@ export default function DailyReflection() {
                 <span>{MONTHS[viewMonth]} {viewYear}</span>
                 <button type="button" className={dailyStyles.calNav} onClick={() => moveMonth(1)} aria-label="Mes siguiente">
                   →
+                </button>
+              </div>
+              <div className={dailyStyles.calActions}>
+                <button type="button" className={dailyStyles.actionBtn} onClick={goToday}>
+                  Hoy
                 </button>
               </div>
               <div className={dailyStyles.calGrid}>

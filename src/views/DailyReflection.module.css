@@ -165,6 +165,37 @@
   font-weight: 700;
 }
 
+.dayNav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 16px;
+}
+
+.dayBtn,
+.actionBtn {
+  padding: 8px 14px;
+  border: 1px solid var(--reflection-border);
+  border-radius: var(--radius-sm);
+  background: var(--reflection-surface);
+  color: var(--reflection-ink);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dayBtn:hover,
+.actionBtn:hover {
+  border-color: var(--reflection-sage);
+  background: var(--reflection-sage-soft);
+}
+
+.calActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
 @media (max-width: 900px) {
   .dailyModule {
     grid-template-columns: 1fr;
