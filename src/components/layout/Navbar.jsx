@@ -44,15 +44,6 @@ function BookIcon() {
   )
 }
 
-function PinIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11Z" />
-      <circle cx="12" cy="10" r="2.5" />
-    </svg>
-  )
-}
-
 function MapIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -92,18 +83,14 @@ const links = [
   },
   { to: '/pages/grupos/grupos.php', label: 'Grupos', icon: UsersIcon },
   { to: '/pages/directorio/directorio.php', label: 'Directorio', icon: BookIcon },
-  { to: '/pages/ubicacion/ubicacion.php', label: 'Ubicación', icon: PinIcon },
   { to: '/pages/distritos/distritos.php', label: 'Distritos', icon: MapIcon },
   { to: '/reflexiones', label: 'Reflexiones', icon: LeafIcon },
+  { to: '/reflexiones-diarias', label: 'Reflexión del día', icon: LeafIcon },
   { to: '/admin', label: 'Admin', icon: ShieldIcon },
 ]
 
 function isInformationRoute(pathname) {
   return pathname.startsWith('/pages/info') || pathname.startsWith('/pages/eventos')
-}
-
-function isReflectionRoute(pathname) {
-  return pathname.startsWith('/pages/reflexiones') || pathname === '/reflexiones'
 }
 
 export default function Navbar() {
@@ -169,17 +156,13 @@ export default function Navbar() {
             }
 
             const Icon = link.icon
-            const isReflection = link.label === 'Reflexiones'
 
             return (
               <NavLink
                 key={link.to}
                 to={link.to}
                 end={link.end}
-                className={({ isActive }) => {
-                  const active = isReflection ? isReflectionRoute(location.pathname) : isActive
-                  return `${styles.item} ${active ? styles.active : ''}`
-                }}
+                className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ''}`}
               >
                 <Icon />
                 <span className={styles.text}>{link.label}</span>

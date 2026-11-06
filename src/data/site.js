@@ -19,4 +19,5 @@ export const quickLinks = [
   { label: 'Eventos', to: '/pages/info/eventos.php' },
   { label: 'Directorio', to: '/pages/directorio/directorio.php' },
   { label: 'Reflexiones', to: '/#reflexiones' },
+  { label: 'Reflexión del día', to: '/reflexiones-diarias' },
 ]

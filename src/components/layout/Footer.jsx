@@ -41,7 +41,7 @@ export default function Footer() {
               <a href="tel:8002169231">{site.nationalPhone} · línea nacional</a>
             </li>
             <li>
-              <Link to="/pages/ubicacion/ubicacion.php">{site.address}</Link>
+              <span>{site.address}</span>
             </li>
           </ul>
         </div>

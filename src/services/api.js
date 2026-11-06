@@ -147,6 +147,11 @@ export const api = {
     return request('/aa/api/v1/directorio/')
   },
 
+  async getReflexionDiaria(fecha) {
+    const params = new URLSearchParams({ fecha })
+    return request(`/aa/api/v1/reflexiones-diarias/?${params.toString()}`)
+  },
+
   async getEventDetail(slugOrId) {
     const value = slugFromUrl(slugOrId)
 

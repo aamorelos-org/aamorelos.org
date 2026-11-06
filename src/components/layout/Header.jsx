@@ -2,15 +2,6 @@ import { Link } from 'react-router-dom'
 import { site } from '../../data/site'
 import styles from './Header.module.css'
 
-function LocationIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-      <path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11Z" />
-      <circle cx="12" cy="10" r="2.5" />
-    </svg>
-  )
-}
-
 function MailIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
@@ -45,10 +36,6 @@ export default function Header() {
           <p className={styles.subtitle}>{site.district} · {site.tagline}</p>
 
           <div className={styles.contact}>
-            <Link to="/pages/ubicacion/ubicacion.php">
-              <LocationIcon />
-              <span>Área Morelos</span>
-            </Link>
             <a href={`mailto:${site.email}`}>
               <MailIcon />
               <span>{site.email}</span>

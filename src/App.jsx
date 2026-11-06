@@ -16,8 +16,8 @@ import GroupDetail from './views/GroupDetail'
 import Districts from './views/Districts'
 import DistrictDetail from './views/DistrictDetail'
 import Directory from './views/Directory'
-import Location from './views/Location'
 import Reflections from './views/Reflections'
+import DailyReflection from './views/DailyReflection'
 import ReflectionDetail from './views/ReflectionDetail'
 import CommitteeDetail from './views/CommitteeDetail'
 import NotFound from './views/NotFound'
@@ -45,7 +45,6 @@ function App() {
           <Route path="pages/distritos/detalle_distrito.php" element={<DistrictDetail />} />
 
           <Route path="pages/directorio/directorio.php" element={<Directory />} />
-          <Route path="pages/ubicacion/ubicacion.php" element={<Location />} />
 
           <Route path="pages/reflexiones/reflexiones.php" element={<Navigate to="/reflexiones" replace />} />
           <Route path="pages/reflexiones/detalle_reflexion.php" element={<ReflectionDetail />} />
@@ -58,8 +57,8 @@ function App() {
           <Route path="grupos" element={<Navigate to="/pages/grupos/grupos.php" replace />} />
           <Route path="distritos" element={<Navigate to="/pages/distritos/distritos.php" replace />} />
           <Route path="directorio" element={<Navigate to="/pages/directorio/directorio.php" replace />} />
-          <Route path="ubicacion" element={<Navigate to="/pages/ubicacion/ubicacion.php" replace />} />
           <Route path="reflexiones" element={<Reflections />} />
+          <Route path="reflexiones-diarias" element={<DailyReflection />} />
           <Route path="login" element={<Login />} />
           <Route path="admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
             <Route index element={<Navigate to="eventos" replace />} />
