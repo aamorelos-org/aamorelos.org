@@ -101,8 +101,9 @@ export const api = {
     return request(`/aa/api/v1/estados/${encodeURIComponent(stateId)}/grupos/${encodeURIComponent(groupId)}`)
   },
 
-  async getReflections() {
-    return request('/aa/api/v1/reflexiones/')
+  async getReflections({ skip = 0, limit = 100 } = {}) {
+    const params = new URLSearchParams({ skip, limit })
+    return request(`/aa/api/v1/reflexiones/?${params.toString()}`)
   },
 
   async getReflectionDetail(slugOrId) {
@@ -133,8 +134,9 @@ export const api = {
     })
   },
 
-  async getEvents() {
-    return request('/aa/api/v1/eventos/')
+  async getEvents({ skip = 0, limit = 100 } = {}) {
+    const params = new URLSearchParams({ skip, limit })
+    return request(`/aa/api/v1/eventos/?${params.toString()}`)
   },
 
   async getGroups() {
@@ -153,7 +155,7 @@ export const api = {
       return response?.data || null
     }
 
-    const response = await this.getEvents()
+    const response = await this.getEvents({ skip: 0, limit: 500 })
     const event = listFrom(response).find(
       (item) => slugFromUrl(item.url) === value || item.slogan === value,
     )

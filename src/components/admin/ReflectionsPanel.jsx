@@ -19,7 +19,9 @@ export default function ReflectionsPanel() {
     setListError('')
 
     try {
-      const response = await api.getReflections()
+      // El admin pagina en cliente sobre el listado completo:
+      // se pide el máximo permitido para no truncar la búsqueda.
+      const response = await api.getReflections({ skip: 0, limit: 500 })
       setReflections(extractList(response))
     } catch (err) {
       setListError(err.message || 'No se pudieron cargar las reflexiones.')

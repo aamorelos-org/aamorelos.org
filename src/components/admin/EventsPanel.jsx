@@ -40,7 +40,8 @@ export default function EventsPanel() {
     setListError('')
 
     try {
-      const response = await api.getEvents()
+      // El admin muestra la lista completa: pedir el máximo permitido.
+      const response = await api.getEvents({ skip: 0, limit: 500 })
       setEvents(extractList(response))
     } catch (err) {
       setListError(err.message || 'No se pudieron cargar los eventos.')

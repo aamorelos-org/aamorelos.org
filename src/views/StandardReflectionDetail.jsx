@@ -60,9 +60,10 @@ export default function StandardReflectionDetail() {
         }
       })
 
-    // El listado se usa solo para la navegación "Anterior / Siguiente".
+    // El listado se usa solo para la navegación "Anterior / Siguiente",
+    // por eso se pide el máximo permitido: necesita el orden completo.
     api
-      .getReflections()
+      .getReflections({ skip: 0, limit: 500 })
       .then((res) => {
         if (active) {
           const list = Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : [])

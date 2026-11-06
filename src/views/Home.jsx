@@ -80,8 +80,10 @@ export default function Home() {
     let active = true
 
     Promise.all([
-      api.getEvents().catch(() => null),
-      api.getReflections().catch(() => null),
+      // En inicio el carrusel muestra solo los primeros 5 eventos.
+      api.getEvents({ limit: 5 }).catch(() => null),
+      // Solo se muestran las primeras 3 en Home: pedir solo esa página.
+      api.getReflections({ limit: 3 }).catch(() => null),
       api.getCommittees().catch(() => []),
     ]).then(([eventsRes, reflectionsRes, committeesRes]) => {
       if (active) {
