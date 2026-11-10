@@ -1,7 +1,7 @@
 import { committees } from '../data/committees'
 import { slugFromUrl } from '../utils/links'
 
-const rawBaseUrl = import.meta.env?.VITE_API_URL || 'https://aamorelos.onrender.com'
+const rawBaseUrl = import.meta.env?.VITE_API_URL || 'https://api.aamorelos.org'
 const API_URL = rawBaseUrl.replace(/\/+$/, '')
 
 export const isApiConfigured = Boolean(API_URL)
