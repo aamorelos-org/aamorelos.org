@@ -360,14 +360,40 @@
 }
 
 .mdContent {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
   margin: 0;
-  padding: 16px 18px;
+  padding: 14px 10px;
   color: var(--reflection-text);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.76rem;
   line-height: 1.75;
+}
+
+.mdLine {
+  display: contents;
+}
+
+.mdLineNo {
+  display: block;
+  padding: 0 0.6rem 0 0.4rem;
+  color: var(--reflection-muted);
+  font-size: 0.66rem;
+  text-align: right;
+  user-select: none;
+}
+
+.mdLineText {
+  display: block;
+  padding: 0 0.75rem 0 0.6rem;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.mdLineHit .mdLineNo,
+.mdLineHit .mdLineText {
+  background: #fef08a;
+  color: var(--reflection-ink);
 }
 
 .mdError {

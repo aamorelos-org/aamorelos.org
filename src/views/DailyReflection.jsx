@@ -5,6 +5,7 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import styles from './Reflections.module.css'
 import dailyStyles from './DailyReflection.module.css'
+import { parseBookAnnotation } from '../utils/annotation'
 
 function todayMMDD() {
   const now = new Date()
@@ -68,6 +69,25 @@ function splitMdFiles(md) {
 
 function buildMdUrl(libro, file) {
   return `https://images.aamorelos.org/libros_anotados/${encodeURIComponent(libro)}/${encodeURIComponent(file)}`
+}
+
+function DocumentacionAnotada({ raw }) {
+  const parsed = useMemo(() => parseBookAnnotation(raw), [raw])
+  const listaHit = useMemo(() => new Set(Object.values(parsed.matches).flat()), [parsed.matches])
+
+  return (
+    <div className={dailyStyles.mdContent}>
+      {parsed.visible.map(({ index, text }) => {
+        const hit = listaHit.has(index)
+        return (
+          <div key={index} className={`${dailyStyles.mdLine} ${hit ? dailyStyles.mdLineHit : ''}`}>
+            <span className={dailyStyles.mdLineNo}>{index}</span>
+            <span className={dailyStyles.mdLineText}>{text}</span>
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 export default function DailyReflection() {
@@ -385,7 +405,7 @@ export default function DailyReflection() {
                       </a>
                     </div>
                     {doc.ok ? (
-                      <pre className={dailyStyles.mdContent}>{doc.content}</pre>
+                      <DocumentacionAnotada raw={doc.content} />
                     ) : (
                       <p className={dailyStyles.mdError}>
                         No se pudo cargar el archivo ({doc.error}). Usa “Abrir archivo” para verlo directamente.
