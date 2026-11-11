@@ -6,6 +6,10 @@ import { api } from '../services/api'
 import styles from './Reflections.module.css'
 import dailyStyles from './DailyReflection.module.css'
 import { parseBookAnnotation } from '../utils/annotation'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import remarkBreaks from 'remark-breaks'
+import rehypeRaw from 'rehype-raw'
 
 function todayMMDD() {
   const now = new Date()
@@ -67,8 +71,14 @@ function splitMdFiles(md) {
     .filter(Boolean)
 }
 
+// VITE_MD_BASE: opcional. Si no está definida, consume los archivos desde
+// el CDN en producción; en desarrollo se recomienda apuntar a /libros_anotados
+// (servidos por Vite desde "public/libros_anotados").
+const MD_BASE = import.meta.env?.VITE_MD_BASE || 'https://images.aamorelos.org/libros_anotados'
+
 function buildMdUrl(libro, file) {
-  return `https://images.aamorelos.org/libros_anotados/${encodeURIComponent(libro)}/${encodeURIComponent(file)}`
+  const base = MD_BASE.replace(/\/+$/, '')
+  return `${base}/${encodeURIComponent(libro)}/${encodeURIComponent(file)}`
 }
 
 // Normaliza la fecha de la reflexión a "MM-DD" (clave usada por <!-- matches -->).
@@ -93,33 +103,116 @@ function normaliseFecha(value) {
   return str
 }
 
+// Divide el texto en párrafos siguiendo la sangría de primera línea del PDF
+// (2+ espacios al inicio) y las líneas vacías. Cada página empieza con su
+// encabezado impreso como bloque separado.
+function dividirEnParrafos(lineas) {
+  const parrafos = []
+  let actual = null
+  const cerrar = () => {
+    if (actual && actual.lineas.length > 0) parrafos.push(actual)
+    actual = null
+  }
+
+  // Detector: línea de encabezado de página (mayúsculas + número de página al final)
+  const RE_ENCABEZADO = /^[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ ]{2,60}\s*\d+$/
+
+  for (const { index, text } of lineas) {
+    const trimmed = text.trim()
+    const conMarca = /^\s{2,}\S/.test(text)
+
+    if (!trimmed) {
+      cerrar()
+      continue
+    }
+
+    if (!actual && RE_ENCABEZADO.test(trimmed)) {
+      // primera línea: encabezado impreso (p. ej. "UNDECIMO PASO 103")
+      actual = { tipo: 'encabezado', lineas: [{ index, text }] }
+      continue
+    }
+
+    if (actual?.tipo === 'encabezado' && conMarca) {
+      // empieza el primer párrafo
+      cerrar()
+      actual = { tipo: 'parrafo', lineas: [{ index, text }] }
+      continue
+    }
+
+    if (actual?.tipo === 'encabezado') {
+      // aún no hubo párrafo: todo es continuación de cuerpo; abrir uno ahora
+      cerrar()
+      actual = { tipo: 'parrafo', lineas: [{ index, text }] }
+      continue
+    }
+
+    if (conMarca && actual?.lineas.length > 0) {
+      cerrar()
+      actual = { tipo: 'parrafo', lineas: [{ index, text }] }
+      continue
+    }
+
+    if (!actual) {
+      actual = { tipo: 'parrafo', lineas: [{ index, text }] }
+      continue
+    }
+
+    actual.lineas.push({ index, text })
+  }
+  cerrar()
+  return parrafos
+}
+
 function DocumentacionAnotada({ raw, fecha }) {
+  // Resaltar solo las líneas de la reflexión actual; mostrar el archivo completo
   let parsed
-  let lineasVisibles = []
+  let lineasHit = new Set()
   try {
     parsed = parseBookAnnotation(raw)
     const entries = fecha && parsed.matches[fecha] ? [parsed.matches[fecha]] : []
-    const hits = new Set(entries.flat())
-    lineasVisibles = parsed.visible.filter(({ index }) => hits.has(index))
+    lineasHit = new Set(entries.flat())
   } catch (error) {
     return <pre className={dailyStyles.mdFallback}>{String(raw || '')}</pre>
   }
 
-  // Sin coincidencias para esta fecha -> mostramos el contenido crudo completo
-  if (lineasVisibles.length === 0) {
-    return <pre className={dailyStyles.mdFallback}>{String(raw || '')}</pre>
-  }
+  const parrafos = dividirEnParrafos(parsed.visible)
+  const bloques = parrafos.map((p) => {
+    if (p.tipo === 'encabezado') return '## ' + p.lineas.map((l) => l.text.trim()).join(' ')
+
+    // Unir las líneas del párrafo; marcar las líneas-hit con <mark>
+    const texto = p.lineas
+      .map(({ index, text }) =>
+        lineasHit.has(index)
+          ? `<mark class="mdQuote">${escaparHtml(text.trim().replace(/\s+/g, ' '))}</mark>`
+          : escaparHtml(text.trim().replace(/\s+/g, ' ')),
+      )
+      .join(' ')
+    return texto
+  })
+
+  const markdown = bloques.join('\n\n')
 
   return (
-    <div className={dailyStyles.mdContent}>
-      {lineasVisibles.map(({ index, text }) => (
-        <div key={index} className={`${dailyStyles.mdLine} ${dailyStyles.mdLineHit}`}>
-          <span className={dailyStyles.mdLineNo}>{index}</span>
-          <span className={dailyStyles.mdLineText}>{text}</span>
-        </div>
-      ))}
-    </div>
+    <article className={dailyStyles.mdReader}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm, remarkBreaks]}
+        rehypePlugins={[rehypeRaw]}
+        components={{
+          h2: ({ children, ...props }) => <div className={dailyStyles.mdEncabezado} {...props}>{children}</div>,
+          mark: ({ children }) => <mark className={dailyStyles.mdQuote}>{children}</mark>,
+        }}
+      >
+        {markdown}
+      </ReactMarkdown>
+    </article>
   )
+}
+
+function escaparHtml(texto) {
+  return String(texto)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
 }
 
 export default function DailyReflection() {
@@ -134,6 +227,7 @@ export default function DailyReflection() {
   const [viewer, setViewer] = useState({ open: false, loading: false, docs: [] })
   const closeButtonRef = useRef(null)
   const citaButtonRef = useRef(null)
+  const modalBodyRef = useRef(null)
 
   const viewYear = viewDate.getFullYear()
   const viewMonth = viewDate.getMonth()
@@ -272,6 +366,37 @@ export default function DailyReflection() {
       document.body.style.overflow = ''
     }
   }, [viewer.open])
+
+  // Al abrir el modal y terminar de cargar, llevar el scroll hasta el primer
+  // pasaje resaltado de la reflexión (mark.mdQuote). Sin animación si el
+  // usuario prefiere movimiento reducido.
+  useEffect(() => {
+    if (!viewer.open || viewer.loading) {
+      return undefined
+    }
+
+    const frame = requestAnimationFrame(() => {
+      const body = modalBodyRef.current
+      if (!body) {
+        return
+      }
+
+      const mark = body.querySelector('mark.mdQuote')
+      if (!mark) {
+        body.scrollTop = 0
+        return
+      }
+
+      const top = mark.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop
+      const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+      body.scrollTo({
+        top: Math.max(0, top - body.clientHeight * 0.3),
+        behavior: reduceMotion ? 'auto' : 'smooth',
+      })
+    })
+
+    return () => cancelAnimationFrame(frame)
+  }, [viewer.open, viewer.loading, viewer.docs])
 
   const textoBlocks = splitIntoBlocks(reflexion?.texto)
   const contenidoBlocks = splitIntoBlocks(reflexion?.contenido)
@@ -424,7 +549,7 @@ export default function DailyReflection() {
               </button>
             </div>
 
-            <div className={dailyStyles.modalBody} aria-live="polite">
+            <div className={dailyStyles.modalBody} ref={modalBodyRef} aria-live="polite">
               {viewer.loading ? (
                 <p className={dailyStyles.modalStatus}>Cargando contenido…</p>
               ) : (

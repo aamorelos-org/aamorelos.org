@@ -369,48 +369,54 @@
   margin: 0;
   padding: 16px 18px;
   color: var(--reflection-text);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.76rem;
-  line-height: 1.75;
+  font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
+  font-size: 0.85rem;
+  line-height: 1.85;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
-.mdContent {
-  display: grid;
-  grid-template-columns: 2.75rem minmax(0, 1fr);
+/* Visor tipo libro impreso: papel crema, serif, párrafos con sangría */
+.mdReader {
   margin: 0;
-  padding: 14px 10px;
-  color: var(--reflection-text);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.76rem;
-  line-height: 1.75;
-}
-
-.mdLine {
-  display: contents;
-}
-
-.mdLineNo {
-  display: block;
-  padding: 0 0.6rem 0 0.4rem;
-  color: var(--reflection-muted);
-  font-size: 0.66rem;
-  text-align: right;
-  user-select: none;
-}
-
-.mdLineText {
-  display: block;
-  padding: 0 0.75rem 0 0.6rem;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.mdLineHit .mdLineNo,
-.mdLineHit .mdLineText {
-  background: #fef08a;
+  padding: 24px clamp(18px, 4vw, 36px) 36px;
+  background: #fffdf7;
   color: var(--reflection-ink);
+  font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+.mdReader h2 {
+  display: block;
+  margin: 0 0 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--reflection-border);
+  color: var(--reflection-muted);
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.mdReader p {
+  margin: 0 0 14px;
+  text-indent: 1.8em;
+}
+
+.mdQuote {
+  background: var(--reflection-sand);
+  color: inherit;
+  padding: 2px 4px;
+  border-radius: 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  border-bottom: 2px solid var(--reflection-sage);
 }
 
 .mdError {
