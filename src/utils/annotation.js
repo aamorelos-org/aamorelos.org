@@ -13,8 +13,12 @@
 //   contenido ...
 
 export function parseBookAnnotation(raw) {
-  const text = String(raw || '').replace(/\r\n/g, '\n')
-  const lines = text.split('\n')
+  if (!raw) {
+    return { matches: {}, visible: [] }
+  }
+  // Normalizar fin de línea (CRLF -> LF) para que los índices de línea
+  // coincidan con los definidos por anotar_md.py.
+  const lines = String(raw).replace(/\r\n/g, '\n').split('\n')
 
   // 1) Extraer coincidencias del bloque <!-- matches ... -->
   const matches = {}

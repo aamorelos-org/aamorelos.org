@@ -72,8 +72,15 @@ function buildMdUrl(libro, file) {
 }
 
 function DocumentacionAnotada({ raw }) {
-  const parsed = useMemo(() => parseBookAnnotation(raw), [raw])
-  const listaHit = useMemo(() => new Set(Object.values(parsed.matches).flat()), [parsed.matches])
+  let parsed
+  let listaHit
+  try {
+    parsed = parseBookAnnotation(raw)
+    listaHit = new Set(Object.values(parsed.matches).flat())
+  } catch (error) {
+    // Si el parser falla, mostramos el contenido crudo como fallback
+    return <pre className={dailyStyles.mdFallback}>{String(raw || '')}</pre>
+  }
 
   return (
     <div className={dailyStyles.mdContent}>

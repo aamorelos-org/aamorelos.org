@@ -359,6 +359,17 @@
   text-decoration: underline;
 }
 
+.mdFallback {
+  margin: 0;
+  padding: 16px 18px;
+  color: var(--reflection-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.76rem;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .mdContent {
   display: grid;
   grid-template-columns: 2.75rem minmax(0, 1fr);
