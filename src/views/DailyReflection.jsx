@@ -73,28 +73,29 @@ function buildMdUrl(libro, file) {
 
 function DocumentacionAnotada({ raw, fecha }) {
   let parsed
-  let listaHit
+  let lineasVisibles = []
   try {
     parsed = parseBookAnnotation(raw)
-    // Solo las líneas de la reflexión activa dentro de este archivo
     const entries = fecha && parsed.matches[fecha] ? [parsed.matches[fecha]] : []
-    listaHit = new Set(entries.flat())
+    const hits = new Set(entries.flat())
+    lineasVisibles = parsed.visible.filter(({ index }) => hits.has(index))
   } catch (error) {
-    // Si el parser falla, mostramos el contenido crudo como fallback
+    return <pre className={dailyStyles.mdFallback}>{String(raw || '')}</pre>
+  }
+
+  // Sin coincidencias para esta fecha -> mostramos el contenido crudo completo
+  if (lineasVisibles.length === 0) {
     return <pre className={dailyStyles.mdFallback}>{String(raw || '')}</pre>
   }
 
   return (
     <div className={dailyStyles.mdContent}>
-      {parsed.visible.map(({ index, text }) => {
-        const hit = listaHit.has(index)
-        return (
-          <div key={index} className={`${dailyStyles.mdLine} ${hit ? dailyStyles.mdLineHit : ''}`}>
-            <span className={dailyStyles.mdLineNo}>{index}</span>
-            <span className={dailyStyles.mdLineText}>{text}</span>
-          </div>
-        )
-      })}
+      {lineasVisibles.map(({ index, text }) => (
+        <div key={index} className={`${dailyStyles.mdLine} ${dailyStyles.mdLineHit}`}>
+          <span className={dailyStyles.mdLineNo}>{index}</span>
+          <span className={dailyStyles.mdLineText}>{text}</span>
+        </div>
+      ))}
     </div>
   )
 }

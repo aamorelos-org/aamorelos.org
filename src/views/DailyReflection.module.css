@@ -256,6 +256,12 @@
   overflow: hidden;
 }
 
+@media (max-height: 720px) {
+  .modal {
+    max-height: calc(100vh - 24px);
+  }
+}
+
 .modalHeader {
   display: flex;
   align-items: flex-start;
