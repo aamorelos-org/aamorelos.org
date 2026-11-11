@@ -71,6 +71,28 @@ function buildMdUrl(libro, file) {
   return `https://images.aamorelos.org/libros_anotados/${encodeURIComponent(libro)}/${encodeURIComponent(file)}`
 }
 
+// Normaliza la fecha de la reflexión a "MM-DD" (clave usada por <!-- matches -->).
+// Soporta: "11-10", "2026-11-10", "10/11/2026".
+function normaliseFecha(value) {
+  if (!value) {
+    return ''
+  }
+  const str = String(value).trim()
+  let match = /^(\d{2})-(\d{2})$/.exec(str)
+  if (match) {
+    return `${match[1]}-${match[2]}`
+  }
+  match = /^\d{4}-(\d{2})-(\d{2})/.exec(str)
+  if (match) {
+    return `${match[1]}-${match[2]}`
+  }
+  match = /^(\d{2})\/(\d{2})\/\d{4}/.exec(str)
+  if (match) {
+    return `${match[2]}-${match[1]}`
+  }
+  return str
+}
+
 function DocumentacionAnotada({ raw, fecha }) {
   let parsed
   let lineasVisibles = []
@@ -415,7 +437,7 @@ export default function DailyReflection() {
                       </a>
                     </div>
                     {doc.ok ? (
-                      <DocumentacionAnotada raw={doc.content} fecha={reflexion?.fecha || fecha} />
+                      <DocumentacionAnotada raw={doc.content} fecha={normaliseFecha(reflexion?.fecha) || fecha} />
                     ) : (
                       <p className={dailyStyles.mdError}>
                         No se pudo cargar el archivo ({doc.error}). Usa “Abrir archivo” para verlo directamente.
