@@ -71,12 +71,14 @@ function buildMdUrl(libro, file) {
   return `https://images.aamorelos.org/libros_anotados/${encodeURIComponent(libro)}/${encodeURIComponent(file)}`
 }
 
-function DocumentacionAnotada({ raw }) {
+function DocumentacionAnotada({ raw, fecha }) {
   let parsed
   let listaHit
   try {
     parsed = parseBookAnnotation(raw)
-    listaHit = new Set(Object.values(parsed.matches).flat())
+    // Solo las líneas de la reflexión activa dentro de este archivo
+    const entries = fecha && parsed.matches[fecha] ? [parsed.matches[fecha]] : []
+    listaHit = new Set(entries.flat())
   } catch (error) {
     // Si el parser falla, mostramos el contenido crudo como fallback
     return <pre className={dailyStyles.mdFallback}>{String(raw || '')}</pre>
@@ -412,7 +414,7 @@ export default function DailyReflection() {
                       </a>
                     </div>
                     {doc.ok ? (
-                      <DocumentacionAnotada raw={doc.content} />
+                      <DocumentacionAnotada raw={doc.content} fecha={reflexion?.fecha || fecha} />
                     ) : (
                       <p className={dailyStyles.mdError}>
                         No se pudo cargar el archivo ({doc.error}). Usa “Abrir archivo” para verlo directamente.
