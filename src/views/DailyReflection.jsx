@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Breadcrumb from '../components/layout/Breadcrumb'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
-import pageStyles from './Page.module.css'
 import styles from './Reflections.module.css'
 import dailyStyles from './DailyReflection.module.css'
 
@@ -58,6 +57,19 @@ function splitIntoBlocks(text) {
     .filter(Boolean)
 }
 
+// El campo "md" puede traer varios archivos separados por ';'
+// (ej. "page_121.md;page_122.md"). Se limpian espacios y entradas vacías.
+function splitMdFiles(md) {
+  return String(md || '')
+    .split(';')
+    .map((file) => file.trim())
+    .filter(Boolean)
+}
+
+function buildMdUrl(libro, file) {
+  return `https://images.aamorelos.org/libros_anotados/${encodeURIComponent(libro)}/${encodeURIComponent(file)}`
+}
+
 export default function DailyReflection() {
   useDocumentTitle('Reflexión del día')
 
@@ -67,6 +79,9 @@ export default function DailyReflection() {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
   const [retryTick, setRetryTick] = useState(0)
+  const [viewer, setViewer] = useState({ open: false, loading: false, docs: [] })
+  const closeButtonRef = useRef(null)
+  const citaButtonRef = useRef(null)
 
   const viewYear = viewDate.getFullYear()
   const viewMonth = viewDate.getMonth()
@@ -135,8 +150,81 @@ export default function DailyReflection() {
     setRetryTick((tick) => tick + 1)
   }
 
+  const closeModal = () => {
+    setViewer((prev) => ({ ...prev, open: false }))
+    citaButtonRef.current?.focus()
+  }
+
+  const openModal = () => {
+    const files = splitMdFiles(reflexion?.md)
+    const libro = reflexion?.libro
+
+    if (!libro || files.length === 0) {
+      return
+    }
+
+    setViewer({ open: true, loading: true, docs: [] })
+
+    Promise.allSettled(
+      files.map(async (file) => {
+        const url = buildMdUrl(libro, file)
+        const response = await fetch(url)
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`)
+        }
+
+        return { file, url, content: await response.text() }
+      }),
+    ).then((results) => {
+      setViewer((prev) => {
+        if (!prev.open) {
+          return prev
+        }
+
+        const docs = results.map((result, index) => {
+          const file = files[index]
+          const url = buildMdUrl(libro, file)
+
+          if (result.status === 'fulfilled') {
+            return { ...result.value, ok: true }
+          }
+
+          const reason = result.reason instanceof Error ? result.reason.message : String(result.reason)
+          return { file, url, ok: false, error: reason }
+        })
+
+        return { open: true, loading: false, docs }
+      })
+    })
+  }
+
+  useEffect(() => {
+    if (!viewer.open) {
+      return undefined
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setViewer((prev) => ({ ...prev, open: false }))
+        citaButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    document.body.style.overflow = 'hidden'
+    closeButtonRef.current?.focus()
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = ''
+    }
+  }, [viewer.open])
+
   const textoBlocks = splitIntoBlocks(reflexion?.texto)
   const contenidoBlocks = splitIntoBlocks(reflexion?.contenido)
+  const mdFiles = splitMdFiles(reflexion?.md)
+  const canViewSource = Boolean(reflexion?.libro) && mdFiles.length > 0
 
   return (
     <div>
@@ -186,7 +274,21 @@ export default function DailyReflection() {
                   </div>
                 ) : null}
                 {reflexion.cita ? (
-                  <blockquote className={styles.quoteBox}>«{reflexion.cita}»</blockquote>
+                  canViewSource ? (
+                    <button
+                      type="button"
+                      ref={citaButtonRef}
+                      className={`${styles.quoteBox} ${dailyStyles.citaButton}`}
+                      onClick={openModal}
+                      aria-haspopup="dialog"
+                      title="Ver página del libro"
+                    >
+                      <span className={dailyStyles.citaQuote}>«{reflexion.cita}»</span>
+                      <span className={dailyStyles.citaHint}>Ver {mdFiles.length > 1 ? `las ${mdFiles.length} páginas` : 'la página'} del libro ↗</span>
+                    </button>
+                  ) : (
+                    <blockquote className={styles.quoteBox}>«{reflexion.cita}»</blockquote>
+                  )
                 ) : null}
                 {contenidoBlocks.length > 0 ? (
                   <div className={styles.articleBody}>
@@ -244,6 +346,58 @@ export default function DailyReflection() {
           </aside>
         </div>
       </div>
+
+      {viewer.open ? (
+        <div className={dailyStyles.modalOverlay} role="presentation" onClick={closeModal}>
+          <div
+            className={dailyStyles.modal}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Página del libro"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className={dailyStyles.modalHeader}>
+              <div className={dailyStyles.modalHeading}>
+                <span className={styles.kicker}>Fuente del texto</span>
+                <h3 className={dailyStyles.modalTitle}>{reflexion?.cita}</h3>
+              </div>
+              <button
+                type="button"
+                ref={closeButtonRef}
+                className={dailyStyles.modalClose}
+                onClick={closeModal}
+                aria-label="Cerrar"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className={dailyStyles.modalBody} aria-live="polite">
+              {viewer.loading ? (
+                <p className={dailyStyles.modalStatus}>Cargando contenido…</p>
+              ) : (
+                viewer.docs.map((doc) => (
+                  <section key={doc.file} className={dailyStyles.mdSection}>
+                    <div className={dailyStyles.mdSectionHeader}>
+                      <span className={dailyStyles.mdFile}>{doc.file}</span>
+                      <a className={dailyStyles.mdLink} href={doc.url} target="_blank" rel="noreferrer">
+                        Abrir archivo ↗
+                      </a>
+                    </div>
+                    {doc.ok ? (
+                      <pre className={dailyStyles.mdContent}>{doc.content}</pre>
+                    ) : (
+                      <p className={dailyStyles.mdError}>
+                        No se pudo cargar el archivo ({doc.error}). Usa “Abrir archivo” para verlo directamente.
+                      </p>
+                    )}
+                  </section>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
