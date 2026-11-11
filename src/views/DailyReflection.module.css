@@ -238,27 +238,28 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 32px 16px;
+  padding: 24px 12px;
   overflow-y: auto;
-  background: rgba(24, 20, 15, 0.55);
+  background: rgba(18, 14, 10, 0.6);
+  backdrop-filter: blur(3px);
 }
 
 .modal {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 880px;
-  max-height: calc(100vh - 64px);
+  max-width: 720px;
+  max-height: calc(100vh - 48px);
   border: 1px solid var(--reflection-border);
   border-radius: var(--radius-xl);
   background: var(--reflection-surface);
-  box-shadow: 0 24px 60px rgba(24, 20, 15, 0.35);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
   overflow: hidden;
 }
 
 @media (max-height: 720px) {
   .modal {
-    max-height: calc(100vh - 24px);
+    max-height: calc(100vh - 16px);
   }
 }
 
@@ -266,10 +267,10 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
-  padding: 18px 22px;
+  gap: 14px;
+  padding: 16px 18px 16px 22px;
   border-bottom: 1px solid var(--reflection-border);
-  background: var(--reflection-surface);
+  background: linear-gradient(180deg, #fbf9f3 0%, #f7f4ea 100%);
 }
 
 .modalHeading {
@@ -316,9 +317,10 @@
 .modalBody {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  padding: 18px 22px 24px;
+  padding: 0;
   overflow-y: auto;
+  gap: 0;
+  background: #fffdf7;
 }
 
 .modalStatus {
@@ -328,41 +330,10 @@
   text-align: center;
 }
 
-.mdSection {
-  border: 1px solid var(--reflection-border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: var(--reflection-bg);
-}
-
-.mdSectionHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 8px 14px;
-  border-bottom: 1px solid var(--reflection-border);
-  background: var(--reflection-sand-soft);
-}
-
-.mdFile {
-  color: var(--reflection-ink);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.78rem;
-  font-weight: 700;
-}
-
-.mdLink {
-  color: var(--reflection-sage-dark);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.mdLink:hover {
-  text-decoration: underline;
+.mdDivider {
+  height: 0;
+  border-top: 1px solid var(--reflection-border);
+  margin: 0 clamp(20px, 5vw, 46px);
 }
 
 .mdFallback {
@@ -379,12 +350,12 @@
 /* Visor tipo libro impreso: papel crema, serif, párrafos con sangría */
 .mdReader {
   margin: 0;
-  padding: 24px clamp(18px, 4vw, 36px) 36px;
+  padding: 34px clamp(20px, 5vw, 46px) 42px;
   background: #fffdf7;
   color: var(--reflection-ink);
   font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;
-  font-size: 0.95rem;
-  line-height: 1.75;
+  font-size: 1.03rem;
+  line-height: 1.82;
   text-align: justify;
   hyphens: auto;
   -webkit-hyphens: auto;
@@ -392,21 +363,21 @@
 
 .mdReader h2 {
   display: block;
-  margin: 0 0 18px;
-  padding-bottom: 12px;
+  margin: 0 0 20px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--reflection-border);
   color: var(--reflection-muted);
   font-family: var(--font-serif, Georgia, serif);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   text-align: center;
 }
 
 .mdReader p {
-  margin: 0 0 14px;
-  text-indent: 1.8em;
+  margin: 0 0 16px;
+  text-indent: 1.7em;
 }
 
 .mdQuote {

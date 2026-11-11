@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Breadcrumb from '../components/layout/Breadcrumb'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
@@ -553,22 +553,15 @@ export default function DailyReflection() {
               {viewer.loading ? (
                 <p className={dailyStyles.modalStatus}>Cargando contenido…</p>
               ) : (
-                viewer.docs.map((doc) => (
-                  <section key={doc.file} className={dailyStyles.mdSection}>
-                    <div className={dailyStyles.mdSectionHeader}>
-                      <span className={dailyStyles.mdFile}>{doc.file}</span>
-                      <a className={dailyStyles.mdLink} href={doc.url} target="_blank" rel="noreferrer">
-                        Abrir archivo ↗
-                      </a>
-                    </div>
+                viewer.docs.map((doc, index) => (
+                  <Fragment key={doc.file}>
+                    {index > 0 && <div className={dailyStyles.mdDivider} aria-hidden="true" />}
                     {doc.ok ? (
                       <DocumentacionAnotada raw={doc.content} fecha={normaliseFecha(reflexion?.fecha) || fecha} />
                     ) : (
-                      <p className={dailyStyles.mdError}>
-                        No se pudo cargar el archivo ({doc.error}). Usa “Abrir archivo” para verlo directamente.
-                      </p>
+                      <p className={dailyStyles.mdError}>No se pudo cargar el archivo ({doc.error}).</p>
                     )}
-                  </section>
+                  </Fragment>
                 ))
               )}
             </div>
