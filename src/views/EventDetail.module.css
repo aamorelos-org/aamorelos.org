@@ -49,6 +49,11 @@
   line-height: 1.78;
 }
 
+.prose p {
+  margin: 0;
+  white-space: pre-line;
+}
+
 .backLink {
   display: inline-flex;
   align-items: center;

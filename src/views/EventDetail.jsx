@@ -217,6 +217,12 @@ export default function EventDetail() {
   }
 
   const esAniversario = event.tipo === 'aniversario' && Boolean(event.aniversario)
+  // descripcion (texto plano) con parrafos separados por linea en blanco;
+  // un salto simple dentro del parrafo se conserva (white-space: pre-line).
+  const parrafosDescripcion = String(event.descripcion ?? '')
+    .split(/\r?\n\s*\r?\n/)
+    .map((texto) => texto.trim())
+    .filter(Boolean)
 
   return (
     <div className={styles.page}>
@@ -250,8 +256,8 @@ export default function EventDetail() {
         </div>
 
         <div className={styles.prose}>
-          {(event.frases || []).map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
+          {parrafosDescripcion.map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
           ))}
         </div>
 
