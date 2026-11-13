@@ -69,13 +69,6 @@ async function request(path, options = {}) {
   return response.json()
 }
 
-function listFrom(response) {
-  if (Array.isArray(response?.data)) {
-    return response.data
-  }
-  return Array.isArray(response) ? response : []
-}
-
 export const api = {
   async getStateDistricts(stateId = '17') {
     return request(`/aa/api/v1/estados/${encodeURIComponent(stateId)}/distritos`)
@@ -138,22 +131,9 @@ export const api = {
       return null
     }
 
-    if (/^\d+$/.test(value)) {
-      const response = await request(`/aa/api/v1/eventos/${encodeURIComponent(value)}`)
-      return response?.data || null
-    }
-
-    const response = await this.getEvents({ skip: 0, limit: 500 })
-    const event = listFrom(response).find(
-      (item) => slugFromUrl(item.url) === value || item.slogan === value,
-    )
-
-    if (!event) {
-      return null
-    }
-
-    const detail = await request(`/aa/api/v1/eventos/${encodeURIComponent(event.id)}`)
-    return detail?.data || null
+    // El service acepta id numérico o slogan directamente (GET /eventos/{id}).
+    const response = await request(`/aa/api/v1/eventos/${encodeURIComponent(value)}`)
+    return response?.data || null
   },
 
   async getCommittees() {
