@@ -5,6 +5,7 @@ import FullScreenImage from '../components/ui/FullScreenImage'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { mediaUrl } from '../utils/links'
+import { renderRichText } from '../utils/richText'
 import styles from './EventDetail.module.css'
 
 function formatJunta(value) {
@@ -218,12 +219,7 @@ export default function EventDetail() {
   }
 
   const esAniversario = event.tipo === 'aniversario' && Boolean(event.aniversario)
-  // descripcion (texto plano) con parrafos separados por linea en blanco;
-  // un salto simple dentro del parrafo se conserva (white-space: pre-line).
-  const parrafosDescripcion = String(event.descripcion ?? '')
-    .split(/\r?\n\s*\r?\n/)
-    .map((texto) => texto.trim())
-    .filter(Boolean)
+  const descripcionHtml = renderRichText(event.descripcion)
 
   return (
     <div className={styles.page}>
@@ -256,11 +252,7 @@ export default function EventDetail() {
           />
         </div>
 
-        <div className={styles.prose}>
-          {parrafosDescripcion.map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
-        </div>
+        <div className={styles.prose} dangerouslySetInnerHTML={{ __html: descripcionHtml }} />
 
         {esAniversario && <AniversarioInfo evento={event} />}
 

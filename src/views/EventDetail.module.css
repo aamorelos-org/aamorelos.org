@@ -54,6 +54,26 @@
   white-space: pre-line;
 }
 
+.prose ul,
+.prose ol {
+  margin: 0;
+  padding-left: 1.4em;
+}
+.prose li {
+  margin: 0.25em 0;
+}
+.prose blockquote {
+  margin: 0;
+  padding: 10px 18px;
+  border-left: 3px solid var(--color-primary, #1d4e89);
+  border-radius: 0 var(--radius-sm, 10px) var(--radius-sm, 10px) 0;
+  background: rgba(29, 78, 137, 0.06);
+}
+.prose a {
+  color: var(--color-primary, #1d4e89);
+  text-decoration: underline;
+}
+
 .backLink {
   display: inline-flex;
   align-items: center;

@@ -200,6 +200,26 @@
   white-space: pre-line;
 }
 
+.articleBody ul,
+.articleBody ol {
+  margin: 0;
+  padding-left: 1.4em;
+}
+.articleBody li {
+  margin: 0.25em 0;
+}
+.articleBody blockquote {
+  margin: 0;
+  padding: 12px 18px;
+  border-left: 3px solid var(--reflection-ink, #3f4a5a);
+  border-radius: 0 var(--radius-sm, 8px) var(--radius-sm, 8px) 0;
+  background: var(--reflection-sand-soft, #f3ece3);
+}
+.articleBody a {
+  color: var(--reflection-ink, #3f4a5a);
+  text-decoration: underline;
+}
+
 .articleBody strong {
   color: var(--reflection-ink);
 }

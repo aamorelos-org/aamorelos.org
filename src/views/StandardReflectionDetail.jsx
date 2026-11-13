@@ -6,29 +6,8 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { reflectionPrompts } from '../data/reflectionsContent'
 import { api } from '../services/api'
 import { reflectionRoute } from '../utils/links'
+import { renderRichText } from '../utils/richText'
 import styles from './Reflections.module.css'
-
-// Divide el contenido en bloques separados por líneas vacías. Si la primera
-// línea repite exactamente el título, se omite para no duplicarlo.
-function splitDescription(text, title) {
-  const normalized = String(text || '')
-    .replace(/\r\n/g, '\n')
-    .trim()
-
-  if (!normalized) return []
-
-  const lines = normalized.split('\n')
-
-  if (title && lines[0].trim() === String(title).trim()) {
-    lines.shift()
-  }
-
-  return lines
-    .join('\n')
-    .split(/\n\s*\n/)
-    .map((block) => block.trim())
-    .filter(Boolean)
-}
 
 export default function StandardReflectionDetail() {
   const { slug = '' } = useParams()
@@ -107,8 +86,8 @@ export default function StandardReflectionDetail() {
   const previous = index > 0 ? reflectionItems[index - 1] : null
   const next = index >= 0 && index < reflectionItems.length - 1 ? reflectionItems[index + 1] : null
   const prompt = reflectionPrompts[reflection.slogan]
-  const blocks = splitDescription(reflection.descripcion, reflection.titulo)
-  const hasArticle = blocks.length > 0 || Boolean(prompt)
+  const descripcionHtml = renderRichText(reflection.descripcion)
+  const hasArticle = Boolean(descripcionHtml) || Boolean(prompt)
 
   const imgPath = reflection.imagen || ''
   const imgSrc = imgPath.startsWith('http') ? imgPath : `/${imgPath.replace(/^\/+/, '')}`
@@ -149,9 +128,7 @@ export default function StandardReflectionDetail() {
         {hasArticle ? (
           <article className={styles.article}>
             <div className={styles.articleBody}>
-              {blocks.map((block, index) => (
-                <p key={index}>{block}</p>
-              ))}
+              <div dangerouslySetInnerHTML={{ __html: descripcionHtml }} />
               {prompt ? (
                 <div className={styles.promptBox}>
                   <span>Para reflexionar</span>
