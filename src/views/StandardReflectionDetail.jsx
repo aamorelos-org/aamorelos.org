@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import Breadcrumb from '../components/layout/Breadcrumb'
+import FullScreenImage from '../components/ui/FullScreenImage'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { reflectionPrompts } from '../data/reflectionsContent'
 import { api } from '../services/api'
@@ -125,7 +126,7 @@ export default function StandardReflectionDetail() {
       <div className={styles.detailPage}>
         <section className={styles.detailHero}>
           <figure className={styles.detailMedia}>
-            <img
+            <FullScreenImage
               src={imgSrc}
               alt={reflection.alt || reflection.titulo}
               onError={(event) => {

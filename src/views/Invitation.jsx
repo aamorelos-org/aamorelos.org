@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Breadcrumb from '../components/layout/Breadcrumb'
+import FullScreenImage from '../components/ui/FullScreenImage'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { mediaUrl } from '../utils/links'
@@ -88,7 +89,7 @@ export default function Invitation() {
         </div>
 
         <figure className={styles.heroMedia}>
-          <img src={mediaUrl(event)} alt={event.alt || event.titulo} />
+          <FullScreenImage src={mediaUrl(event)} alt={event.alt || event.titulo} />
         </figure>
       </section>
 

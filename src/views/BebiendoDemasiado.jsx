@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Breadcrumb from '../components/layout/Breadcrumb'
+import FullScreenImage from '../components/ui/FullScreenImage'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { bebiendo } from '../data/reflectionsContent'
 import { api } from '../services/api'
@@ -65,7 +66,7 @@ export default function BebiendoDemasiado() {
         <section className={styles.detailHero}>
           {image ? (
             <figure className={styles.detailMedia}>
-              <img
+              <FullScreenImage
                 src={image}
                 alt={bebiendo.title}
                 onLoad={(event) => {

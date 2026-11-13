@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import Breadcrumb from '../components/layout/Breadcrumb'
+import FullScreenImage from '../components/ui/FullScreenImage'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { mediaUrl } from '../utils/links'
@@ -246,7 +247,7 @@ export default function EventDetail() {
         </header>
 
         <div className={styles.imageFrame}>
-          <img
+          <FullScreenImage
             src={mediaUrl(event)}
             alt={event.alt || event.titulo}
             onError={(imageEvent) => {
