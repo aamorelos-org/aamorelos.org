@@ -23,8 +23,6 @@ export default function StandardReflectionDetail() {
   useEffect(() => {
     let active = true
 
-    // El detalle se pide directamente a la API: el listado ya no incluye
-    // la descripción para no inflar el payload.
     api
       .getReflectionDetail(identifier)
       .then((detail) => {
@@ -40,8 +38,6 @@ export default function StandardReflectionDetail() {
         }
       })
 
-    // El listado se usa solo para la navegación "Anterior / Siguiente",
-    // por eso se pide el máximo permitido: necesita el orden completo.
     api
       .getReflections({ skip: 0, limit: 500 })
       .then((res) => {

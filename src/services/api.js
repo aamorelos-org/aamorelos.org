@@ -15,7 +15,6 @@ function messageFromErrorData(errorData, status) {
     return errorData.error
   }
 
-  // FastAPI/Pydantic: {detail: "..."} o {detail: [{loc, msg, type}, ...]}
   const detail = errorData?.detail
 
   if (typeof detail === 'string' && detail.trim()) {
@@ -60,7 +59,6 @@ async function request(path, options = {}) {
     try {
       errorData = await response.json()
     } catch {
-      // Si la API no envía JSON, se conserva el mensaje por estado HTTP.
     }
 
     throw new Error(messageFromErrorData(errorData, response.status))
@@ -131,7 +129,6 @@ export const api = {
       return null
     }
 
-    // El service acepta id numérico o slogan directamente (GET /eventos/{id}).
     const response = await request(`/aa/api/v1/eventos/${encodeURIComponent(value)}`)
     return response?.data || null
   },

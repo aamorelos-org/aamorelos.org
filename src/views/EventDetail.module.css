@@ -140,7 +140,6 @@
   background: var(--color-primary-soft);
 }
 
-/* ── Sección anniversario ────────────────────────────────────────── */
 
 .sectionBlock {
   margin-top: 42px;
@@ -224,7 +223,6 @@
   font-size: 0.82rem;
 }
 
-/* ── Bloques de información (adaptados de Invitation) ───────────── */
 
 .block {
   margin-top: 18px;
@@ -259,7 +257,6 @@
   text-transform: uppercase;
 }
 
-/* ── Agenda de días (adaptada de Invitation) ───────────────────── */
 
 .days {
   display: grid;
@@ -343,7 +340,6 @@
   font-weight: 700;
 }
 
-/* ── Cita / frase de reflexión (adaptada de Invitation) ─────────── */
 
 .quote {
   margin-top: 24px;
@@ -357,7 +353,6 @@
   line-height: 1.7;
 }
 
-/* ── Cierre con contacto (adaptado de Invitation) ───────────────── */
 
 .closing {
   display: grid;

@@ -347,7 +347,6 @@
   word-break: break-word;
 }
 
-/* Visor tipo libro impreso: papel crema, serif, párrafos con sangría */
 .mdReader {
   margin: 0;
   padding: 34px clamp(20px, 5vw, 46px) 42px;

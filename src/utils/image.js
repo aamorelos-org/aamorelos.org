@@ -26,7 +26,7 @@ export function fileToWebpBase64(file) {
           return
         }
 
-        // Fondo blanco: evita que los PNG con transparencia se conviertan en negro.
+        // Fondo blanco: si no, PNG transparentes se exportan con negro en áreas vacías.
         context.fillStyle = '#ffffff'
         context.fillRect(0, 0, canvas.width, canvas.height)
         context.drawImage(image, 0, 0)

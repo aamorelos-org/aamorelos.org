@@ -62,8 +62,14 @@ function splitIntoBlocks(text) {
     .filter(Boolean)
 }
 
-// El campo "md" puede traer varios archivos separados por ';'
-// (ej. "page_121.md;page_122.md"). Se limpian espacios y entradas vacías.
+const MD_BASE =
+  import.meta.env?.VITE_MD_BASE || 'https://images.aamorelos.org/libros_anotados'
+
+function buildMdUrl(libro, file) {
+  const base = MD_BASE.replace(/\/+$/, '')
+  return `${base}/${encodeURIComponent(libro)}/${encodeURIComponent(file)}`
+}
+
 function splitMdFiles(md) {
   return String(md || '')
     .split(';')
@@ -71,18 +77,6 @@ function splitMdFiles(md) {
     .filter(Boolean)
 }
 
-// VITE_MD_BASE: opcional. Si no está definida, consume los archivos desde
-// el CDN en producción; en desarrollo se recomienda apuntar a /libros_anotados
-// (servidos por Vite desde "public/libros_anotados").
-const MD_BASE = import.meta.env?.VITE_MD_BASE || 'https://images.aamorelos.org/libros_anotados'
-
-function buildMdUrl(libro, file) {
-  const base = MD_BASE.replace(/\/+$/, '')
-  return `${base}/${encodeURIComponent(libro)}/${encodeURIComponent(file)}`
-}
-
-// Normaliza la fecha de la reflexión a "MM-DD" (clave usada por <!-- matches -->).
-// Soporta: "11-10", "2026-11-10", "10/11/2026".
 function normaliseFecha(value) {
   if (!value) {
     return ''
@@ -103,9 +97,8 @@ function normaliseFecha(value) {
   return str
 }
 
-// Divide el texto en párrafos siguiendo la sangría de primera línea del PDF
-// (2+ espacios al inicio) y las líneas vacías. Cada página empieza con su
-// encabezado impreso como bloque separado.
+const RE_ENCABEZADO = /^[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ ]{2,60}\s*\d+$/
+
 function dividirEnParrafos(lineas) {
   const parrafos = []
   let actual = null
@@ -113,9 +106,6 @@ function dividirEnParrafos(lineas) {
     if (actual && actual.lineas.length > 0) parrafos.push(actual)
     actual = null
   }
-
-  // Detector: línea de encabezado de página (mayúsculas + número de página al final)
-  const RE_ENCABEZADO = /^[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ ]{2,60}\s*\d+$/
 
   for (const { index, text } of lineas) {
     const trimmed = text.trim()
@@ -127,20 +117,17 @@ function dividirEnParrafos(lineas) {
     }
 
     if (!actual && RE_ENCABEZADO.test(trimmed)) {
-      // primera línea: encabezado impreso (p. ej. "UNDECIMO PASO 103")
       actual = { tipo: 'encabezado', lineas: [{ index, text }] }
       continue
     }
 
     if (actual?.tipo === 'encabezado' && conMarca) {
-      // empieza el primer párrafo
       cerrar()
       actual = { tipo: 'parrafo', lineas: [{ index, text }] }
       continue
     }
 
     if (actual?.tipo === 'encabezado') {
-      // aún no hubo párrafo: todo es continuación de cuerpo; abrir uno ahora
       cerrar()
       actual = { tipo: 'parrafo', lineas: [{ index, text }] }
       continue
@@ -164,14 +151,13 @@ function dividirEnParrafos(lineas) {
 }
 
 function DocumentacionAnotada({ raw, fecha }) {
-  // Resaltar solo las líneas de la reflexión actual; mostrar el archivo completo
   let parsed
   let lineasHit = new Set()
   try {
     parsed = parseBookAnnotation(raw)
     const entries = fecha && parsed.matches[fecha] ? [parsed.matches[fecha]] : []
     lineasHit = new Set(entries.flat())
-  } catch (error) {
+  } catch {
     return <pre className={dailyStyles.mdFallback}>{String(raw || '')}</pre>
   }
 
@@ -179,7 +165,6 @@ function DocumentacionAnotada({ raw, fecha }) {
   const bloques = parrafos.map((p) => {
     if (p.tipo === 'encabezado') return '## ' + p.lineas.map((l) => l.text.trim()).join(' ')
 
-    // Unir las líneas del párrafo; marcar las líneas-hit con <mark>
     const texto = p.lineas
       .map(({ index, text }) =>
         lineasHit.has(index)
@@ -367,9 +352,6 @@ export default function DailyReflection() {
     }
   }, [viewer.open])
 
-  // Al abrir el modal y terminar de cargar, llevar el scroll hasta el primer
-  // pasaje resaltado de la reflexión (mark.mdQuote). Sin animación si el
-  // usuario prefiere movimiento reducido.
   useEffect(() => {
     if (!viewer.open || viewer.loading) {
       return undefined

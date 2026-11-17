@@ -16,7 +16,7 @@ function formatJunta(value) {
 
 function DiaAgenda({ dia }) {
   const esJunta = dia.es_junta_publica === 'true' || dia.es_junta_publica === true
-  const [, mes, diaNum] = String(dia.fecha || '').split('-')
+  const [, mes, _diaNum] = String(dia.fecha || '').split('-')
   const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
   const mesNombre = mes ? MESES[Number(mes) - 1] || mes : ''
   const gruposLista = Array.isArray(dia.grupos)

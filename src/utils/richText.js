@@ -23,15 +23,11 @@ const escapeHtml = (text) =>
     .replace(/>/g, '&gt;')
 
 /**
- * Normaliza la descripción para mostrarla (HTML del WYSIWYG, texto plano legacy,
- * o póster HTML pegado por el admin) y la sanea: bloquea scripts, iframes,
- * formularios y atributos de evento; permite posters completos (tabla, div/span,
- * títulos, estilos inline) porque son contenido propio de un admin autenticado.
- * Devuelve string usable en dangerouslySetInnerHTML.
+ * Normaliza la descripción (HTML o texto plano) y la sanea para usarla en
+ * dangerouslySetInnerHTML con una allowlist estricta.
  */
 export function renderRichText(text) {
   const raw = String(text ?? '')
-  // ¿Parece HTML real? etiqueta con nombre que contiene algo dentro o auto-cierra.
   const looksHtml = /<\w[^>]*>/.test(raw)
   const html = looksHtml
     ? raw

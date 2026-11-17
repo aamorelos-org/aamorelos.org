@@ -1,27 +1,12 @@
-// Parse de un .md anotado con `<!-- matches -->` (un JSON embebido entre
-// comentarios). Devuelve las líneas del cuerpo (comentarios ocultos) y el
-// mapa de coincidencias con los índices de línea originales.
-//
-// Forma mínima:
-//   <!-- pagina-pdf: 99 -->
-//   <!-- pagina-impresa: 103 -->
-//   <!-- matches
-//   {
-//     "04-30": [10, 11, 12]
-//   }
-//   -->
-//   contenido ...
-
+// Parse de un .md anotado (bloque `<!-- matches -->` con JSON).
+// Ver formato de anotación en scripts de conversión (anotar_md.py).
 export function parseBookAnnotation(raw) {
   if (!raw) {
     return { matches: {}, visible: [] }
   }
-  // Normalizar fin de línea (CRLF -> LF) para que los índices de línea
-  // coincidan con los definidos por anotar_md.py.
   const text = String(raw || '').replace(/\r\n/g, '\n')
   const lines = text.split('\n')
 
-  // 1) Extraer coincidencias del bloque <!-- matches ... -->
   const matches = {}
   const matchesRegex = /<!--\s*matches[\s\S]*?-->/gi
   let match
@@ -31,11 +16,10 @@ export function parseBookAnnotation(raw) {
     try {
       Object.assign(matches, JSON.parse(body))
     } catch {
-      // JSON malformado: dejamos `matches` con lo ya parseado
+      // JSON inválido: se conserva matches con lo ya leído
     }
   }
 
-  // 2) Generar las líneas visibles conservando el índice original (1-based)
   const visible = []
   let inCommentBlock = false
 
@@ -48,13 +32,12 @@ export function parseBookAnnotation(raw) {
         if (!trimmed.endsWith('-->')) {
           inCommentBlock = true
         }
-        continue // skip la línea inicial (single-line o apertura del bloque)
+        continue
       }
       visible.push({ index: i + 1, text: line })
       continue
     }
 
-    // Estamos dentro de un bloque comment; lo saltamos hasta el cierre
     if (trimmed.endsWith('-->')) {
       inCommentBlock = false
     }
