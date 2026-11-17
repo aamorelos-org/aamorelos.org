@@ -10,6 +10,15 @@ import pageStyles from './Page.module.css'
 import styles from './Listing.module.css'
 
 const PAGE_SIZE = 20
+const DAY_OPTIONS = [
+  ['lunes', 'Lunes'],
+  ['martes', 'Martes'],
+  ['miercoles', 'Miércoles'],
+  ['jueves', 'Jueves'],
+  ['viernes', 'Viernes'],
+  ['sabado', 'Sábado'],
+  ['domingo', 'Domingo'],
+]
 
 export default function Groups() {
   useDocumentTitle('Directorio de grupos')
@@ -22,6 +31,7 @@ export default function Groups() {
   const [municipality, setMunicipality] = useState('')
   const [districtId, setDistrictId] = useState('')
   const [type, setType] = useState('')
+  const [day, setDay] = useState('')
   const [page, setPage] = useState(1)
 
   useEffect(() => {
@@ -82,16 +92,22 @@ export default function Groups() {
       if (type && typ !== type) {
         return false
       }
+      if (day) {
+        const horario = String(group[`horario_${day}`] ?? '').trim()
+        if (!horario) {
+          return false
+        }
+      }
       if (query && !matchesRecord({ ...group, district: districtNames.get(dist) }, query)) {
         return false
       }
       return true
     })
-  }, [districtId, districtNames, municipality, query, rawGroups, type])
+  }, [districtId, districtNames, municipality, query, rawGroups, type, day])
 
   useEffect(() => {
     setPage(1)
-  }, [districtId, municipality, query, type])
+  }, [districtId, municipality, query, type, day])
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const currentPage = Math.min(page, pageCount)
@@ -102,6 +118,7 @@ export default function Groups() {
     setMunicipality('')
     setDistrictId('')
     setType('')
+    setDay('')
   }
 
   return (
@@ -113,7 +130,7 @@ export default function Groups() {
         <h1 className={pageStyles.title}>Grupos de Alcohólicos Anónimos</h1>
         <p className={pageStyles.lead}>
           Consulta los grupos del Área Morelos consumidos desde el API oficial. Puedes buscar por
-          nombre, municipio, colonia o filtrar por distrito y tipo de reunión.
+          nombre, municipio, colonia o filtrar por distrito, tipo y día que sesiona.
         </p>
       </header>
 
@@ -186,6 +203,21 @@ export default function Groups() {
             <option value="">Todos</option>
             {types.map((item) => (
               <option key={item} value={item}>{item}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className={styles.field}>
+          <label htmlFor="group-day">Día de sesión</label>
+          <select
+            id="group-day"
+            className={styles.select}
+            value={day}
+            onChange={(event) => setDay(event.target.value)}
+          >
+            <option value="">Todos</option>
+            {DAY_OPTIONS.map(([value, label]) => (
+              <option key={value} value={value}>{label}</option>
             ))}
           </select>
         </div>
