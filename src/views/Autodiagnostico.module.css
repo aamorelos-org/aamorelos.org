@@ -103,3 +103,65 @@ button[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.consent {
+  margin-top: 18px;
+  padding: 16px 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.consentLegend {
+  font-weight: 800;
+  color: var(--color-ink);
+  padding: 0;
+}
+
+.phoneRow {
+  margin: 12px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.phoneLabel {
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.phoneInput {
+  flex: 1 1 200px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.phoneInput:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.errorText {
+  margin: 10px 0 0;
+  color: #b3261e;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.savedNote {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-weight: 700;
+}

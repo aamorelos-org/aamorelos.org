@@ -141,6 +141,14 @@ export const api = {
     return request('/aa/api/v1/cuestionario')
   },
 
+  async postCuestionario(payload) {
+    return request('/aa/api/v1/cuestionario', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+  },
+
   async getHealth() {
     return request('/health')
   },
