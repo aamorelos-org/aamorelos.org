@@ -20,4 +20,5 @@ export const quickLinks = [
   { label: 'Directorio', to: '/pages/directorio/directorio.php' },
   { label: 'Reflexiones', to: '/#reflexiones' },
   { label: 'Reflexión del día', to: '/reflexiones-diarias' },
+  { label: 'Autodiagnóstico', to: '/autodiagnostico' },
 ]

@@ -137,6 +137,10 @@ export const api = {
     return committees
   },
 
+  async getCuestionario() {
+    return request('/aa/api/v1/cuestionario')
+  },
+
   async getHealth() {
     return request('/health')
   },

@@ -3,6 +3,7 @@ import Layout from './components/layout/Layout'
 import ScrollToTop from './components/layout/ScrollToTop'
 import Home from './views/Home'
 import Info from './views/Info'
+import Autodiagnostico from './views/Autodiagnostico'
 import Events from './views/Events'
 import EventDetail from './views/EventDetail'
 import Invitation from './views/Invitation'
@@ -27,6 +28,7 @@ function App() {
           <Route path="index.php" element={<Home />} />
 
           <Route path="pages/info/info.php" element={<Info />} />
+<Route path="autodiagnostico" element={<Autodiagnostico />} />
           <Route path="pages/info/aa_info.php" element={<Info />} />
           <Route path="pages/info/eventos.php" element={<Events />} />
 
