@@ -8,7 +8,7 @@ export function parseBookAnnotation(raw) {
   const lines = text.split('\n')
 
   const matches = {}
-  const matchesRegex = /<!--\s*matches[\s\S]*?-->/gi
+  const matchesRegex = /<!--\s*matches(?:(?!-->)[\s\S])*-->/gi
   let match
   const rawNormalizado = text
   while ((match = matchesRegex.exec(rawNormalizado)) !== null) {

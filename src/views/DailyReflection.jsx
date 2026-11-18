@@ -66,7 +66,10 @@ const MD_BASE =
   import.meta.env?.VITE_MD_BASE || 'https://images.aamorelos.org/libros_anotados'
 
 function buildMdUrl(libro, file) {
-  const base = MD_BASE.replace(/\/+$/, '')
+  let base = MD_BASE
+  while (base.endsWith('/')) {
+    base = base.slice(0, -1)
+  }
   return `${base}/${encodeURIComponent(libro)}/${encodeURIComponent(file)}`
 }
 
@@ -327,6 +330,10 @@ export default function DailyReflection() {
 
         return { open: true, loading: false, docs }
       })
+    }).catch(() => {
+      setViewer((prev) => (
+        prev.open ? { open: false, loading: false, docs: [] } : prev
+      ))
     })
   }
 

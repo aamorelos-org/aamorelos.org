@@ -85,7 +85,6 @@ export default function Carousel({ items = [], interval = 6000 }) {
       className={styles.carousel}
       aria-roledescription="carrusel"
       aria-label="Eventos y noticias destacadas"
-      tabIndex={0}
       onKeyDown={handleKeyDown}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}

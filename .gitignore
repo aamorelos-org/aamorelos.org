@@ -27,3 +27,5 @@ requerimiento.txt
 # Cobertura y analisis Sonar
 coverage/
 .scannerwork/
+
+issues.json

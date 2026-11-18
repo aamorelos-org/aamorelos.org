@@ -39,7 +39,8 @@ export function toSlug(value) {
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9_-]+/g, '_')
-    .replace(/^_+|_+$/g, '')
+    .replace(/^_+/, '')
+    .replace(/_+$/, '')
     .replace(/_{2,}/g, '_')
 }
 

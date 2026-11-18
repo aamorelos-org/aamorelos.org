@@ -139,6 +139,11 @@ export default function Directory() {
           aria-modal="true"
           aria-label="Visor del directorio institucional"
           onClick={close}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              close()
+            }
+          }}
         >
           <button type="button" className={styles.modalClose} onClick={close} aria-label="Cerrar visor">
             ×
