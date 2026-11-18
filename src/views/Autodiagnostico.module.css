@@ -71,7 +71,14 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--color-surface);
-  padding: 22px;
+  padding: 26px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.result > * {
+  margin: 0;
 }
 
 .resultTitle {
@@ -99,14 +106,21 @@
   text-decoration: underline;
 }
 
+.consent .primaryButton {
+  margin: 0;
+  align-self: flex-start;
+}
+
 button[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
 .consent {
-  margin-top: 18px;
-  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--color-surface);
@@ -119,7 +133,7 @@ button[disabled] {
 }
 
 .phoneRow {
-  margin: 12px 0 0;
+  margin: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -151,14 +165,14 @@ button[disabled] {
 }
 
 .errorText {
-  margin: 10px 0 0;
+  margin: 0;
   color: #b3261e;
   font-size: 0.85rem;
   font-weight: 600;
 }
 
 .savedNote {
-  margin-top: 18px;
+  margin: 0;
   padding: 14px 16px;
   border-radius: var(--radius-sm);
   background: var(--color-primary-soft);
