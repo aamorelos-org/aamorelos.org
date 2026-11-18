@@ -28,6 +28,9 @@ const escapeHtml = (text) =>
  */
 export function renderRichText(text) {
   const raw = String(text ?? '')
+  if (!raw.trim()) {
+    return ''
+  }
   const looksHtml = /<\w[^>]*>/.test(raw)
   const html = looksHtml
     ? raw
