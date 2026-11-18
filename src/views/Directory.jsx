@@ -138,7 +138,11 @@ export default function Directory() {
           role="dialog"
           aria-modal="true"
           aria-label="Visor del directorio institucional"
-          onClick={close}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              close()
+            }
+          }}
           onKeyDown={(event) => {
             if (event.key === 'Escape') {
               close()
@@ -149,7 +153,7 @@ export default function Directory() {
             ×
           </button>
 
-          <div className={styles.modal} onClick={(event) => event.stopPropagation()}>
+          <div className={styles.modal}>
             <img
               className={styles.modalImage}
               src={assetUrl(items[selected].imagen)}

@@ -1,4 +1,6 @@
-// Parse de un .md anotado (bloque `<!-- matches -->` con JSON).
+// Parse de un .md anotado con `<!-- matches -->` (un JSON embebido entre
+// comentarios). Devuelve las líneas del cuerpo (comentarios ocultos) y el
+// mapa de coincidencias con los índices de línea originales.
 // Ver formato de anotación en scripts de conversión (anotar_md.py).
 export function parseBookAnnotation(raw) {
   if (!raw) {
@@ -8,11 +10,10 @@ export function parseBookAnnotation(raw) {
   const lines = text.split('\n')
 
   const matches = {}
-  const matchesRegex = /<!--\s*matches(?:(?!-->)[\s\S])*-->/gi
-  let match
-  const rawNormalizado = text
-  while ((match = matchesRegex.exec(rawNormalizado)) !== null) {
-    const body = match[0].replace(/^<!--\s*matches\s*/i, '').replace(/\s*-->$/, '')
+  const collectMatches = (blockLines) => {
+    let body = blockLines.join('\n').replace(/^<!--\s*/, '')
+    body = body.replace(/^matches/i, '')
+    body = body.replace(/\s*-->$/, '').trim()
     try {
       Object.assign(matches, JSON.parse(body))
     } catch {
@@ -21,16 +22,22 @@ export function parseBookAnnotation(raw) {
   }
 
   const visible = []
-  let inCommentBlock = false
+  let comment = null // { isMatches: bool, lines: [...] }
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
     const trimmed = line.trim()
 
-    if (!inCommentBlock) {
-      if (/^<!--\s*(pagina-pdf|pagina-impresa|matches)\b/.test(trimmed)) {
-        if (!trimmed.endsWith('-->')) {
-          inCommentBlock = true
+    if (!comment) {
+      const isCommentOpen = /^<!--\s*(pagina-pdf|pagina-impresa|matches)\b/i.test(trimmed)
+      if (isCommentOpen) {
+        const isMatches = /^<!--\s*matches\b/i.test(trimmed)
+        if (trimmed.endsWith('-->')) {
+          if (isMatches) {
+            collectMatches([trimmed])
+          }
+        } else {
+          comment = { isMatches, lines: [trimmed] }
         }
         continue
       }
@@ -38,9 +45,17 @@ export function parseBookAnnotation(raw) {
       continue
     }
 
+    comment.lines.push(line)
     if (trimmed.endsWith('-->')) {
-      inCommentBlock = false
+      if (comment.isMatches) {
+        collectMatches(comment.lines)
+      }
+      comment = null
     }
+  }
+
+  if (comment?.isMatches) {
+    collectMatches(comment.lines)
   }
 
   return { matches, visible }

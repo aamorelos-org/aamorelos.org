@@ -2,10 +2,14 @@ import { committees } from '../data/committees'
 import { slugFromUrl } from '../utils/links'
 
 const rawBaseUrl = import.meta.env?.VITE_API_URL || 'https://api.aamorelos.org'
-let API_URL = rawBaseUrl
-while (API_URL.endsWith('/')) {
-  API_URL = API_URL.slice(0, -1)
+const computeApiUrl = (value) => {
+  let result = String(value)
+  while (result.endsWith('/')) {
+    result = result.slice(0, -1)
+  }
+  return result
 }
+const API_URL = computeApiUrl(rawBaseUrl)
 
 export const isApiConfigured = Boolean(API_URL)
 

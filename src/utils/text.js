@@ -33,15 +33,18 @@ export function matchesRecord(record, query) {
 }
 
 export function toSlug(value) {
-  return String(value || '')
+  const cleaned = String(value || '')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9_-]+/g, '_')
-    .replace(/^_+/, '')
-    .replace(/_+$/, '')
     .replace(/_{2,}/g, '_')
+  let start = 0
+  let end = cleaned.length
+  while (start < end && cleaned.charAt(start) === '_') start += 1
+  while (end > start && cleaned.charAt(end - 1) === '_') end -= 1
+  return cleaned.slice(start, end)
 }
 
 export function formatPhoneHref(value = '') {
