@@ -71,6 +71,7 @@ const links = [
     children: [
       { to: '/pages/info/info.php', label: '¿Qué es AA?' },
       { to: '/pages/info/eventos.php', label: 'Eventos y noticias' },
+      { to: '/autodiagnostico', label: 'Autodiagnóstico' },
     ],
   },
   { to: '/pages/grupos/grupos.php', label: 'Grupos', icon: UsersIcon },
@@ -81,7 +82,11 @@ const links = [
 ]
 
 function isInformationRoute(pathname) {
-  return pathname.startsWith('/pages/info') || pathname.startsWith('/pages/eventos')
+  return (
+    pathname.startsWith('/pages/info') ||
+    pathname.startsWith('/pages/eventos') ||
+    pathname === '/autodiagnostico'
+  )
 }
 
 export default function Navbar() {
