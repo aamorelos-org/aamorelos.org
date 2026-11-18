@@ -11,9 +11,18 @@ export function parseBookAnnotation(raw) {
 
   const matches = {}
   const collectMatches = (blockLines) => {
-    let body = blockLines.join('\n').replace(/^<!--\s*/, '')
-    body = body.replace(/^matches/i, '')
-    body = body.replace(/\s*-->$/, '').trim()
+    let body = blockLines.join('\n')
+    if (body.startsWith('<!--')) {
+      body = body.slice(4)
+    }
+    body = body.trimStart()
+    if (body.toLowerCase().startsWith('matches')) {
+      body = body.slice('matches'.length)
+    }
+    if (body.trimEnd().endsWith('-->')) {
+      body = body.trimEnd().slice(0, -3)
+    }
+    body = body.trim()
     try {
       Object.assign(matches, JSON.parse(body))
     } catch {
