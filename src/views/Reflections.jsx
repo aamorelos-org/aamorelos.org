@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Breadcrumb from '../components/layout/Breadcrumb'
-import Pagination from '../components/ui/Pagination'
-import ReflectionCard from '../components/ui/ReflectionCard'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
+import { Pagination } from '../components/ui/Pagination'
+import { ReflectionCard } from '../components/ui/ReflectionCard'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import styles from './Reflections.module.css'
 
 const PAGE_SIZE = 20
 
-export default function Reflections() {
+/**
+ * Listado de reflexiones.
+ */
+export function Reflections() {
   useDocumentTitle('Reflexiones')
 
   const [reflections, setReflections] = useState([])

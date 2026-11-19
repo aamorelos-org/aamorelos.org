@@ -1,7 +1,16 @@
-// Parse de un .md anotado con `<!-- matches -->` (un JSON embebido entre
-// comentarios). Devuelve las líneas del cuerpo (comentarios ocultos) y el
-// mapa de coincidencias con los índices de línea originales.
-// Ver formato de anotación en scripts de conversión (anotar_md.py).
+/**
+ * @fileoverview Parse de un `.md` anotado con `<!-- matches -->` (un JSON embebido
+ * entre comentarios). Devuelve las líneas del cuerpo (comentarios ocultos) y el
+ * mapa de coincidencias con los índices de línea originales.
+ * Ver formato de anotación en los scripts de conversión (anotar_md.py).
+ */
+
+/**
+ * Interpreta un `.md` anotado para el visor "Fuente del texto".
+ * @param raw Contenido completo del documento; puede ser null.
+ * @return Documento { matches, visible } donde `matches` mapea fecha (MM-DD) a
+ *   índices de línea 1-based y `visible` son las líneas no comentadas con su índice.
+ */
 export function parseBookAnnotation(raw) {
   if (!raw) {
     return { matches: {}, visible: [] }
@@ -26,12 +35,11 @@ export function parseBookAnnotation(raw) {
     try {
       Object.assign(matches, JSON.parse(body))
     } catch {
-      // JSON inválido: se conserva matches con lo ya leído
     }
   }
 
   const visible = []
-  let comment = null // { isMatches: bool, lines: [...] }
+  let comment = null
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]

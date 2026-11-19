@@ -1,3 +1,4 @@
+/** @fileoverview Catálogo de comités de servicio del área (nombre, descripción y funciones). */
 export const committees = [
     {
         "id": 1,
@@ -112,4 +113,3 @@ export const committees = [
         "fuente": "https://www.aa.org/es/remote-communities-committees"
     }
 ]
-export default committees

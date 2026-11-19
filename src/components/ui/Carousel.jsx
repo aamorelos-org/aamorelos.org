@@ -37,7 +37,12 @@ function SlideContent({ item }) {
   )
 }
 
-export default function Carousel({ items = [], interval = 6000 }) {
+/**
+ * Carrusel automático de imágenes.
+ * @param items Ítems con imagen.
+ * @param interval Milisegundos entre transiciones (default 6000).
+ */
+export function Carousel({ items = [], interval = 6000 }) {
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
   const count = items.length

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Breadcrumb from '../components/layout/Breadcrumb'
-import FullScreenImage from '../components/ui/FullScreenImage'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
+import { FullScreenImage } from '../components/ui/FullScreenImage'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { bebiendo } from '../data/reflectionsContent'
 import { api } from '../services/api'
@@ -28,7 +28,10 @@ function PhoneIcon() {
   )
 }
 
-export default function BebiendoDemasiado() {
+/**
+ * Mini-sitio dedicado al contenido "¿Estás bebiendo demasiado?".
+ */
+export function BebiendoDemasiado() {
   useDocumentTitle(bebiendo.title)
 
   const [reflection, setReflection] = useState(null)

@@ -1,3 +1,4 @@
+/** Tamaño máximo aceptado para imágenes (5 MB). */
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024
 
 const WEBP_QUALITY = 0.9
@@ -5,6 +6,7 @@ const WEBP_QUALITY = 0.9
 /**
  * Convierte un archivo de imagen a WebP en el navegador.
  * Devuelve el base64 (sin prefijo data:) listo para enviar a la API.
+ * El fondo se pinta blanco para que los PNG transparentes no salgan negros.
  */
 export function fileToWebpBase64(file) {
   return new Promise((resolve, reject) => {
@@ -26,7 +28,6 @@ export function fileToWebpBase64(file) {
           return
         }
 
-        // Fondo blanco: si no, PNG transparentes se exportan con negro en áreas vacías.
         context.fillStyle = '#ffffff'
         context.fillRect(0, 0, canvas.width, canvas.height)
         context.drawImage(image, 0, 0)

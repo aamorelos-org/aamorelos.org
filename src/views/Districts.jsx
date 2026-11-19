@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Breadcrumb from '../components/layout/Breadcrumb'
-import Pagination from '../components/ui/Pagination'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
+import { Pagination } from '../components/ui/Pagination'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { districtRoute } from '../utils/links'
@@ -11,7 +11,10 @@ import styles from './Listing.module.css'
 
 const PAGE_SIZE = 20
 
-export default function Districts() {
+/**
+ * Listado de distritos del área.
+ */
+export function Districts() {
   useDocumentTitle('Directorio de distritos')
 
   const [districts, setDistricts] = useState([])

@@ -4,11 +4,15 @@ import styles from './FullScreenImage.module.css';
 /**
  * Imagen ampliable a pantalla completa.
  *
- * Uso: <FullScreenImage src={...} alt={...} onError={...} />
- * El <img> admite las mismas props que un <img> normal (onLoad, onError, className…).
+ * Uso: `<FullScreenImage src={...} alt={...} onError={...} />`
+ * El `<img>` admite las mismas props que un `<img>` normal (onLoad, onError, className…).
  * Al activarla se abre un visor modal: clic fuera, Escape o el botón × la cierran.
+ *
+ * @param src Imagen a mostrar.
+ * @param alt Texto alternativo.
+ * @param imgProps Resto de props del elemento img.
  */
-export default function FullScreenImage({ src, alt = '', ...imgProps }) {
+export function FullScreenImage({ src, alt = '', ...imgProps }) {
   const [open, setOpen] = useState(false);
   const closeButtonRef = useRef(null);
   const triggerRef = useRef(null);

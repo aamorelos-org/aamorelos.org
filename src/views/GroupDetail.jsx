@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import Breadcrumb from '../components/layout/Breadcrumb'
-import MapEmbed from '../components/ui/MapEmbed'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
+import { MapEmbed } from '../components/ui/MapEmbed'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { districtRoute, groupRoute } from '../utils/links'
@@ -18,7 +18,10 @@ const days = [
   ['Domingo', 'horario_domingo'],
 ]
 
-export default function GroupDetail() {
+/**
+ * Detalle de grupo (horarios, mapa, como llegar).
+ */
+export function GroupDetail() {
   const [searchParams] = useSearchParams()
   const id = searchParams.get('id') || ''
 

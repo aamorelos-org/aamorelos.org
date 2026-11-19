@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import Breadcrumb from '../components/layout/Breadcrumb'
-import EventCard from '../components/ui/EventCard'
-import Pagination from '../components/ui/Pagination'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
+import { EventCard } from '../components/ui/EventCard'
+import { Pagination } from '../components/ui/Pagination'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import pageStyles from './Page.module.css'
@@ -9,7 +9,10 @@ import styles from './Listing.module.css'
 
 const PAGE_SIZE = 20
 
-export default function Events() {
+/**
+ * Calendario/listado de eventos.
+ */
+export function Events() {
   useDocumentTitle('Eventos y noticias')
 
   const [events, setEvents] = useState([])

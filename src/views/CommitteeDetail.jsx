@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import Breadcrumb from '../components/layout/Breadcrumb'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import styles from './Page.module.css'
 
-export default function CommitteeDetail() {
+/**
+ * Detalle de comité (contenido del área cargado dinámicamente).
+ */
+export function CommitteeDetail() {
   const [searchParams] = useSearchParams()
   const rawId = searchParams.get('id') || ''
   const numericId = Number(rawId)

@@ -1,8 +1,11 @@
 import { useParams, useSearchParams } from 'react-router-dom'
-import BebiendoDemasiado from './BebiendoDemasiado'
-import StandardReflectionDetail from './StandardReflectionDetail'
+import { BebiendoDemasiado } from './BebiendoDemasiado'
+import { StandardReflectionDetail } from './StandardReflectionDetail'
 
-export default function ReflectionDetail() {
+/**
+ * Detalle de reflexión (legado o estándar según contenido).
+ */
+export function ReflectionDetail() {
   const { slug = '' } = useParams()
   const [searchParams] = useSearchParams()
   const id = searchParams.get('id') || ''

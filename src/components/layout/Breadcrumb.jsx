@@ -1,7 +1,12 @@
 import { Link } from 'react-router-dom'
 import styles from './Breadcrumb.module.css'
 
-export default function Breadcrumb({ items = [] }) {
+/**
+ * Ruta de navegación (breadcrumb) sobre el contenido.
+ * @param items Ítems de la ruta ({label, to}).
+ * @return Componente de migas.
+ */
+export function Breadcrumb({ items = [] }) {
   if (!items.length) {
     return null
   }

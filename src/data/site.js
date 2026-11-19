@@ -1,3 +1,4 @@
+/** @fileoverview Datos institucionales del área (nombre, contacto, organización). */
 export const site = {
   name: 'Área Morelos',
   community: 'Alcohólicos Anónimos',
@@ -11,6 +12,7 @@ export const site = {
   address: 'Área Morelos, Morelos, México',
 }
 
+/** Enlaces principales del sitio (usados en Header/Footer). */
 export const quickLinks = [
   { label: 'Inicio', to: '/' },
   { label: '¿Qué es AA?', to: '/pages/info/info.php' },

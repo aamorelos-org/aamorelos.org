@@ -19,7 +19,10 @@ function PhoneIcon() {
   )
 }
 
-export default function Header() {
+/**
+ * Cabecera principal del sitio (logo del área + navegación).
+ */
+export function Header() {
   return (
     <header className={styles.header}>
       <div className={`container ${styles.inner}`}>

@@ -89,7 +89,10 @@ function isInformationRoute(pathname) {
   )
 }
 
-export default function Navbar() {
+/**
+ * Barra de navegación principal (responsive, con drawer móvil).
+ */
+export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [infoOpen, setInfoOpen] = useState(false)
   const location = useLocation()

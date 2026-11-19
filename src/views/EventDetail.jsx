@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import Breadcrumb from '../components/layout/Breadcrumb'
-import FullScreenImage from '../components/ui/FullScreenImage'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
+import { FullScreenImage } from '../components/ui/FullScreenImage'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { mediaUrl } from '../utils/links'
@@ -152,7 +152,10 @@ function AniversarioInfo({ evento }) {
   )
 }
 
-export default function EventDetail() {
+/**
+ * Detalle del evento (informativo o invitación).
+ */
+export function EventDetail() {
   const { slug = '' } = useParams()
   const cleanSlug = slug.replace(/\.php$/i, '')
 

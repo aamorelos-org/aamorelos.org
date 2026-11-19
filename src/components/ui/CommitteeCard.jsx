@@ -11,7 +11,11 @@ function Arrow() {
   )
 }
 
-export default function CommitteeCard({ committee }) {
+/**
+ * Tarjeta de comité.
+ * @param committee Comité crudo de la API.
+ */
+export function CommitteeCard({ committee }) {
   if (!committee) {
     return null
   }

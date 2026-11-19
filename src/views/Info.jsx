@@ -1,4 +1,4 @@
-import Breadcrumb from '../components/layout/Breadcrumb'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { site } from '../data/site'
 import styles from './Page.module.css'
@@ -20,7 +20,10 @@ const notDone = [
   'No suministra cartas de recomendación a las juntas de libertad condicional, abogados o funcionarios de los tribunales, agencias sociales, empleadores.',
 ]
 
-export default function Info() {
+/**
+ * Historia y qué es AA para la comunidad.
+ */
+export function Info() {
   useDocumentTitle('¿Qué es AA?')
 
   return (

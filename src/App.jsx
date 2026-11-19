@@ -1,24 +1,25 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import Layout from './components/layout/Layout'
-import ScrollToTop from './components/layout/ScrollToTop'
-import Home from './views/Home'
-import Info from './views/Info'
-import Autodiagnostico from './views/Autodiagnostico'
-import Events from './views/Events'
-import EventDetail from './views/EventDetail'
-import Invitation from './views/Invitation'
-import Groups from './views/Groups'
-import GroupDetail from './views/GroupDetail'
-import Districts from './views/Districts'
-import DistrictDetail from './views/DistrictDetail'
-import Directory from './views/Directory'
-import Reflections from './views/Reflections'
-import DailyReflection from './views/DailyReflection'
-import ReflectionDetail from './views/ReflectionDetail'
-import CommitteeDetail from './views/CommitteeDetail'
-import NotFound from './views/NotFound'
+import { Layout } from './components/layout/Layout'
+import { ScrollToTop } from './components/layout/ScrollToTop'
+import { Home } from './views/Home'
+import { Info } from './views/Info'
+import { Autodiagnostico } from './views/Autodiagnostico'
+import { Events } from './views/Events'
+import { EventDetail } from './views/EventDetail'
+import { Invitation } from './views/Invitation'
+import { Groups } from './views/Groups'
+import { GroupDetail } from './views/GroupDetail'
+import { Districts } from './views/Districts'
+import { DistrictDetail } from './views/DistrictDetail'
+import { Directory } from './views/Directory'
+import { Reflections } from './views/Reflections'
+import { DailyReflection } from './views/DailyReflection'
+import { ReflectionDetail } from './views/ReflectionDetail'
+import { CommitteeDetail } from './views/CommitteeDetail'
+import { NotFound } from './views/NotFound'
 
-function App() {
+/** Componente raíz: enruta las vistas y envuelve la navegación global. */
+export function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
@@ -64,4 +65,3 @@ function App() {
   )
 }
 
-export default App

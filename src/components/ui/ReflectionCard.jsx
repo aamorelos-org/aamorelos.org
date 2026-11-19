@@ -11,7 +11,11 @@ function Arrow() {
   )
 }
 
-export default function ReflectionCard({ reflection }) {
+/**
+ * Tarjeta de reflexión.
+ * @param reflection Reflexión cruda de la API.
+ */
+export function ReflectionCard({ reflection }) {
   if (!reflection) {
     return null
   }

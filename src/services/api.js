@@ -1,7 +1,7 @@
 import { committees } from '../data/committees'
 import { slugFromUrl } from '../utils/links'
 
-const rawBaseUrl = import.meta.env?.VITE_API_URL || 'https://api.aamorelos.org'
+const RAW_BASE_URL = import.meta.env?.VITE_API_URL || 'https://api.aamorelos.org'
 const computeApiUrl = (value) => {
   let result = String(value)
   while (result.endsWith('/')) {
@@ -9,8 +9,9 @@ const computeApiUrl = (value) => {
   }
   return result
 }
-const API_URL = computeApiUrl(rawBaseUrl)
+const API_URL = computeApiUrl(RAW_BASE_URL)
 
+/** true cuando hay URL base configurada para la API. */
 export const isApiConfigured = Boolean(API_URL)
 
 function messageFromErrorData(errorData, status) {
@@ -74,6 +75,12 @@ async function request(path, options = {}) {
   return response.json()
 }
 
+/**
+ * Cliente de la API pública AA Morelos. Los endpoints devuelven el JSON crudo del
+ * servicio; los métodos con detalle (`getReflectionDetail`, `getEventDetail`) devuelven
+ * `null` cuando no hay ruta válida; los de listado usan paginación `skip`/`limit`.
+ * Errores: lanzan `Error` con el mensaje `message`/`error`/`detail` del backend.
+ */
 export const api = {
   async getStateDistricts(stateId = '17') {
     return request(`/aa/api/v1/estados/${encodeURIComponent(stateId)}/distritos`)

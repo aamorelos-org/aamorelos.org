@@ -2,7 +2,10 @@ import { Link } from 'react-router-dom'
 import { quickLinks, site } from '../../data/site'
 import styles from './Footer.module.css'
 
-export default function Footer() {
+/**
+ * Pie de página con enlaces rápidos y datos de contacto del área.
+ */
+export function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={`container ${styles.grid}`}>

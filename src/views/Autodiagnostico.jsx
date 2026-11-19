@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Breadcrumb from '../components/layout/Breadcrumb'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { site } from '../data/site'
@@ -9,7 +9,10 @@ import styles from './Autodiagnostico.module.css'
 
 const PHONE_RE = /^[+()\-.\s\d]{7,20}$/
 
-export default function Autodiagnostico() {
+/**
+ * Autodiagnóstico de AA (cuestionario con resultados).
+ */
+export function Autodiagnostico() {
   useDocumentTitle('Autodiagnóstico')
 
   const [questions, setQuestions] = useState(null)

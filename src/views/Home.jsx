@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Carousel from '../components/ui/Carousel'
-import ReflectionCard from '../components/ui/ReflectionCard'
-import CommitteeCard from '../components/ui/CommitteeCard'
+import { Carousel } from '../components/ui/Carousel'
+import { ReflectionCard } from '../components/ui/ReflectionCard'
+import { CommitteeCard } from '../components/ui/CommitteeCard'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { site } from '../data/site'
@@ -69,7 +69,10 @@ const introCards = [
   },
 ]
 
-export default function Home() {
+/**
+ * Portada del sitio (hero, reflexiones, eventos).
+ */
+export function Home() {
   useDocumentTitle('Inicio')
 
   const [events, setEvents] = useState([])

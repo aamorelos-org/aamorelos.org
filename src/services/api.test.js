@@ -239,13 +239,13 @@ describe('api: endpoints de geo y detalle', () => {
     )
   })
 
-  it('getReflexionDiaria envía fecha en el query', async () => {
+  it('getReflexionDiaria envÃ­a fecha en el query', async () => {
     fetchMock().mockResolvedValue(jsonResponse({ ok: true, data: [] }))
     await api.getReflexionDiaria('11-17')
     expect(fetchMock().mock.calls[0][0]).toContain('fecha=11-17')
   })
 
-  it('getEventDetail devuelve data del envelope con un slug válido', async () => {
+  it('getEventDetail devuelve data del envelope con un slug vÃ¡lido', async () => {
     fetchMock().mockResolvedValue(jsonResponse({ ok: true, data: { id: 7 } }))
     const result = await api.getEventDetail('mi-evento')
     expect(result).toEqual({ id: 7 })

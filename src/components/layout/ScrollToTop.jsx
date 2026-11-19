@@ -1,7 +1,10 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
-export default function ScrollToTop() {
+/**
+ * Devuelve el scroll al inicio al cambiar de ruta.
+ */
+export function ScrollToTop() {
   const { pathname, hash } = useLocation()
 
   useEffect(() => {

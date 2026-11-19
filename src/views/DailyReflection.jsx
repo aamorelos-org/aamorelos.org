@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Breadcrumb from '../components/layout/Breadcrumb'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import styles from './Reflections.module.css'
@@ -203,7 +203,10 @@ function escaparHtml(texto) {
     .replace(/>/g, '&gt;')
 }
 
-export default function DailyReflection() {
+/**
+ * Reflexión diaria con la fuente del texto anotada.
+ */
+export function DailyReflection() {
   useDocumentTitle('Reflexión del día')
 
   const [fecha, setFecha] = useState(todayMMDD)

@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Breadcrumb from '../components/layout/Breadcrumb'
-import FullScreenImage from '../components/ui/FullScreenImage'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
+import { FullScreenImage } from '../components/ui/FullScreenImage'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { mediaUrl } from '../utils/links'
 import styles from './Invitation.module.css'
 
-export default function Invitation() {
+/**
+ * Invitación a la semana nacional de AA (detalle).
+ */
+export function Invitation() {
   useDocumentTitle('16 Aniversario · Grupo Hoy Volvemos a Empezar')
 
   const [event, setEvent] = useState(null)

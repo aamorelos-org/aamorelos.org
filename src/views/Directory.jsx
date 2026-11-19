@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import Breadcrumb from '../components/layout/Breadcrumb'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { assetUrl } from '../utils/links'
@@ -15,7 +15,10 @@ function periodLabel(item) {
   return parts.length ? `Directorio ${parts.join(' · ')}` : 'Directorio'
 }
 
-export default function Directory() {
+/**
+ * Directorio alcohólico y oficinas del área.
+ */
+export function Directory() {
   useDocumentTitle('Directorio institucional')
 
   const [items, setItems] = useState([])

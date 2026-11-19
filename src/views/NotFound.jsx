@@ -2,7 +2,10 @@ import { Link } from 'react-router-dom'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import styles from './Page.module.css'
 
-export default function NotFound() {
+/**
+ * Página 404 (ruta inexistente).
+ */
+export function NotFound() {
   useDocumentTitle('Página no encontrada')
 
   return (

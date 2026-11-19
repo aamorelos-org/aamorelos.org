@@ -8,7 +8,13 @@ function Arrow({ direction = 'right' }) {
   )
 }
 
-export default function Pagination({ page, pageCount, onChange }) {
+/**
+ * Paginación numerada.
+ * @param page Página actual (1-based).
+ * @param pageCount Total de páginas.
+ * @param onChange Callback al cambiar de página.
+ */
+export function Pagination({ page, pageCount, onChange }) {
   if (pageCount <= 1) {
     return null
   }

@@ -1,3 +1,4 @@
+/** @fileoverview Contenido editorial de las reflexiones dedicadas (mini-sitios). */
 export const bebiendo = {
   title: '¿Crees que estás bebiendo demasiado y no puedes parar?',
   kicker: 'Pausa y Bienestar · 6to Dtto. Jiutepec, Morelos',
@@ -13,6 +14,7 @@ export const bebiendo = {
   phones: ['777 132 05 95', '777 268 08 18', '777 524 90 95', '777 111 95 58'],
 }
 
+/** Prompts del cuestionario ¿Estás bebiendo demasiado? para la reflexión. */
 export const reflectionPrompts = {
   llegamos_creer: '¿Qué pequeño apoyo puedes permitirte recibir hoy?',
   oracion_serenidad: '¿Qué situación puedes soltar por un momento y qué sí está en tus manos?',

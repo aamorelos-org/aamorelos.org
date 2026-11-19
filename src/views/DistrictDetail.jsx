@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import Breadcrumb from '../components/layout/Breadcrumb'
-import MapEmbed from '../components/ui/MapEmbed'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
+import { MapEmbed } from '../components/ui/MapEmbed'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { api } from '../services/api'
 import { groupRoute } from '../utils/links'
 import pageStyles from './Page.module.css'
 import styles from './Detail.module.css'
 
-export default function DistrictDetail() {
+/**
+ * Detalle de distrito (grupos, dirección, contacto).
+ */
+export function DistrictDetail() {
   const [searchParams] = useSearchParams()
   const id = searchParams.get('id') || ''
 

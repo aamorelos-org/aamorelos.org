@@ -11,7 +11,11 @@ function Arrow() {
   )
 }
 
-export default function EventCard({ event }) {
+/**
+ * Tarjeta de evento (informativo o invitación).
+ * @param event Evento crudo de la API.
+ */
+export function EventCard({ event }) {
   if (!event) {
     return null
   }

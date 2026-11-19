@@ -1,7 +1,13 @@
 import { mapsEmbedUrl } from '../../utils/links'
 import styles from './MapEmbed.module.css'
 
-export default function MapEmbed({ query, title = 'Mapa de ubicación', height = 320 }) {
+/**
+ * Embebido de Google Maps.
+ * @param query Consulta de búsqueda.
+ * @param title Texto accesible del iframe.
+ * @param height Altura en px.
+ */
+export function MapEmbed({ query, title = 'Mapa de ubicación', height = 320 }) {
   if (!query) {
     return null
   }

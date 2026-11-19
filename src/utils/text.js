@@ -1,3 +1,8 @@
+/**
+ * Normaliza texto para comparaciones: minúsculas, sin acentos/diacríticos y sin espacios extremos.
+ * @param value Texto fuente.
+ * @return Texto normalizado.
+ */
 export function normalizeText(value = '') {
   return String(value)
     .toLowerCase()
@@ -6,6 +11,12 @@ export function normalizeText(value = '') {
     .trim()
 }
 
+/**
+ * Indica si [value] contiene [query] tras normalizar ambos. Sin [query] siempre es true.
+ * @param value Texto buscado.
+ * @param query Consulta del usuario.
+ * @return true si hay coincidencia.
+ */
 export function matchesQuery(value, query) {
   if (!query) {
     return true
@@ -14,6 +25,13 @@ export function matchesQuery(value, query) {
   return normalizeText(value).includes(normalizeText(query))
 }
 
+/**
+ * Indica si algún campo del registro contiene [query] tras normalizar. Omite las claves
+ * `image`/`imagen` y los valores nulos; objeto sueltos se serializan. Sin [query] siempre es true.
+ * @param record Registro a evaluar.
+ * @param query Consulta del usuario.
+ * @return true si algún valor coincide.
+ */
 export function matchesRecord(record, query) {
   if (!query) {
     return true
@@ -32,6 +50,12 @@ export function matchesRecord(record, query) {
   return matchesQuery(haystack, query)
 }
 
+/**
+ * Convierte un texto a slug `[a-z0-9_]`: minúsculas, sin acentos, caracteres especiales
+ * a `_`, `_` repetidos se colapsan y se recorta en los extremos.
+ * @param value Texto fuente.
+ * @return Slug sin guiones bajos en los extremos.
+ */
 export function toSlug(value) {
   const cleaned = String(value || '')
     .normalize('NFD')
@@ -47,6 +71,12 @@ export function toSlug(value) {
   return cleaned.slice(start, end)
 }
 
+/**
+ * Devuelve un `tel:` con código de país: 10 dígitos mexicanos reciben `+52`,
+ * el resto se prefija `+`. Devuelve '' si no hay dígitos.
+ * @param value Teléfono en cualquier formato.
+ * @return URL de teléfono.
+ */
 export function formatPhoneHref(value = '') {
   const digits = String(value).replace(/\D/g, '')
 

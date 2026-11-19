@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
-import Breadcrumb from '../components/layout/Breadcrumb'
-import FullScreenImage from '../components/ui/FullScreenImage'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
+import { FullScreenImage } from '../components/ui/FullScreenImage'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { reflectionPrompts } from '../data/reflectionsContent'
 import { api } from '../services/api'
@@ -9,7 +9,10 @@ import { reflectionRoute } from '../utils/links'
 import { renderRichText } from '../utils/richText'
 import styles from './Reflections.module.css'
 
-export default function StandardReflectionDetail() {
+/**
+ * Detalle estándar de reflexión con fuente del texto.
+ */
+export function StandardReflectionDetail() {
   const { slug = '' } = useParams()
   const [searchParams] = useSearchParams()
   const id = searchParams.get('id') || ''

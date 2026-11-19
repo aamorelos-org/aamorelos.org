@@ -25,6 +25,8 @@ const escapeHtml = (text) =>
 /**
  * Normaliza la descripción (HTML o texto plano) y la sanea para usarla en
  * dangerouslySetInnerHTML con una allowlist estricta.
+ * @param text Descripción cruda (HTML o texto plano con saltos de línea).
+ * @return HTML saneado con allowlist estricta.
  */
 export function renderRichText(text) {
   const raw = String(text ?? '')
