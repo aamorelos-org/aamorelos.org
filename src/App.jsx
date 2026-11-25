@@ -17,6 +17,7 @@ import { DailyReflection } from './views/DailyReflection'
 import { ReflectionDetail } from './views/ReflectionDetail'
 import { CommitteeDetail } from './views/CommitteeDetail'
 import { NotFound } from './views/NotFound'
+import { PrivacyPolicy } from './views/PrivacyPolicy'
 
 /** Componente raíz: enruta las vistas y envuelve la navegación global. */
 export function App() {
@@ -58,6 +59,8 @@ export function App() {
           <Route path="reflexiones" element={<Reflections />} />
           <Route path="reflexiones-diarias" element={<DailyReflection />} />
 
+          <Route path="politica-de-privacidad" element={<PrivacyPolicy />} />
+          <Route path="privacidad" element={<PrivacyPolicy />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
