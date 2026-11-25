@@ -1,4 +1,4 @@
-﻿import { Breadcrumb } from '../components/layout/Breadcrumb'
+import { Breadcrumb } from '../components/layout/Breadcrumb'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import styles from './Page.module.css'
 
