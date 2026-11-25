@@ -64,7 +64,10 @@ export function Footer() {
 
       <div className={`container ${styles.bottom}`}>
         <p>© {new Date().getFullYear()} Área Morelos · Central Mexicana de Servicios Generales de A.A., A.C.</p>
-        <p>Unidad · Servicio · Recuperación</p>
+        <p>
+          <Link to="/politica-de-privacidad">Política de privacidad</Link>
+          {' · '}Unidad · Servicio · Recuperación
+        </p>
       </div>
     </footer>
   )
