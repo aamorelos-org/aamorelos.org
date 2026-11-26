@@ -3,26 +3,26 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import styles from './Page.module.css'
 
 /**
- * PolÃ­tica de privacidad de AAMorelos.
+ * Política de privacidad de AAMorelos.
  */
 export function PrivacyPolicy() {
-  useDocumentTitle('PolÃ­tica de privacidad')
+  useDocumentTitle('Política de privacidad')
 
   return (
     <div className={styles.page}>
       <Breadcrumb
         items={[
           { label: 'Inicio', to: '/' },
-          { label: 'PolÃ­tica de privacidad' },
+          { label: 'Política de privacidad' },
         ]}
       />
 
       <header className={styles.pageHeader}>
         <span className={styles.eyebrow}>AAMorelos</span>
-        <h1 className={styles.title}>PolÃ­tica de privacidad</h1>
+        <h1 className={styles.title}>Política de privacidad</h1>
         <p className={styles.lead}>
-          Ãšltima actualizaciÃ³n: 25 de noviembre de 2026. Esta polÃ­tica describe cÃ³mo
-          AAMorelos recopila, usa y protege la informaciÃ³n cuando utilizas la aplicaciÃ³n y
+          Última actualización: 25 de noviembre de 2026. Esta política describe cómo
+          AAMorelos recopila, usa y protege la información cuando utilizas la aplicación y
           los servicios relacionados.
         </p>
       </header>
@@ -30,9 +30,9 @@ export function PrivacyPolicy() {
       <div className={styles.prose}>
         <div className={styles.infoBox}>
           <p>
-            <strong>Resumen:</strong> AAMorelos no vende tu informaciÃ³n personal ni muestra
-            publicidad de terceros. Solo recopilamos la informaciÃ³n necesaria para operar la
-            aplicaciÃ³n, responder solicitudes voluntarias y mantener la seguridad del servicio.
+            <strong>Resumen:</strong> AAMorelos no vende tu información personal ni muestra
+            publicidad de terceros. Solo recopilamos la información necesaria para operar la
+            aplicación, responder solicitudes voluntarias y mantener la seguridad del servicio.
           </p>
         </div>
 
@@ -43,74 +43,74 @@ export function PrivacyPolicy() {
           <a href="mailto:aamorelos6todistrito@gmail.com">aamorelos6todistrito@gmail.com</a>.
         </p>
 
-        <h2>2. InformaciÃ³n que recopilamos</h2>
-        <h3>InformaciÃ³n que proporcionas</h3>
+        <h2>2. Información que recopilamos</h2>
+        <h3>Información que proporcionas</h3>
         <ul>
           <li>
-            <strong>Acceso administrativo:</strong> si usas la secciÃ³n de AdministraciÃ³n, se
-            solicitan credenciales (usuario/correo y contraseÃ±a) para autenticarte. Estas
-            credenciales se envÃ­an al servicio de AAMorelos Ãºnicamente para validar el acceso.
+            <strong>Acceso administrativo:</strong> si usas la sección de Administración, se
+            solicitan credenciales (usuario/correo y contraseña) para autenticarte. Estas
+            credenciales se envían al servicio de AAMorelos únicamente para validar el acceso.
           </li>
           <li>
-            <strong>AutodiagnÃ³stico (opcional):</strong> el autodiagnÃ³stico es orientativo y no
-            clÃ­nico. Si decides guardar tus respuestas o solicitar que te llamen, la aplicaciÃ³n
-            puede enviar las respuestas del cuestionario, la opciÃ³n de contacto y el nÃºmero
-            telefÃ³nico que proporciones, solo con tu acciÃ³n explÃ­cita.
+            <strong>Autodiagnóstico (opcional):</strong> el autodiagnóstico es orientativo y no
+            clínico. Si decides guardar tus respuestas o solicitar que te llamen, la aplicación
+            puede enviar las respuestas del cuestionario, la opción de contacto y el número
+            telefónico que proporciones, solo con tu acción explícita.
           </li>
         </ul>
 
-        <h3>InformaciÃ³n recopilada automÃ¡ticamente</h3>
+        <h3>Información recopilada automáticamente</h3>
         <ul>
           <li>
-            <strong>Notificaciones push:</strong> si autorizas notificaciones, la aplicaciÃ³n
+            <strong>Notificaciones push:</strong> si autorizas notificaciones, la aplicación
             puede usar Firebase Cloud Messaging (Google) para recibir avisos. Esto puede
-            implicar el procesamiento de un token de notificaciÃ³n del dispositivo y datos
-            tÃ©cnicos necesarios para entregar la notificaciÃ³n.
+            implicar el procesamiento de un token de notificación del dispositivo y datos
+            técnicos necesarios para entregar la notificación.
           </li>
           <li>
-            <strong>InformaciÃ³n tÃ©cnica bÃ¡sica:</strong> el servicio o API puede recibir
-            informaciÃ³n tÃ©cnica estÃ¡ndar necesaria para operar, como direcciÃ³n IP, tipo de
-            dispositivo, versiÃ³n de la app, fecha/hora de solicitud y registros de error, segÃºn
+            <strong>Información técnica básica:</strong> el servicio o API puede recibir
+            información técnica estándar necesaria para operar, como dirección IP, tipo de
+            dispositivo, versión de la app, fecha/hora de solicitud y registros de error, según
             la infraestructura utilizada.
           </li>
         </ul>
 
-        <h2>3. CÃ³mo usamos la informaciÃ³n</h2>
+        <h2>3. Cómo usamos la información</h2>
         <ul>
-          <li>Mostrar contenido de la aplicaciÃ³n: grupos, eventos, reflexiones e informaciÃ³n.</li>
+          <li>Mostrar contenido de la aplicación: grupos, eventos, reflexiones e información.</li>
           <li>Permitir el acceso administrativo autorizado.</li>
-          <li>Procesar el envÃ­o voluntario del autodiagnÃ³stico cuando el usuario lo solicita.</li>
-          <li>Enviar notificaciones relacionadas con la aplicaciÃ³n, si el usuario las autoriza.</li>
+          <li>Procesar el envío voluntario del autodiagnóstico cuando el usuario lo solicita.</li>
+          <li>Enviar notificaciones relacionadas con la aplicación, si el usuario las autoriza.</li>
           <li>Mantener la seguridad, funcionamiento y mejora del servicio.</li>
         </ul>
 
-        <h2>4. ComparticiÃ³n de informaciÃ³n</h2>
-        <p>Podemos compartir informaciÃ³n solo en estos casos:</p>
+        <h2>4. Compartición de información</h2>
+        <p>Podemos compartir información solo en estos casos:</p>
         <ul>
           <li>
             <strong>Proveedores de servicio:</strong> con servicios necesarios para operar la
-            aplicaciÃ³n, como infraestructura de alojamiento/API y Firebase Cloud Messaging
-            (Google), Ãºnicamente para las funciones descritas.
+            aplicación, como infraestructura de alojamiento/API y Firebase Cloud Messaging
+            (Google), únicamente para las funciones descritas.
           </li>
           <li>
-            <strong>ObligaciÃ³n legal:</strong> cuando sea necesario para cumplir una ley,
+            <strong>Obligación legal:</strong> cuando sea necesario para cumplir una ley,
             solicitud legal o proteger derechos, seguridad e integridad del servicio.
           </li>
           <li>
-            <strong>Con tu consentimiento:</strong> cuando autorices expresamente una acciÃ³n,
-            como solicitar contacto tras el autodiagnÃ³stico.
+            <strong>Con tu consentimiento:</strong> cuando autorices expresamente una acción,
+            como solicitar contacto tras el autodiagnóstico.
           </li>
         </ul>
 
-        <h2>5. RetenciÃ³n y seguridad</h2>
+        <h2>5. Retención y seguridad</h2>
         <p>
-          Conservamos la informaciÃ³n solo el tiempo necesario para los fines descritos en esta
-          polÃ­tica o segÃºn lo exija la ley. Aplicamos medidas razonables de seguridad para
-          proteger la informaciÃ³n; sin embargo, ningÃºn sistema de transmisiÃ³n o almacenamiento
+          Conservamos la información solo el tiempo necesario para los fines descritos en esta
+          política o según lo exija la ley. Aplicamos medidas razonables de seguridad para
+          proteger la información; sin embargo, ningún sistema de transmisión o almacenamiento
           es 100% seguro.
         </p>
 
-        <h2>6. Permisos de la aplicaciÃ³n</h2>
+        <h2>6. Permisos de la aplicación</h2>
         <ul>
           <li>
             <strong>Internet:</strong> para consultar y mostrar contenido del servicio AAMorelos.
@@ -123,26 +123,26 @@ export function PrivacyPolicy() {
 
         <h2>7. Privacidad de menores</h2>
         <p>
-          La aplicaciÃ³n no estÃ¡ dirigida especÃ­ficamente a menores de 13 aÃ±os. Si consideras que
-          un menor proporcionÃ³ informaciÃ³n personal sin autorizaciÃ³n, contÃ¡ctanos para revisarlo
+          La aplicación no está dirigida específicamente a menores de 13 años. Si consideras que
+          un menor proporcionó información personal sin autorización, contáctanos para revisarlo
           y eliminarla cuando corresponda.
         </p>
 
         <h2>8. Tus derechos y opciones</h2>
         <ul>
-          <li>No otorgar permiso de notificaciones, o desactivarlo desde la configuraciÃ³n de tu dispositivo.</li>
-          <li>No enviar el formulario opcional de autodiagnÃ³stico/contacto.</li>
+          <li>No otorgar permiso de notificaciones, o desactivarlo desde la configuración de tu dispositivo.</li>
+          <li>No enviar el formulario opcional de autodiagnóstico/contacto.</li>
           <li>
-            Solicitar informaciÃ³n, correcciÃ³n o eliminaciÃ³n de datos personales que hayas
+            Solicitar información, corrección o eliminación de datos personales que hayas
             proporcionado voluntariamente, escribiendo a{' '}
             <a href="mailto:aamorelos6todistrito@gmail.com">aamorelos6todistrito@gmail.com</a>.
           </li>
         </ul>
 
-        <h2>9. Cambios a esta polÃ­tica</h2>
+        <h2>9. Cambios a esta política</h2>
         <p>
-          Podemos actualizar esta PolÃ­tica de Privacidad. Publicaremos la versiÃ³n vigente en
-          esta misma URL e indicaremos la fecha de Ãºltima actualizaciÃ³n.
+          Podemos actualizar esta Política de Privacidad. Publicaremos la versión vigente en
+          esta misma URL e indicaremos la fecha de última actualización.
         </p>
       </div>
     </div>
