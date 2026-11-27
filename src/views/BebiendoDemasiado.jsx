@@ -119,7 +119,7 @@ export function BebiendoDemasiado() {
               </a>
             ))}
           </div>
-          <p className={styles.contactFooter}>6to Distrito · Jiutepec, Morelos</p>
+          <p className={styles.contactFooter}>Jiutepec, Morelos</p>
         </section>
       </div>
     </div>

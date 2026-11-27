@@ -3,7 +3,7 @@ export const site = {
   name: 'Área Morelos',
   community: 'Alcohólicos Anónimos',
   organization: 'Central Mexicana de Servicios Generales de A.A., A.C.',
-  district: '6to Distrito · Área Morelos',
+  district: 'Área Morelos',
   tagline: '2026 · Año de compartir el mensaje al alcohólico que está sufriendo',
   email: 'area28@aamexico.org.mx',
   phone: '777 992-40-62',

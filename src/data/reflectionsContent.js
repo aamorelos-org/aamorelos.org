@@ -1,7 +1,7 @@
 /** @fileoverview Contenido editorial de las reflexiones dedicadas (mini-sitios). */
 export const bebiendo = {
   title: '¿Crees que estás bebiendo demasiado y no puedes parar?',
-  kicker: 'Pausa y Bienestar · 6to Dtto. Jiutepec, Morelos',
+  kicker: 'Pausa y Bienestar · Jiutepec, Morelos',
   image: 'images/reflections/bebiendo_demasiado.jpg',
   paragraphs: [
     'Para los que pertenecemos a Alcohólicos Anónimos, sabemos lo que es la compulsión por el alcohol.',
