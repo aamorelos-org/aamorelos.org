@@ -11,7 +11,7 @@ export function Footer() {
       <div className={`container ${styles.grid}`}>
         <div className={styles.brand}>
           <Link to="/" className={styles.logoLink}>
-            <img src="https://images.aamorelos.org/logo.webp" alt="Alcohólicos Anónimos" />
+            <img src="https://images.aamorelos.org/logo-area-morelos.webp" alt="Alcohólicos Anónimos" />
           </Link>
           <p className={styles.brandTitle}>{site.community} · {site.name}</p>
           <p className={styles.brandText}>
