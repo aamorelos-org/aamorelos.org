@@ -35,10 +35,16 @@ export function Footer() {
           <h2>Contacto</h2>
           <ul className={styles.contactList}>
             <li>
-              <a href={`mailto:${site.email}`}>{site.email}</a>
+              <span className={styles.contactArea}>Área Morelos 1</span>
+              <a href="tel:+527773090872">777 309-08-72</a>
+              {' · '}
+              <a href="mailto:area28@aamexico.org.mx">area28@aamexico.org.mx</a>
             </li>
             <li>
-              <a href={`tel:${site.phoneHref}`}>{site.phone}</a>
+              <span className={styles.contactArea}>Área Morelos 2</span>
+              <a href="tel:+527353023873">(735) 302-38-73</a>
+              {' · '}
+              <a href="mailto:area82@aamexico.org.mx">area82@aamexico.org.mx</a>
             </li>
             <li>
               <a href="tel:8002169231">{site.nationalPhone} · línea nacional</a>

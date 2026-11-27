@@ -28,7 +28,7 @@ export function Header() {
       <div className={`container ${styles.inner}`}>
         <Link className={styles.logo} to="/" aria-label="Ir al inicio">
           <img
-            src="https://images.aamorelos.org/logo-header.webp"
+            src="https://images.aamorelos.org/logo-area-morelos.webp"
             alt="Central Mexicana de Servicios Generales de Alcohólicos Anónimos, A.C."
           />
         </Link>
@@ -39,14 +39,28 @@ export function Header() {
           <p className={styles.subtitle}>{site.district} · {site.tagline}</p>
 
           <div className={styles.contact}>
-            <a href={`mailto:${site.email}`}>
-              <MailIcon />
-              <span>{site.email}</span>
-            </a>
-            <a href={`tel:${site.phoneHref}`}>
-              <PhoneIcon />
-              <span>{site.phone}</span>
-            </a>
+            <div className={styles.contactGroup}>
+              <span className={styles.contactLabel}>Área Morelos 1</span>
+              <a href="tel:+527773090872">
+                <PhoneIcon />
+                <span>777 309-08-72</span>
+              </a>
+              <a href="mailto:area28@aamexico.org.mx">
+                <MailIcon />
+                <span>area28@aamexico.org.mx</span>
+              </a>
+            </div>
+            <div className={styles.contactGroup}>
+              <span className={styles.contactLabel}>Área Morelos 2</span>
+              <a href="tel:+527353023873">
+                <PhoneIcon />
+                <span>(735) 302-38-73</span>
+              </a>
+              <a href="mailto:area82@aamexico.org.mx">
+                <MailIcon />
+                <span>area82@aamexico.org.mx</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

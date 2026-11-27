@@ -82,9 +82,25 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 8px 22px;
+  gap: 10px 28px;
   margin-top: 18px;
   font-size: 0.82rem;
+}
+
+.contactGroup {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px 14px;
+}
+
+.contactLabel {
+  color: #bfdbfe;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .contact a {
@@ -143,6 +159,10 @@
 
   .contact {
     justify-content: center;
-    gap: 6px 16px;
+    gap: 8px 16px;
+  }
+
+  .contactGroup {
+    justify-content: center;
   }
 }
